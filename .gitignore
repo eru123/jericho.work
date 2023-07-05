@@ -1,1 +1,4 @@
 /dev
+*/vendor/
+*/node_modules/
+*/composer.lock

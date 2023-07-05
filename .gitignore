@@ -3,3 +3,5 @@
 */node_modules/
 */composer.lock
 html/.env
+/test*
+/html/test*

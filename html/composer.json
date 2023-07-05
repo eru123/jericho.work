@@ -1,0 +1,6 @@
+{
+    "minimum-stability": "dev",
+    "require": {
+        "eru123/holyphp": "dev-main"
+    }
+}

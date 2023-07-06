@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Plugin\Upload;
-use App\Plugin\R2; 
+use App\Plugin\R2;
 use App\Plugin\DB;
 use eru123\router\Context;
 
@@ -68,7 +68,31 @@ class CDN extends Controller
                         unset($fo['key']);
                         unset($fo['url']);
                         $fr['file'] = $fo;
+                    } else {
+                        $fr['message'] = "Failed to save to database";
+                        $fr['uploaded'] = false;
                     }
+                }
+
+                if ($fr['uploaded']) {
+                    $ao = [];
+
+                    if (in_array($fo['mime'], ['text/css'])) {
+                        $ao['type'] = 'css';
+                        $ao['tag'] = '<link rel="stylesheet" href="' . $fr['stream'] . '" integrity="' . $fo['sha256'] . '" crossorigin="anonymous">';
+                    }
+
+                    if (in_array($fo['mime'], ['application/javascript', 'text/javascript'])) {
+                        $ao['type'] = 'js';
+                        $ao['tag'] = '<script src="' . $fr['stream'] . '" integrity="' . $fo['sha256'] . '" crossorigin="anonymous"></script>';
+                    }
+
+                    if (preg_match('/^image\//', $fo['mime'])) {
+                        $ao['type'] = 'image';
+                        $ao['tag'] = '<img src="' . $fr['stream'] . '" alt="' . $fo['name'] . '" title="' . $fo['name'] . '">';
+                    }
+
+                    $fr['html'] = $ao;
                 }
             }
 

@@ -6,10 +6,10 @@ class Upload
 {
     static $instance = null;
 
-    public static function instance(...$args)
+    public static function instance()
     {
         if (static::$instance === null) {
-            static::$instance = new static(...$args);
+            static::$instance = new static();
         }
         return static::$instance;
     }

@@ -5,12 +5,29 @@ namespace App\Controller;
 use App\Plugin\Upload;
 use App\Plugin\R2;
 use App\Plugin\DB;
+use App\Plugin\Rate;
 use eru123\router\Context;
 
 class CDN extends Controller
 {
     public function upload(Context $c)
     {
+        $rate = Rate::instance()->ip('i', 1);
+        
+        header('X-RateLimit-Limit: ' . $rate['limit']);
+        header('X-RateLimit-Remaining: ' . $rate['remaining']);
+        header('X-RateLimit-Reset: ' . date('Y-m-d H:i:00', strtotime('+1 minute')));
+
+        if ($rate['limited']) {
+            http_response_code(429);
+            return [
+                [
+                    'uploaded' => false,
+                    'message' => "Rate limit exceeded. Try again in 1 minute",
+                ]
+            ];
+        }
+
         $files = Upload::instance()->list();
         $r2 = R2::instance();
         $db = DB::instance();

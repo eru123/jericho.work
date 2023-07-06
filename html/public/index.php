@@ -16,9 +16,14 @@ DotEnv::load(__DIR__ . '/../');
 
 $router = new Router();
 $router->error(function (Throwable $e) {
-    // $code = intval($e->getCode() ?: 500);
-    $code = 500;
+    $code = intval($e->getCode() ?: 500);
+    // $code = 500;
     return Router::status_page($code, $code . ' Internal Server Error', 'The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.');
+    // http_response_code($code);
+    // return [
+    //     'code' => $code,
+    //     'message' => $e->getMessage(),
+    // ];
     // return Router::status_page($code, $code . ' Internal Server Error', $e->getMessage());
     // return Router::status_page($code, $code . ' Internal Server Error', $e->getMessage().'::'.$e->getTraceAsString());
     // return [
@@ -33,22 +38,23 @@ $router->get('/info', function (Context $c) {
 });
 
 $router->static('/', __DIR__, [], function (Context $c) {
+    // throw new Exception('404 Not Found sdfsdf', 404);
     if ($c->file == '/index.php' || substr($c->file, -4) == '.php') {
         return false;
     }
 });
 
 $router->post('/cdn/upload', 'App\Controller\CDN@upload');
-$router->get('/cdn/stream/$id', 'App\Controller\CDN@stream');
+// $router->get('/cdn/stream/$id', 'App\Controller\CDN@stream');
 $router->get('/cdn/stream/$id/$name', 'App\Controller\CDN@stream');
-$router->get('/cdn/download/$id', 'App\Controller\CDN@download');
+// $router->get('/cdn/download/$id', 'App\Controller\CDN@download');
 $router->get('/cdn/download/$id/$name', 'App\Controller\CDN@download');
 
 // if server name is cdn.jericho.work
 if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == 'cdn.jericho.work') {
-    $router->get('/stream/$id', 'App\Controller\CDN@stream');
+    // $router->get('/stream/$id', 'App\Controller\CDN@stream');
     $router->get('/stream/$id/$name', 'App\Controller\CDN@stream');
-    $router->get('/download/$id', 'App\Controller\CDN@download');
+    // $router->get('/download/$id', 'App\Controller\CDN@download');
     $router->get('/download/$id/$name', 'App\Controller\CDN@download');
 }
 

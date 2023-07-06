@@ -20,6 +20,12 @@ $router->error(function (Throwable $e) {
     $code = 500;
     return Router::status_page($code, $code . ' Internal Server Error', 'The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.');
     // return Router::status_page($code, $code . ' Internal Server Error', $e->getMessage());
+    // return Router::status_page($code, $code . ' Internal Server Error', $e->getMessage().'::'.$e->getTraceAsString());
+    // return [
+    //     'trace' => $e->getTrace(),
+    //     'message' => $e->getMessage(),
+    //     'code' => $e->getCode(),
+    // ];
 });
 $router->get('/info', function (Context $c) {
     phpinfo();

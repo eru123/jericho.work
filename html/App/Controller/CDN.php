@@ -56,6 +56,11 @@ class CDN extends Controller
                     $fr['message'] = "File type not allowed";
                 }
 
+                if ($f['size'] > 5242880) {
+                    $fr['uploaded'] = false;
+                    $fr['message'] = "File size too large. Allowed size is 5MB.";
+                }
+
                 $fo['sha256'] = hash_file('sha256', $f['tmp_name']);
                 $fo['size'] = $f['size'];
                 $fo['mime'] = $f['type'];

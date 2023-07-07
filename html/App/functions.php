@@ -32,9 +32,11 @@ function get_ip()
     return $ip ?? '0';
 }
 
-function vite(Router &$router, string $base, bool $prod, array $data = [])
+function vite(Router &$r, string $base, bool $prod, array $data = [])
 {
-    error_log($base);
+    $router = new Router();
+    $router->base($base);
+
     $forbidden_files = [
         '/manifest.json',
         '/index.html',
@@ -53,6 +55,7 @@ function vite(Router &$router, string $base, bool $prod, array $data = [])
     $app_id = A::get($data, 'id', 'app');
     $public = A::get($data, 'public');
     $src = A::get($data, 'src');
+    $favicon = A::get($data, 'favicon');
 
     if (!$prod) {
         $html = Format::template($template, [
@@ -63,8 +66,8 @@ function vite(Router &$router, string $base, bool $prod, array $data = [])
             'app_id' => $app_id,
         ], FORMAT_TEMPLATE_DOLLAR_CURLY);
 
-        $router->static($base, [$public]);
-        $router->static(rtrim($base, '/') . '/src', [$src]);
+        $router->static('/', [$public]);
+        $router->static('/src', [$src]);
 
         $router->get('/', (function () use ($html) {
             http_response_code(200);
@@ -75,11 +78,6 @@ function vite(Router &$router, string $base, bool $prod, array $data = [])
     }
 
     $dist = rtrim(A::get($data, 'dist'), '/');
-    $router->static($base, [$dist], [], function (Context $c) use ($forbidden_files) {
-        if (in_array($c->file, $forbidden_files)) {
-            return false;
-        }
-    });
 
     $css = [];
     $manifest = json_decode(file_get_contents(rtrim($dist, '/') . '/manifest.json'), true);
@@ -89,19 +87,30 @@ function vite(Router &$router, string $base, bool $prod, array $data = [])
         $entry = $manifest[$entry]['file'];
     }
 
-
+    $headers = array_map(function ($css) use ($base) {
+        return '<link rel="stylesheet" href="' . rtrim($base, '/') . '/' . $css . '">';
+    }, $css);
+    $favicon = $favicon ? rtrim($base, '/') . '/' . ltrim($favicon, '/') : null;
+    $favicon_html = $favicon ? '<link rel="icon" href="' . $favicon . '">' : '';
+    $headers[] = $favicon_html;
     $html = Format::template($template, [
         'base' => rtrim($base, '/'),
         'app_title' => $app_title,
         'app_id' => $app_id,
         'entry' => $entry,
-        'headers' => implode("", array_map(function ($css) use ($base) {
-            return '<link rel="stylesheet" href="' . rtrim($base, '/') . '/' . $css . '">';
-        }, $css)),
+        'headers' => implode("", $headers)
     ], FORMAT_TEMPLATE_DOLLAR_CURLY);
 
-    $router->fallback(function () use ($html) {
-        http_response_code(200);
-        return $html;
+    $router->static('/', [$dist], [], function (Context $c) use ($forbidden_files, $html) {
+        if (in_array($c->file, $forbidden_files)) {
+            return false;
+        }
+
+        if (!$c->file_path) {
+            http_response_code(200);
+            return $html;
+        }
     });
+
+    $r->child($router);
 }

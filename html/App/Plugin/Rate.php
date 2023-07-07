@@ -22,13 +22,13 @@ class Rate
         $this->mc = MC::instance();
     }
 
-    public function ip(string $mode, int $limit)
+    public function ip(string $mode, int $limit, string $prefix = '')
     {
         $d = 'YmdHis';
         $mode = substr($d, 0, strlen($d) - strpos(strrev($d), $mode));
         $date = date($mode);
         $ip = get_ip();
-        $identifier = str_replace(['.', ':'], '_', $date . "_" . $ip);
+        $identifier = str_replace(['.', ':'], $prefix . '_', $date . "_" . $ip);
         $count = $this->mc->get($identifier) ?? 0;
 
         $limited = false;
@@ -36,8 +36,6 @@ class Rate
         if ($count >= $limit) {
             $limited = true;
         }
-
-        out("IDENTIFIER: $identifier", PHP_EOL);
 
         $remaining = $limit - $count;
         $count += 1;

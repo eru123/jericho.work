@@ -38,6 +38,7 @@ class CDN extends Controller
         $r2 = R2::instance();
         $db = DB::instance();
         $result = [];
+
         foreach ($files as $f) {
             $fr = [
                 'uploaded' => false,
@@ -49,6 +50,11 @@ class CDN extends Controller
 
                 $fr['uploaded'] = true;
                 $fr['message'] = 'File uploaded successfully';
+
+                if (!preg_match('/(7Z|CSV|GIF|MIDI|PNG|TIF|ZIP|AVI|DOC|GZ|MKV|PPT|TIFF|ZST|AVIF|DOCX|ICO|MP3|PPTX|TTF|APK|DMG|ISO|MP4|PS|WEBM|BIN|EJS|JAR|OGG|RAR|WEBP|BMP|EOT|JPG|OTF|SVG|WOFF|BZ2|EPS|JPEG|PDF|SVGZ|WOFF2|CLASS|EXE|JS|PICT|SWF|XLS|CSS|FLAC|MID|PLS|TAR|XLSX)$/i', $f['name'])) {
+                    $fr['uploaded'] = false;
+                    $fr['message'] = "File type not allowed";
+                }
 
                 $fo['sha256'] = hash_file('sha256', $f['tmp_name']);
                 $fo['size'] = $f['size'];

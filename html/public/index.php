@@ -46,86 +46,12 @@ $router->static('/', __DIR__, [], function (Context $c) {
     }
 });
 
-function vite(Router &$router, string $base, bool $prod, array $data = [])
-{
-    $forbidden_files = [
-        '/manifest.json',
-        // '/index.html',
-    ];
-
-    $app_title = A::get($data, 'title', 'CDN');
-    $entry = A::get($data, 'entry', 'src/main.js');
-    $client = rtrim(A::get($data, 'client', '/'), '/');
-    $base = rtrim(A::get($data, 'base', '/'), '/');
-    $react = A::get($data, 'react', false);
-    $template_name = $prod ? 'vite' : ($react ? 'dev-react' : 'dev-vite');
-    $template_path = realpath(__DIR__ . '/../client/template/' . $template_name . '.html');
-    $template = file_get_contents($template_path);
-    $app_id = A::get($data, 'id', 'app');
-    $public = A::get($data, 'public');
-    $src = A::get($data, 'src');
-
-    if (!$prod) {
-        $html = Format::template($template, [
-            'client' => $client,
-            'base' => $base,
-            'entry' => $entry,
-            'app_title' => $app_title,
-            'app_id' => $app_id,
-        ], FORMAT_TEMPLATE_DOLLAR_CURLY);
-
-        $router->static($base, [$public]);
-        $router->static(rtrim($base, '/') . '/src', [$src]);
-
-        $router->get('/', (function () use ($html) {
-            http_response_code(200);
-            return $html;
-        }));
-
-        return;
-    }
-
-    $dist = rtrim(A::get($data, 'dist'), '/');
-    $router->static($base, [$dist], ['index.html'], function (Context $c) use ($forbidden_files) {
-        if (in_array($c->file, $forbidden_files)) {
-            return false;
-        }
-    });
-
-    $css = [];
-    $manifest = json_decode(file_get_contents(rtrim($dist, '/') . '/manifest.json'), true);
-    if (isset($manifest[$entry]) && isset($manifest[$entry]['isEntry']) && $manifest[$entry]['isEntry'] === true) {
-        $entry = $manifest[$entry]['file'];
-        $css = @$manifest[$entry]['css'] ?? [];
-    }
-
-    $html = Format::template($template, [
-        'base' => rtrim($base, '/'),
-        'app_title' => $app_title,
-        'app_id' => $app_id,
-        'entry' => $entry,
-        'headers' => implode("", array_map(function ($css) {
-            return '<link rel="stylesheet" href="' . $css . '">';
-        }, $css)),
-    ], FORMAT_TEMPLATE_DOLLAR_CURLY);
-    $router->get($base, (function () use ($html) {
-        http_response_code(200);
-        return $html;
-    }));
-
-    // $router->error(function (Throwable $e) use ($html) {
-    // http_response_code(intval($e->getCode() ?: 500));
-    // header('Referrer-Policy: unsafe-url');
-    // return $html;
-    // });
-}
-
-vite($router, '/', true, [
+vite($router, '/cdn', true, [
     'entry' => 'src/main.js',
     'client' => 'http://127.0.0.1:3000',
     'public' => __DIR__ . '/../client/cdn/public',
     'src' => __DIR__ . '/../client/cdn/src',
-    'dist' => __DIR__ . '/../client/cdn/dist',
+    'dist' => __DIR__ . '/../client/cdn/dist'
 ]);
 
 // if server name is cdn.jericho.work

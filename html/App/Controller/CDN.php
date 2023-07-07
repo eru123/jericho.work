@@ -12,19 +12,25 @@ class CDN extends Controller
 {
     public function upload(Context $c)
     {
-        $rate = Rate::instance()->ip('i', 1);
-        
-        header('X-RateLimit-Limit: ' . $rate['limit']);
-        header('X-RateLimit-Remaining: ' . $rate['remaining']);
-        header('X-RateLimit-Reset: ' . date('Y-m-d H:i:00', strtotime('+1 minute')));
+        $rate = Rate::instance()->ip('i', 1, 'cdn_map');
+        $reset_time = strtotime('+1 minute');
+        $reset_at = date('Y-m-d H:i:00', $reset_time);
+        $reset_ts = strtotime($reset_at);
+        if (!headers_sent()) {
+            header('X-RateLimit-Limit: ' . $rate['limit']);
+            header('X-RateLimit-Remaining: ' . $rate['remaining']);
+            header('X-RateLimit-Reset: ' . $reset_at);
+        }
 
         if ($rate['limited']) {
-            http_response_code(429);
+            if (!headers_sent()) {
+                http_response_code(429);
+                $time_diff = $reset_ts - time();
+                header('Retry-After: ' . $time_diff);
+            }
             return [
-                [
-                    'uploaded' => false,
-                    'message' => "Rate limit exceeded. Try again in 1 minute",
-                ]
+                'status' => false,
+                'error' => "Rate limit exceeded. Try again in 1 minute",
             ];
         }
 
@@ -116,7 +122,10 @@ class CDN extends Controller
             $result[] = $fr;
         }
 
-        return $result;
+        return [
+            'status' => true,
+            'files' => $result,
+        ];
     }
 
     public function stream(Context $c)

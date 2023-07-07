@@ -1,0 +1,9 @@
+{
+    "scripts": {
+        "start": "gulp dev",
+        "build": "gulp build"
+    },
+    "dependencies": {
+        "gulp": "^4.0.2"
+    }
+}

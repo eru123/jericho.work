@@ -51,7 +51,8 @@ vite($router, '/cdn', true, [
     'client' => 'http://127.0.0.1:3000',
     'public' => __DIR__ . '/../client/cdn/public',
     'src' => __DIR__ . '/../client/cdn/src',
-    'dist' => __DIR__ . '/../client/cdn/dist'
+    'dist' => __DIR__ . '/../client/cdn/dist',
+    'favicon' => 'favicon.ico',
 ]);
 
 // if server name is cdn.jericho.work

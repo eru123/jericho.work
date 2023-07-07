@@ -6,3 +6,5 @@ html/.env
 /test*
 /html/test*
 /*.jericho.work
+pnpm-lock.yaml
+package-lock.json

@@ -22,7 +22,7 @@ function get_ip()
 {
     $ip = $_SERVER['REMOTE_ADDR'] ?? null;
     if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['f'];
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
     }
     return $ip ?? '0';
 }

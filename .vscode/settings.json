@@ -3,5 +3,6 @@
     "git.autofetch": true,
     "files.exclude": {
         "*.jericho.work": true
-    }
+    },
+    "vue.codeActions.enabled": false
 }

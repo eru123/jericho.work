@@ -56,7 +56,7 @@ vite($router, $cdn_base, $cdn_prod, [
     'favicon' => 'favicon.ico',
 ]);
 
-$router->post($cdn_path . '/cdn/upload', 'App\Controller\CDN@upload');
+$router->post($cdn_path . '/upload', 'App\Controller\CDN@upload');
 $router->get($cdn_path . '/stream/$id/$name', 'App\Controller\CDN@stream');
 $router->get($cdn_path . '/download/$id/$name', 'App\Controller\CDN@download');
 

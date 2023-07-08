@@ -79,8 +79,10 @@ class Rate
         $time_diff = $reset_ts - time();
         $time_diff = $time_diff > 0 ? $time_diff : 0;
 
-        if(!headers_sent()) {
-            http_response_code(429);
+        if (!headers_sent()) {
+            if ($limit_reach) {
+                http_response_code(429);
+            }
             header('X-RateLimit-Limit: ' . $limit);
             header('X-RateLimit-Remaining: ' . ($remaining > 0 ? $remaining : 0));
             header('X-RateLimit-Reset: ' . $reset_ts);

@@ -12,25 +12,10 @@ class CDN extends Controller
 {
     public function upload(Context $c)
     {
-        $rate = Rate::instance()->ip('i', 1, 'cdn_map');
-        $reset_time = strtotime('+1 minute');
-        $reset_at = date('Y-m-d H:i:00', $reset_time);
-        $reset_ts = strtotime($reset_at);
-        if (!headers_sent()) {
-            header('X-RateLimit-Limit: ' . $rate['limit']);
-            header('X-RateLimit-Remaining: ' . $rate['remaining']);
-            header('X-RateLimit-Reset: ' . $reset_at);
-        }
-
-        if ($rate['limited']) {
-            if (!headers_sent()) {
-                http_response_code(429);
-                $time_diff = $reset_ts - time();
-                header('Retry-After: ' . $time_diff);
-            }
+        if (Rate::ip('i', 1, 'cdn_map')) {
             return [
                 'status' => false,
-                'error' => "Rate limit exceeded. Try again in 1 minute",
+                'error' => "Rate limit exceeded, please try after 1 minute.",
             ];
         }
 
@@ -54,34 +39,46 @@ class CDN extends Controller
                 if (!preg_match('/(7Z|CSV|GIF|MIDI|PNG|TIF|ZIP|AVI|DOC|GZ|MKV|PPT|TIFF|ZST|AVIF|DOCX|ICO|MP3|PPTX|TTF|APK|DMG|ISO|MP4|PS|WEBM|BIN|EJS|JAR|OGG|RAR|WEBP|BMP|EOT|JPG|OTF|SVG|WOFF|BZ2|EPS|JPEG|PDF|SVGZ|WOFF2|CLASS|EXE|JS|PICT|SWF|XLS|CSS|FLAC|MID|PLS|TAR|XLSX)$/i', $f['name'])) {
                     $fr['uploaded'] = false;
                     $fr['message'] = "File type not allowed";
+                    $fr['file'] = [
+                        'name' => $f['name'],
+                        'mime' => $f['type'],
+                        'size' => $f['size'],
+                    ];
                 }
 
-                if ($f['size'] > 5242880) {
+                if ($fr['uploaded'] && $f['size'] > 5242880) {
                     $fr['uploaded'] = false;
-                    $fr['message'] = "File size too large. Allowed size is 5MB.";
+                    $fr['message'] = "File size exceeded 5MB limit";
+                    $fr['file'] = [
+                        'name' => $f['name'],
+                        'mime' => $f['type'],
+                        'size' => $f['size'],
+                    ];
                 }
 
-                $fo['sha256'] = hash_file('sha256', $f['tmp_name']);
-                $fo['size'] = $f['size'];
-                $fo['mime'] = $f['type'];
-                $fo['name'] = $f['name'];
+                if ($fr['uploaded']) {
+                    $fo['sha256'] = hash_file('sha256', $f['tmp_name']);
+                    $fo['size'] = $f['size'];
+                    $fo['mime'] = $f['type'];
+                    $fo['name'] = $f['name'];
 
-                $key = date('YmdHis') . '-' . $fo['sha256'] . '-' . $fo['name'];
-                $fo['key'] = $key;
+                    $key = date('YmdHis') . '-' . $fo['sha256'] . '-' . $fo['name'];
+                    $fo['key'] = $key;
 
-                $ff = fopen($f['tmp_name'], 'r');
-                $r2s = $r2->put([
-                    'Key' => $fo['key'],
-                    'ContentType' => $fo['mime'],
-                ], $ff);
-                fclose($ff);
+                    $ff = fopen($f['tmp_name'], 'r');
+                    $r2s = $r2->put([
+                        'Key' => $fo['key'],
+                        'ContentType' => $fo['mime'],
+                    ], $ff);
+                    fclose($ff);
 
-                if ($r2s) {
-                    $fr['message'] = 'File uploaded successfully';
-                    $fo['url'] = $r2s['ObjectURL'];
-                } else {
-                    $fr['message'] = "Failed to upload is R2 Server";
-                    $fr['uploaded'] = false;
+                    if ($r2s) {
+                        $fr['message'] = 'File uploaded successfully';
+                        $fo['url'] = $r2s['ObjectURL'];
+                    } else {
+                        $fr['message'] = "Failed to upload is R2 Server";
+                        $fr['uploaded'] = false;
+                    }
                 }
 
                 if ($fr['uploaded']) {
@@ -133,8 +130,13 @@ class CDN extends Controller
             $result[] = $fr;
         }
 
+        $total_uploaded = count(array_filter($result, function ($r) {
+            return $r['uploaded'];
+        }));
+
         return [
-            'status' => true,
+            'status' => $total_uploaded > 0,
+            'message' => $total_uploaded > 0 ? $total_uploaded . ' file(s) uploaded successfully' : 'No file uploaded',
             'files' => $result,
         ];
     }

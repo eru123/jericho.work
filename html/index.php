@@ -42,38 +42,22 @@ $router->static('/', __DIR__ . '/public', [], function (Context $c) {
     }
 });
 
-// if server name is cdn.jericho.work
-if (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == env('CDN_DOMAIN')) {
-    // $router->get('/stream/$id', 'App\Controller\CDN@stream');
-    $router->get('/stream/$id/$name', 'App\Controller\CDN@stream');
-    // $router->get('/download/$id', 'App\Controller\CDN@download');
-    $router->get('/download/$id/$name', 'App\Controller\CDN@download');
+$is_cdn = isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] == env('CDN_DOMAIN');
+$cdn_base = $is_cdn ? '/' : '/cdn';
+$cdn_path = $is_cdn ? '' : '/cdn';
+$cdn_prod = true;
 
-    vite($router, '/', true, [
-        'entry' => 'src/main.js',
-        'client' => 'http://127.0.0.1:3000',
-        'public' => __DIR__ . '/client/cdn/public',
-        'src' => __DIR__ . '/client/cdn/src',
-        'dist' => __DIR__ . '/client/cdn/dist',
-        'favicon' => 'favicon.ico',
-    ]);
-} else {
-    $router->post('/cdn/upload', 'App\Controller\CDN@upload');
-    // $router->get('/cdn/stream/$id', 'App\Controller\CDN@stream');
-    $router->get('/cdn/stream/$id/$name', 'App\Controller\CDN@stream');
-    // $router->get('/cdn/download/$id', 'App\Controller\CDN@download');
-    $router->get('/cdn/download/$id/$name', 'App\Controller\CDN@download');
+vite($router, $cdn_base, $cdn_prod, [
+    'entry' => 'src/main.js',
+    'client' => 'http://127.0.0.1:3000',
+    'public' => __DIR__ . '/client/cdn/public',
+    'src' => __DIR__ . '/client/cdn/src',
+    'dist' => __DIR__ . '/client/cdn/dist',
+    'favicon' => 'favicon.ico',
+]);
 
-    vite($router, '/cdn', true, [
-        'entry' => 'src/main.js',
-        'client' => 'http://127.0.0.1:3000',
-        'public' => __DIR__ . '/client/cdn/public',
-        'src' => __DIR__ . '/client/cdn/src',
-        'dist' => __DIR__ . '/client/cdn/dist',
-        'favicon' => 'favicon.ico',
-    ]);
-}
-
-
+$router->post($cdn_path . '/cdn/upload', 'App\Controller\CDN@upload');
+$router->get($cdn_path . '/stream/$id/$name', 'App\Controller\CDN@stream');
+$router->get($cdn_path . '/download/$id/$name', 'App\Controller\CDN@download');
 
 $router->run();

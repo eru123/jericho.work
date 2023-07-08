@@ -33,9 +33,11 @@ function get_ip()
     return $ip ?? '0';
 }
 
-function vite(Router &$r, string $base, bool $prod, array $data = [])
+function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$router = null)
 {
-    $router = new Router();
+    if (!$router) {
+        $router = new Router();
+    }
     $router->base($base);
 
     $forbidden_files = [

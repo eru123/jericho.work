@@ -1,9 +1,10 @@
 <?php
 
 use eru123\helper\ArrayUtil as A;
-use eru123\helper\Format;
 use eru123\router\Context;
 use eru123\router\Router;
+use eru123\router\Helper as RouterHelper;
+use App\Plugin\Vite;
 
 function base_url($path = '')
 {
@@ -57,21 +58,24 @@ function vite(Router &$r, string $base, bool $prod, array $data = [])
     $src = A::get($data, 'src');
     $favicon = A::get($data, 'favicon');
 
+    $vite = Vite::instance();
+    $vite->template($template);
+
     if (!$prod) {
-        $html = Format::template($template, [
-            'client' => $client,
+        $vite->data([
             'base' => $base,
             'entry' => $entry,
+            'client' => $client,
             'app_title' => $app_title,
             'app_id' => $app_id,
-        ], FORMAT_TEMPLATE_DOLLAR_CURLY);
+        ]);
 
         $router->static('/', [$public]);
         $router->static('/src', [$src]);
 
-        $router->get('/', (function () use ($html) {
+        $router->get('/', (function () use ($vite) {
             http_response_code(200);
-            return $html;
+            return $vite->build();
         }));
 
         return;
@@ -87,28 +91,44 @@ function vite(Router &$r, string $base, bool $prod, array $data = [])
         $entry = $manifest[$entry]['file'];
     }
 
-    $headers = array_map(function ($css) use ($base) {
+    $vite->headers(array_map(function ($css) use ($base) {
         return '<link rel="stylesheet" href="' . rtrim($base, '/') . '/' . $css . '">';
-    }, $css);
+    }, $css));
+
     $favicon = $favicon ? rtrim($base, '/') . '/' . ltrim($favicon, '/') : null;
     $favicon_html = $favicon ? '<link rel="icon" href="' . $favicon . '">' : '';
-    $headers[] = $favicon_html;
-    $html = Format::template($template, [
+    $vite->header($favicon_html);
+
+    $vite->data([
+        'base' => $base,
+        'entry' => $entry,
+        'client' => $client,
+        'app_title' => $app_title,
+        'app_id' => $app_id,
+    ]);
+
+    $vite->data([
         'base' => rtrim($base, '/'),
         'app_title' => $app_title,
         'app_id' => $app_id,
         'entry' => $entry,
-        'headers' => implode("", $headers)
-    ], FORMAT_TEMPLATE_DOLLAR_CURLY);
+    ]);
 
-    $router->static('/', [$dist], [], function (Context $c) use ($forbidden_files, $html) {
+    $vite->seo([
+        'title' => $app_title,
+        'description' => $app_title,
+        'image' => $favicon,
+        'url' => base_url(RouterHelper::uri()),
+    ]);
+
+    $router->static('/', [$dist], [], function (Context $c) use ($forbidden_files, $vite) {
         if (in_array($c->file, $forbidden_files)) {
             return false;
         }
 
         if (!$c->file_path) {
             http_response_code(200);
-            return $html;
+            return $vite->build();
         }
     });
 

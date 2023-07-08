@@ -33,11 +33,18 @@ function get_ip()
     return $ip ?? '0';
 }
 
-function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$router = null)
+function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$router = null, $callback = null)
 {
     if (!$router) {
         $router = new Router();
     }
+
+    if(!$callback) {
+        $callback = function () {
+            return null;
+        };
+    }
+
     $router->base($base);
 
     $forbidden_files = [
@@ -75,7 +82,7 @@ function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$r
         $router->static('/', [$public]);
         $router->static('/src', [$src]);
 
-        $router->get('/', (function () use ($vite) {
+        $router->get('/', $callback, (function () use ($vite) {
             http_response_code(200);
             return $vite->build();
         }));
@@ -123,7 +130,7 @@ function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$r
         'url' => base_url(RouterHelper::uri()),
     ]);
 
-    $router->static('/', [$dist], [], function (Context $c) use ($forbidden_files, $vite) {
+    $router->static('/', [$dist], [], $callback, function (Context $c) use ($forbidden_files, $vite) {
         if (in_array($c->file, $forbidden_files)) {
             return false;
         }

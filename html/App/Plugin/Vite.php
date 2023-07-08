@@ -12,7 +12,7 @@ class Vite
     private $seo = [];
     private $data = [];
 
-    public static function instance()
+    public static function instance(): static
     {
         if (static::$instance === null) {
             static::$instance = new static();

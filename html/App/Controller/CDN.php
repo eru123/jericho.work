@@ -6,18 +6,49 @@ use App\Plugin\Upload;
 use App\Plugin\R2;
 use App\Plugin\DB;
 use App\Plugin\Rate;
+use App\Plugin\Vite;
 use eru123\router\Context;
 
 class CDN extends Controller
 {
+    public function index()
+    {
+        Vite::instance()->data([
+            'app_title' => 'OpenCDN',
+        ]);
+
+        Vite::instance()->seo([
+            'title' => 'OpenCDN',
+            'description' => 'Fast and Free Content Delivery Network (CDN) Alternative',
+            'keywords' => [
+                'cdn',
+                'opencdn',
+                'fastcdn',
+                'cdnjs',
+                'jsdelivr',
+                'unpkg',
+                'cloudflare',
+            ],
+            'image' => 'https://cdn.jericho.work/stream/1/opencdn.png',
+            'url' => base_url(),
+            'type' => 'website'
+        ]);
+    }
+
     public function upload(Context $c)
     {
-        if (Rate::ip('i', 1, 'cdn_map')) {
+        if (Rate::ip('d', 1000, 'cdn_map')) {
             return [
                 'status' => false,
-                'error' => "Rate limit exceeded, please try again after 1 minute.",
+                'error' => "Rate limit exceeded, please try again tomorrow.",
             ];
-        }
+        } 
+        // else if (Rate::ip('i', 2, 'cdn_map')) {
+        //     return [
+        //         'status' => false,
+        //         'error' => "Rate limit exceeded, please try again after 1 minute.",
+        //     ];
+        // }
 
         $files = Upload::instance()->list();
         $r2 = R2::instance();
@@ -36,19 +67,19 @@ class CDN extends Controller
                 $fr['uploaded'] = true;
                 $fr['message'] = 'File uploaded successfully';
 
-                if (!preg_match('/(7Z|CSV|GIF|MIDI|PNG|TIF|ZIP|AVI|DOC|GZ|MKV|PPT|TIFF|ZST|AVIF|DOCX|ICO|MP3|PPTX|TTF|APK|DMG|ISO|MP4|PS|WEBM|BIN|EJS|JAR|OGG|RAR|WEBP|BMP|EOT|JPG|OTF|SVG|WOFF|BZ2|EPS|JPEG|PDF|SVGZ|WOFF2|CLASS|EXE|JS|PICT|SWF|XLS|CSS|FLAC|MID|PLS|TAR|XLSX)$/i', $f['name'])) {
-                    $fr['uploaded'] = false;
-                    $fr['message'] = "File type not allowed";
-                    $fr['file'] = [
-                        'name' => $f['name'],
-                        'mime' => $f['type'],
-                        'size' => $f['size'],
-                    ];
-                }
+                // if (!preg_match('/(7Z|CSV|GIF|MIDI|PNG|TIF|ZIP|AVI|DOC|GZ|MKV|PPT|TIFF|ZST|AVIF|DOCX|ICO|MP3|PPTX|TTF|APK|DMG|ISO|MP4|PS|WEBM|BIN|EJS|JAR|OGG|RAR|WEBP|BMP|EOT|JPG|OTF|SVG|WOFF|BZ2|EPS|JPEG|PDF|SVGZ|WOFF2|CLASS|EXE|JS|PICT|SWF|XLS|CSS|FLAC|MID|PLS|TAR|XLSX)$/i', $f['name'])) {
+                //     $fr['uploaded'] = false;
+                //     $fr['message'] = "File type not allowed";
+                //     $fr['file'] = [
+                //         'name' => $f['name'],
+                //         'mime' => $f['type'],
+                //         'size' => $f['size'],
+                //     ];
+                // }
 
-                if ($fr['uploaded'] && $f['size'] > 5242880) {
+                if ($fr['uploaded'] && $f['size'] > 26214400) {
                     $fr['uploaded'] = false;
-                    $fr['message'] = "File size exceeded 5MB limit";
+                    $fr['message'] = "File size exceeded 25MB limit";
                     $fr['file'] = [
                         'name' => $f['name'],
                         'mime' => $f['type'],
@@ -57,12 +88,15 @@ class CDN extends Controller
                 }
 
                 if ($fr['uploaded']) {
-                    $fo['sha256'] = hash_file('sha256', $f['tmp_name']);
+                    $srif = fopen($f['tmp_name'], 'r');
+                    $srib = fread($srif, $f['size']);
+                    fclose($srif);
+                    $fo['sri'] = 'sha256-' . base64_encode(hash('sha256', $srib, true));
                     $fo['size'] = $f['size'];
                     $fo['mime'] = $f['type'];
                     $fo['name'] = $f['name'];
 
-                    $key = date('YmdHis') . '-' . $fo['sha256'] . '-' . $fo['name'];
+                    $key = date('YmdHis') . '-' . $fo['sri'] . '-' . $fo['name'];
                     $fo['key'] = $key;
 
                     $ff = fopen($f['tmp_name'], 'r');
@@ -87,7 +121,7 @@ class CDN extends Controller
                         'name' => $fo['name'],
                         'mime' => $fo['mime'],
                         'size' => $fo['size'],
-                        'sha256' => $fo['sha256'],
+                        'sri' => $fo['sri'],
                         'url' => $fo['url'],
                     ]);
 
@@ -110,17 +144,37 @@ class CDN extends Controller
 
                     if (in_array($fo['mime'], ['text/css'])) {
                         $ao['type'] = 'css';
-                        $ao['tag'] = '<link rel="stylesheet" href="' . $fr['stream'] . '" integrity="' . $fo['sha256'] . '" crossorigin="anonymous">';
+                        $ao['tag'] = '<link rel="stylesheet" href="' . $fr['stream'] . '" integrity="' . $fo['sri'] . '" crossorigin="anonymous">';
                     }
 
                     if (in_array($fo['mime'], ['application/javascript', 'text/javascript'])) {
                         $ao['type'] = 'js';
-                        $ao['tag'] = '<script src="' . $fr['stream'] . '" integrity="' . $fo['sha256'] . '" crossorigin="anonymous"></script>';
+                        $ao['tag'] = '<script src="' . $fr['stream'] . '" integrity="' . $fo['sri'] . '" crossorigin="anonymous"></script>';
                     }
 
                     if (preg_match('/^image\//', $fo['mime'])) {
                         $ao['type'] = 'image';
                         $ao['tag'] = '<img src="' . $fr['stream'] . '" alt="' . $fo['name'] . '" title="' . $fo['name'] . '">';
+                    }
+
+                    if (preg_match('/^video\//', $fo['mime'])) {
+                        $ao['type'] = 'video';
+                        $ao['tag'] = '<video src="' . $fr['stream'] . '" controls></video>';
+                    }
+
+                    if (preg_match('/^audio\//', $fo['mime'])) {
+                        $ao['type'] = 'audio';
+                        $ao['tag'] = '<audio src="' . $fr['stream'] . '" controls></audio>';
+                    }
+
+                    if (preg_match('/^font\//', $fo['mime'])) {
+                        $ao['type'] = 'font';
+                        $ao['tag'] = '<link rel="stylesheet" href="' . $fr['stream'] . '" integrity="' . $fo['sri'] . '" crossorigin="anonymous">';
+                    }
+
+                    if (in_array($fo['mime'], ['application/pdf'])) {
+                        $ao['type'] = 'pdf';
+                        $ao['tag'] = '<iframe src="' . $fr['stream'] . '" title="' . $fo['name'] . '" style="width: 100%; height: 100%; border: none;"></iframe>';
                     }
 
                     $fr['html'] = $ao;
@@ -134,10 +188,26 @@ class CDN extends Controller
             return $r['uploaded'];
         }));
 
+        $error_message = false;
+
+        if (!$total_uploaded) {
+            foreach ($result as $r) {
+                if ($r['message']) {
+                    $error_message = $r['message'];
+                    break;
+                }
+            }
+
+            if (!$error_message) {
+                $error_message = 'No file uploaded';
+            }
+        }
+        
         return [
             'status' => $total_uploaded > 0,
-            'message' => $total_uploaded > 0 ? $total_uploaded . ' file(s) uploaded successfully' : 'No file uploaded',
+            'message' => $total_uploaded . ' file(s) uploaded successfully',
             'files' => $result,
+            'error' => $error_message
         ];
     }
 
@@ -158,6 +228,7 @@ class CDN extends Controller
             'Key' => $key,
         ]);
 
+        header('Access-Control-Allow-Origin: *');
         header('Content-Type: ' . $r2s['ContentType']);
         header('Content-Length: ' . $r2s['ContentLength']);
         header('Content-Disposition: inline; filename="' . $name . '"');
@@ -182,6 +253,7 @@ class CDN extends Controller
             'Key' => $key,
         ]);
 
+        header('Access-Control-Allow-Origin: *');
         header('Content-Type: ' . $r2s['ContentType']);
         header('Content-Length: ' . $r2s['ContentLength']);
         header('Content-Disposition: attachment; filename="' . $name . '"');

@@ -15,7 +15,7 @@ class CDN extends Controller
         if (Rate::ip('i', 1, 'cdn_map')) {
             return [
                 'status' => false,
-                'error' => "Rate limit exceeded, please try after 1 minute.",
+                'error' => "Rate limit exceeded, please try again after 1 minute.",
             ];
         }
 

@@ -16,7 +16,7 @@ $router = new Router();
 $router->error(function (Throwable $e) {
     $code = intval($e->getCode() ?: 500);
     // $code = 500;
-    return Router::status_page($code, $code . ' Internal Server Error', 'The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.');
+    // return Router::status_page($code, $code . ' Internal Server Error', 'The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.');
     // http_response_code($code);
     // return [
     //     'code' => $code,
@@ -29,6 +29,12 @@ $router->error(function (Throwable $e) {
     //     'message' => $e->getMessage(),
     //     'code' => $e->getCode(),
     // ];
+
+    return [
+        'status' => false,
+        'code' => $code,
+        'error' => $e->getMessage()
+    ];
 });
 
 $router->get('/info', function (Context $c) {
@@ -54,7 +60,7 @@ vite($router, $cdn_base, $cdn_prod, [
     'src' => __DIR__ . '/client/cdn/src',
     'dist' => __DIR__ . '/client/cdn/dist',
     'favicon' => 'favicon.ico',
-]);
+], $cdnrouter, 'App\Controller\CDN::index');
 
 $router->post($cdn_path . '/upload', 'App\Controller\CDN@upload');
 $router->get($cdn_path . '/stream/$id/$name', 'App\Controller\CDN@stream');

@@ -71,7 +71,7 @@ const copy = (text) => {
       createModal('Copied!', 'The URL has been copied to your clipboard.')
     })
     .catch(() => {
-      createModal('Error', 'Something went wrong! Please try again later.')
+      createModal('Error', 'Failed to copy the text to your clipboard. Please try on a browser that supports this feature or copy the text manually.')
     })
 }
 
@@ -152,7 +152,7 @@ const hsize = (bytes) => {
     </div>
   </Teleport>
   <Teleport to="body">
-    
+
   </Teleport>
 </template>
 

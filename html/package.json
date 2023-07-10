@@ -1,7 +1,8 @@
 {
     "scripts": {
         "start": "gulp dev",
-        "build": "gulp build"
+        "build": "gulp build",
+        "install": "gulp install"
     },
     "dependencies": {
         "gulp": "^4.0.2"

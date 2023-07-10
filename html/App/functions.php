@@ -33,18 +33,15 @@ function get_ip()
     return $ip ?? '0';
 }
 
-function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$router = null, $callback = null)
+function vite(Router &$router, string $base, bool $prod, array $data = [], $callback = null)
 {
-    if (!$router) {
-        $router = new Router();
-    }
-
-    if(!$callback) {
+    if (!$callback) {
         $callback = function () {
             return null;
         };
     }
 
+    $base = rtrim($base, '/');
     $router->base($base);
 
     $forbidden_files = [
@@ -52,8 +49,7 @@ function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$r
         '/index.html',
     ];
 
-    $base = rtrim($base, '/');
-    $base = empty($base) ? '/' : $base;
+    // $base = empty($base) ? '/' : $base;
 
     $app_title = A::get($data, 'title', 'CDN');
     $entry = A::get($data, 'entry', 'src/main.js');
@@ -70,6 +66,17 @@ function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$r
     $vite = Vite::instance();
     $vite->template($template);
 
+    $favicon = $favicon ? rtrim($base, '/') . '/' . ltrim($favicon, '/') : null;
+    $favicon_html = $favicon ? '<link rel="icon" href="' . $favicon . '">' : '';
+    $vite->header($favicon_html);
+
+    $vite->seo([
+        'title' => $app_title,
+        'description' => $app_title,
+        'image' => $favicon,
+        'url' => base_url(RouterHelper::uri()),
+    ]);
+
     if (!$prod) {
         $vite->data([
             'base' => $base,
@@ -79,8 +86,17 @@ function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$r
             'app_id' => $app_id,
         ]);
 
-        $router->static('/', [$public]);
         $router->static('/src', [$src]);
+        $router->static('/', [$public], [], $callback, function (Context $c) use ($forbidden_files, $vite) {
+            if (in_array($c->file, $forbidden_files)) {
+                return false;
+            }
+
+            if (!$c->file_path) {
+                http_response_code(200);
+                return $vite->build();
+            }
+        });
 
         $router->get('/', $callback, (function () use ($vite) {
             http_response_code(200);
@@ -104,30 +120,11 @@ function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$r
         return '<link rel="stylesheet" href="' . rtrim($base, '/') . '/' . $css . '">';
     }, $css));
 
-    $favicon = $favicon ? rtrim($base, '/') . '/' . ltrim($favicon, '/') : null;
-    $favicon_html = $favicon ? '<link rel="icon" href="' . $favicon . '">' : '';
-    $vite->header($favicon_html);
-
-    $vite->data([
-        'base' => $base,
-        'entry' => $entry,
-        'client' => $client,
-        'app_title' => $app_title,
-        'app_id' => $app_id,
-    ]);
-
     $vite->data([
         'base' => rtrim($base, '/'),
         'app_title' => $app_title,
         'app_id' => $app_id,
         'entry' => $entry,
-    ]);
-
-    $vite->seo([
-        'title' => $app_title,
-        'description' => $app_title,
-        'image' => $favicon,
-        'url' => base_url(RouterHelper::uri()),
     ]);
 
     $router->static('/', [$dist], [], $callback, function (Context $c) use ($forbidden_files, $vite) {
@@ -140,6 +137,4 @@ function vite(Router &$r, string $base, bool $prod, array $data = [], Router &$r
             return $vite->build();
         }
     });
-
-    $r->child($router);
 }

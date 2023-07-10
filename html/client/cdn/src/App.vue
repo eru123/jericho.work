@@ -1,6 +1,6 @@
 <script setup>
 
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 const fileInput = ref(null)
 const uploading = ref(false)
 
@@ -22,11 +22,15 @@ const createModal = (title, message, callback = null) => {
 
 const onFileChange = () => {
   if (!fileInput.value.files.length) {
-    return
+    return;
   }
-  const file = fileInput.value.files[0]
+
   const formData = new FormData()
-  formData.append('file', file)
+  if (fileInput.value.files.length) {
+    for (let i = 0; i < fileInput.value.files.length; i++) {
+      formData.append('files[]', fileInput.value.files[i])
+    }
+  }
   uploading.value = true
 
   fetch('/upload', {
@@ -80,12 +84,35 @@ const hsize = (bytes) => {
   return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${['B', 'KB', 'MB', 'GB', 'TB'][i]}`
 }
 
+const allowDrop = (e) => {
+  e.preventDefault()
+}
+
+const drop = (e) => {
+  e.preventDefault()
+  if (!e.dataTransfer.files.length) {
+    return
+  }
+  fileInput.value.files = e.dataTransfer.files
+  onFileChange()
+}
+
+onMounted(() => {
+  document.addEventListener('dragover', allowDrop)
+  document.addEventListener('drop', drop)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('dragover', allowDrop)
+  document.removeEventListener('drop', drop)
+})
+
 </script>
 
 <template>
   <div>
     <h1 class="brand">Open<span class="cdn">CDN</span></h1>
-    <input type="file" ref="fileInput" style="display: none" @change="onFileChange" />
+    <input type="file" ref="fileInput" style="display: none" @change="onFileChange" multiple />
     <button @click="upload" :disabled="uploading">Upload a file</button>
 
     <div v-if="files.length" class="files">
@@ -147,8 +174,10 @@ const hsize = (bytes) => {
       </div>
     </div>
     <div v-show="uploading" class="uploading-dialog">
-      <h2>Uploading...</h2>
-      <progress></progress>
+      <div class="uploading-container">
+        <h2>Uploading...</h2>
+        <progress></progress>
+      </div>
     </div>
   </Teleport>
   <Teleport to="body">
@@ -297,6 +326,41 @@ const hsize = (bytes) => {
   z-index: 100;
 }
 
+.uploading-dialog .uploading-container {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploading-dialog h2 {
+  color: #333;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.uploading-dialog progress {
+  width: 100%;
+  max-width: 300px;
+  height: 1rem;
+  border-radius: 5px;
+  border: none;
+  background: #333;
+}
+
+.uploading-dialog progress::-webkit-progress-bar {
+  background: #333;
+  border-radius: 5px;
+}
+
+.uploading-dialog progress::-webkit-progress-value {
+  background: #006650;
+  border-radius: 5px;
+}
+
 .modal {
   position: fixed;
   top: 0;
@@ -358,5 +422,11 @@ const hsize = (bytes) => {
 
 .actions {
   margin-top: 1rem;
+}
+
+
+/** If there is file dragging change style of the upload a file button */
+.files.dragging .upload-file {
+  background: #006650;
 }
 </style>

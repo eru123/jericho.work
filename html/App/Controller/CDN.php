@@ -42,7 +42,7 @@ class CDN extends Controller
                 'status' => false,
                 'error' => "Rate limit exceeded, please try again tomorrow.",
             ];
-        } 
+        }
         // else if (Rate::ip('i', 2, 'cdn_map')) {
         //     return [
         //         'status' => false,
@@ -96,7 +96,7 @@ class CDN extends Controller
                     $fo['mime'] = $f['type'];
                     $fo['name'] = $f['name'];
 
-                    $key = date('YmdHis') . '-' . $fo['sri'] . '-' . $fo['name'];
+                    $key = date('YmdHis') . '-' . hash('md5', implode('; ', $fo));
                     $fo['key'] = $key;
 
                     $ff = fopen($f['tmp_name'], 'r');
@@ -202,7 +202,7 @@ class CDN extends Controller
                 $error_message = 'No file uploaded';
             }
         }
-        
+
         return [
             'status' => $total_uploaded > 0,
             'message' => $total_uploaded . ' file(s) uploaded successfully',

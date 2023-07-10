@@ -138,3 +138,8 @@ function vite(Router &$router, string $base, bool $prod, array $data = [], $call
         }
     });
 }
+
+function is_dev()
+{
+    return in_array(trim(strtolower(env('APP_ENV', 'production'))), ['dev', 'development']);
+}

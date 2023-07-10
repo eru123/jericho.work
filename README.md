@@ -10,7 +10,7 @@ gpg --list-secret-keys --keyid-format LONG
 
 whereis gpg
 git config --global gpg.program /usr/bin/gpg
-git config --global user.signingkey 7E8C532921D7F76A
+git config --global user.signingkey <keyid>
 git config --global commit.gpgsign true
 
 # Memcached

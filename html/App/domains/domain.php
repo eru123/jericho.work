@@ -5,7 +5,7 @@ use eru123\router\Router;
 $router = new Router();
 
 $router->get('/', function () {
-    Router::status_page(200, 'Hi there!', 'The domain is working! You can start building your website now.');
+    Router::status_page(200, 'Welcome!', 'Hi there! The domain you are visiting is currently not configured, please come back later.');
 });
 
 $router->get('/info', function () {

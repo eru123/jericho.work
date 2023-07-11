@@ -11,8 +11,8 @@ use App\Plugin\Domain;
 
 DotEnv::load(__DIR__);
 
-$domain = Domain::instance(__DIR__.'/App/domains');
-$domain->createVirtualHost(env('DOMAIN', 'localhost'));
-$domain->createVirtualHost(env('CDN_DOMAIN', 'localhost'), 'cdn');
+$domain = Domain::instance(__DIR__ . '/App/domains');
+$domain->createVirtualHost(env('DOMAIN'), 'main');
+$domain->createVirtualHost(env('CDN_DOMAIN'), 'cdn');
 
 $domain->serve();

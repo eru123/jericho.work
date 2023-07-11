@@ -1,4 +1,16 @@
 # jericho.work
+This repository will be the base of all my web projects, research and experiment before it goes to production.
+
+### This repository features the following:
+ - **Frontend** - Usage of different Fron-end frameworks (Vue, React.js) together with PHP
+ - **VHosts** - In this project I use a default apache2 configuration where all apache2 vhosts points to a single DocRoot and use a Domain plugin to handle different domains
+ - **Static Files** - In addition to `VHosts`, it will be also packed with Static file serving where we can serve files more securely (Middlewares, File Traversal Protection)
+ - **CDN** and **Cloud Storage** - In able to support Storage and High Availability of static files, we built this project on top of Cloudflare CDN and Cloudflare R2 Storage
+
+### Purpose:
+ - I support Open Source and as for Transparency of our free services, this repository will be open to the public and open for Contributions
+ - Create Light weight, Fast and Alternative Technology for Web Applications
+ - Help developers and students on their Research and Experiments
 
 # For Production
  - Copy the Project into your Apache2 Document Root `/var/www`

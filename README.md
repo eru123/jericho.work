@@ -25,6 +25,10 @@ We recommend to use a VPS or a Cloud Server for this project. It is not recommen
 
 Another reason for using VPS is that we will be taking advantage of having multiple domains and wildcard domains in a single server. I know that this might not be recommended because if the app is compromised or down, all other apps or domains will be affected, and we understand that well. But one of the purpose of this project is to create a lightweight, cost effective and alternative technology for web applications. So we will be using a single server for all of our apps and domains. If the a scaling issues arises, we will be using a load balancer and multiple servers to handle the load. As of now our main focus is the development and the research of the project.
 
+### PORTS Used
+Please ensure that the following ports are not used by other apps, in the development
+ - 3000
+
 ## CDN Frontend Development
 ```bash
 cd html

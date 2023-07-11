@@ -9,8 +9,40 @@ This repository will be the base of all my web projects, research and experiment
 
 ### Purpose:
  - I support Open Source and as for Transparency of our free services, this repository will be open to the public and open for Contributions
- - Create Light weight, Fast and Alternative Technology for Web Applications
+ - Create Light weight, Cosft Effective, Fast and Alternative Technology for Web Applications
  - Help developers and students on their Research and Experiments
+
+## Frontend Development
+For the frontend development, we wanted to support different frameworks and technologies. We will be using Vue.js as our primary framework frontend as I the owner of this repository is more familiar with Vue.js (Ako batas dito). Technically speaking, anything that vitejs supports, it should be able to run in this project as well (but need to be tested).
+
+For the environment, we will be using `pnpm` as our package manager. It is a fast, disk space efficient and node_modules efficient package manager. It is also compatible with `npm` and `yarn` so you can still use your favorite package manager (it's just that I prefer `pnpm`).
+
+We will be using `gulp` as our task runner. It will be used to install the project dependencies, build the project and run the project. It will also be used to run the project in development mode in parallel if one or more of the frontend frameworks are used.
+
+Ubuntu 20.04 LTS is the primary OS for this project. It is the most stable and most supported OS for this project. It is also the most used OS in the world so it is the best choice for this project.
+
+We recommend to use a VPS or a Cloud Server for this project. It is not recommended to use a shared hosting for this project as it will be hard to configure and it will be hard to maintain.
+
+Another reason for using VPS is that we will be taking advantage of having multiple domains and wildcard domains in a single server. I know that this might not be recommended because if the app is compromised or down, all other apps or domains will be affected, and we understand that well. But one of the purpose of this project is to create a lightweight, cost effective and alternative technology for web applications. So we will be using a single server for all of our apps and domains. If the a scaling issues arises, we will be using a load balancer and multiple servers to handle the load. As of now our main focus is the development and the research of the project.
+
+## CDN Frontend Development
+```bash
+cd html
+```
+
+Change CDN mode to Development.
+```env
+# .env
+CDN_PROD=false
+```
+Run the project frontend in development mode.
+```bash
+gulp dev
+```
+
+Lastly, tunnel your localhost to the VPS server so you can use access the project in your local machine. If you are using remote vscode, you can use the port forwarding easily.
+
+If you are going to tunnel or serve the dev server using different methods, make sure to change `client` property that you passed onto the vite function in the `cdn.domain.php` file.
 
 # For Production
  - Copy the Project into your Apache2 Document Root `/var/www`

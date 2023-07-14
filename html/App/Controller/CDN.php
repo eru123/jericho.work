@@ -215,7 +215,7 @@ class CDN extends Controller
     {
         $db = DB::instance();
         $id = $c->params['id'];
-        $rec = $db->query('SELECT * FROM `cdn` WHERE `id` = ? AND `deleted_at` IS NULL', [$id])->fetch();
+        $rec = $db->query('SELECT `name`, `r2key` FROM `cdn` WHERE `id` = ? AND `deleted_at` IS NULL', [$id])->fetch();
         if (!$rec) {
             return false;
         }
@@ -240,7 +240,7 @@ class CDN extends Controller
     {
         $db = DB::instance();
         $id = $c->params['id'];
-        $rec = $db->query('SELECT * FROM `cdn` WHERE `id` = ? AND `deleted_at` IS NULL', [$id])->fetch();
+        $rec = $db->query('SELECT `name`, `r2key` FROM `cdn` WHERE `id` = ? AND `deleted_at` IS NULL', [$id])->fetch();
         if (!$rec) {
             return false;
         }

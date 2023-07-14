@@ -1,6 +1,9 @@
 <script setup>
 
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, provide } from 'vue'
+import TextCopy from './components/TextCopy.vue';
+import ButtonLink from './components/ButtonLink.vue';
+
 const fileInput = ref(null)
 const uploading = ref(false)
 
@@ -69,16 +72,6 @@ const modalClose = () => {
   modalCloseCallback.value = null
 }
 
-const copy = (text) => {
-  navigator.clipboard.writeText(text)
-    .then(() => {
-      createModal('Copied!', 'The URL has been copied to your clipboard.')
-    })
-    .catch(() => {
-      createModal('Error', 'Failed to copy the text to your clipboard. Please try on a browser that supports this feature or copy the text manually.')
-    })
-}
-
 const hsize = (bytes) => {
   const i = Math.floor(Math.log(bytes) / Math.log(1024))
   return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${['B', 'KB', 'MB', 'GB', 'TB'][i]}`
@@ -107,6 +100,8 @@ onUnmounted(() => {
   document.removeEventListener('drop', drop)
 })
 
+provide('createModal', createModal)
+
 </script>
 
 <template>
@@ -122,42 +117,14 @@ onUnmounted(() => {
           <h3 class="file-header">
             <div class="file-name">{{ f.file.name }}<br /><small>{{ hsize(f.file.size) }}</small></div>
             <div class="file-actions">
-              <a :href="f.stream" target="_blank">Stream</a>
-              <a :href="f.download" target="_blank">Download</a>
+              <ButtonLink :href="f.stream" text="Stream" />
+              <ButtonLink :href="f.download" text="Download" />
             </div>
           </h3>
           <div class="file-copies">
-
-            <div class="file-copy">
-              <span class="file-copy-label">
-                Stream URL
-              </span>
-              <div class="file-copy-data">
-                <input type="text" :value="f.stream" readonly />
-                <button @click="copy(f.stream)">Copy</button>
-              </div>
-            </div>
-
-            <div class="file-copy">
-              <span class="file-copy-label">
-                Download URL
-              </span>
-              <div class="file-copy-data">
-                <input type="text" :value="f.download" readonly />
-                <button @click="copy(f.download)">Copy</button>
-              </div>
-            </div>
-
-            <div class="file-copy" v-if="f?.html?.tag">
-              <span class="file-copy-label">
-                HTML Tag
-              </span>
-              <div class="file-copy-data">
-                <input type="text" :value="f.html.tag" readonly />
-                <button @click="copy(f.html.tag)">Copy</button>
-              </div>
-            </div>
-
+            <TextCopy :text="f.stream" label="Stream URL" />
+            <TextCopy :text="f.download" label="Download URL" />
+            <TextCopy :text="f?.html?.tag" label="HTML Tag" v-if="f?.html?.tag" />
           </div>
         </div>
       </div>
@@ -238,64 +205,10 @@ onUnmounted(() => {
   gap: .5rem;
 }
 
-.file-actions a {
-  padding: .25rem 1rem;
-  font-size: 1rem;
-  border-radius: .25rem;
-  background: #006650;
-  color: #fff;
-}
-
-.file-actions a:hover {
-  background: #00503f;
-}
-
 .file-copies {
   margin-top: 1rem;
   display: flex;
   flex-direction: column;
-}
-
-.file-copy {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
-}
-
-.file-copy-label {
-  font-size: 1rem;
-  text-align: left;
-  color: #cfcfcf;
-}
-
-.file-copy-data {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .5rem;
-}
-
-.file-copy-data input[readonly] {
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  padding: .25rem .5rem;
-  font-size: 1rem;
-  width: 100%;
-  background: #fafafa;
-  color: #333;
-}
-
-.file-copy-data button {
-  padding: .25rem .5rem;
-  border-radius: .25rem;
-  transition: all .2s ease;
-  border: none;
-  background: #006650;
-  color: #fff;
-}
-
-.file-copy-data button:hover {
-  background: #00503f;
 }
 
 .brand {

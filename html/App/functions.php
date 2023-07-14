@@ -66,8 +66,8 @@ function vite(Router &$router, string $base, bool $prod, array $data = [], $call
     $vite = Vite::instance();
     $vite->template($template);
 
-    $favicon = $favicon ? rtrim($base, '/') . '/' . ltrim($favicon, '/') : null;
-    $favicon_html = $favicon ? '<link rel="icon" href="' . $favicon . '">' : '';
+    $favicon = $favicon ? rtrim($base, "/") . "/" . ltrim($favicon, "/") : null;
+    $favicon_html = $favicon ? "<link rel=\"icon\" href=\"$favicon\">" : "";
     $vite->header($favicon_html);
 
     $vite->seo([

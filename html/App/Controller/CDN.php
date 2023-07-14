@@ -29,7 +29,7 @@ class CDN extends Controller
                 'unpkg',
                 'cloudflare',
             ],
-            'image' => 'https://cdn.jericho.work/stream/1/opencdn.png',
+            'image' => env('CDN_URL') . '/cover.png',
             'url' => base_url(),
             'type' => 'website'
         ]);

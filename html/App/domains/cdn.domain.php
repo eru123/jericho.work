@@ -16,13 +16,6 @@ $router->post('/upload', 'App\Controller\CDN@upload');
 $router->get('/stream/$id/$name', 'App\Controller\CDN@stream');
 $router->get('/download/$id/$name', 'App\Controller\CDN@download');
 
-vite($router, '/', env('CDN_PROD', true), [
-    'entry' => 'src/main.js',
-    // 'client' => 'http://127.0.0.1:3000',
-    // 'public' => __DIR__ . '/../../client/cdn/public',
-    // 'src' => __DIR__ . '/../../client/cdn/src',
-    'dist' => __DIR__ . '/../../client/cdn/dist',
-    'favicon' => 'favicon.ico',
-], 'App\Controller\CDN::index');
+$router->static('/', [__DIR__ . '/../../client/cdn/dist'], [], 'App\Controller\CDN::index');
 
 return $router;

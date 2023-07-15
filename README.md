@@ -5,7 +5,7 @@ This repository will be the base of all my web projects, research and experiment
  - **Frontend** - Usage of different Fron-end frameworks (Vue, React.js) together with PHP
  - **VHosts** - In this project I use a default apache2 configuration where all apache2 vhosts points to a single DocRoot and use a Domain plugin to handle different domains
  - **Static Files** - In addition to `VHosts`, it will be also packed with Static file serving where we can serve files more securely (Middlewares, File Traversal Protection)
- - **CDN** and **Cloud Storage** - In able to support Storage and High Availability of static files, we built this project on top of Cloudflare CDN and Cloudflare R2 Storage
+ - **CDN** and **Cloud Storage** - In able to support Storage and High Availability of static files, we built this project on top of Cloudflare CDN and Cloudflare R2 Storage (When I get enough funds for this project I might use Cloudflare Cache Reserved and increase API limits of our CDN Service)
 
 ### Purpose:
  - I support Open Source and as for Transparency of our free services, this repository will be open to the public and open for Contributions

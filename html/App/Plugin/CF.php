@@ -93,6 +93,6 @@ class CF
         $result = curl_exec($ch);
         curl_close($ch);
         $res = json_decode($result, true);
-        return $res['success'];
+        return isset($res['success']) && $res['success'] === true;
     }
 }

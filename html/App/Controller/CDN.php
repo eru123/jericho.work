@@ -30,7 +30,7 @@ class CDN extends Controller
                 'cloudflare',
             ],
             'image' => env('CDN_URL') . '/cover.png',
-            'url' => base_url(),
+            'url' => env('CDN_URL'),
             'type' => 'website'
         ]);
     }

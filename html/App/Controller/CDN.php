@@ -11,13 +11,25 @@ use eru123\router\Context;
 
 class CDN extends Controller
 {
-    public function index()
+    public function index(Context $c)
     {
-        Vite::instance()->data([
+        if ($c->file_path) {
+            return null;
+        }
+
+        $vite = Vite::instance();
+        $vite->setDist(__DIR__ . '/../../client/cdn/dist');
+        
+        $vite->setAppId('app');
+        $vite->useTemplate('vite');
+
+        $vite->data([
             'app_title' => 'OpenCDN',
         ]);
 
-        Vite::instance()->seo([
+        $vite->header("<link rel=\"icon\" href=\"/favicon.ico\">");
+
+        $vite->seo([
             'title' => 'OpenCDN',
             'description' => 'Fast and Free Content Delivery Network (CDN) Alternative',
             'keywords' => [
@@ -33,6 +45,7 @@ class CDN extends Controller
             'url' => env('CDN_URL'),
             'type' => 'website'
         ]);
+        return $vite->render();
     }
 
     public function upload(Context $c)

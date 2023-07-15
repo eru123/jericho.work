@@ -12,10 +12,6 @@ $router->error(function (Throwable $e) {
     ];
 });
 
-vite($router, '/', env('CDN_PROD', true), [
-    'entry' => 'src/main.js',
-    'dist' => __DIR__ . '/../../client/admin/dist',
-    'favicon' => 'favicon.ico',
-], 'App\Controller\CDN::index');
+$router->static('/', [__DIR__ . '/../../client/admin/dist'], [], 'App\Controller\Admin::index');
 
 return $router;

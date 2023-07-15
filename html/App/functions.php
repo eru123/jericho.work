@@ -143,3 +143,57 @@ function is_dev()
 {
     return in_array(trim(strtolower(env('APP_ENV', 'production'))), ['dev', 'development']);
 }
+
+function append_file($file, $content)
+{
+    $f = realpath($file);
+    if (!$f || !file_exists($f)) {
+        return false;
+    }
+    $handle = fopen($f, 'a');
+    fwrite($handle, $content);
+}
+
+function prepend_file($file, $content)
+{
+    $f = realpath($file);
+    if (!$f || !file_exists($f)) {
+        return false;
+    }
+    $handle = fopen($f, 'r+');
+    $len = strlen($content);
+    $final_len = filesize($f) + $len;
+    $cache_old = fread($handle, $len);
+    rewind($handle);
+    $i = 1;
+    while (ftell($handle) < $final_len) {
+        fwrite($handle, $content);
+        $content = $cache_old;
+        $cache_old = fread($handle, $len);
+        fseek($handle, $i * $len);
+        $i++;
+    }
+    return true;
+}
+
+function writelog($content, $append = true, $file = null)
+{
+    $file = $file ?? __DIR__ . '/../logs/' . date('Y-m-d') . '.log';
+    if (!file_exists($file)) {
+        touch($file);
+    }
+    
+    if (is_array($content) || is_object($content)) {
+        $content = json_encode($content, JSON_PRETTY_PRINT);
+    }
+    $msg = "[\033[34m" . date("Y-m-d H:i:s") . "\033[0m] $content\n";
+    if (!is_writable($file)) {
+        return false;
+    }
+
+    if ($append) {
+        return append_file($file, $msg);
+    }
+
+    return prepend_file($file, $msg);
+}

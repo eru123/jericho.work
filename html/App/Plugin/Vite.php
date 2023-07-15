@@ -20,6 +20,24 @@ class Vite
         return static::$instance;
     }
 
+    public function footer(string $footer)
+    {
+        if (isset($this->data['footers'])) {
+            $this->data['footers'] .= $footer;
+        } else {
+            $this->data['footers'] = $footer;
+        }
+    }
+
+    public function extend(string $extend)
+    {
+        if (isset($this->data['extends'])) {
+            $this->data['extends'] .= $extend;
+        } else {
+            $this->data['extends'] = $extend;
+        }
+    }
+
     public function data(array $data)
     {
         $this->data = array_merge($this->data, $data);
@@ -45,7 +63,8 @@ class Vite
         $this->data['template'] = $template;
     }
 
-    public function build() {
+    public function build()
+    {
         return Format::template(
             $this->data['template'],
             array_merge(

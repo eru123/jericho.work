@@ -8,3 +8,4 @@ html/.env
 /*.jericho.work
 pnpm-lock.yaml
 package-lock.json
+html/logs/

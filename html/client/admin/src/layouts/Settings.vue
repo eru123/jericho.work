@@ -33,7 +33,7 @@ watch(darkMode, () => theme.global.name.value = darkMode.value ? 'dark' : 'light
 <template>
     <v-app>
         <v-navigation-drawer v-model="drawer" :border="darkMode ? 0 : 1">
-            <v-toolbar>
+            <v-toolbar :elevation="darkMode ? 0 : 4">
                 <v-toolbar-title>Settings</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="drawer = !drawer">
@@ -51,7 +51,7 @@ watch(darkMode, () => theme.global.name.value = darkMode.value ? 'dark' : 'light
             </v-list>
         </v-navigation-drawer>
 
-        <v-app-bar>
+        <v-app-bar :elevation="darkMode ? 0 : 4">
             <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!drawer"></v-app-bar-nav-icon>
             <v-toolbar-title>{{ navTitle }}</v-toolbar-title>
             <v-spacer></v-spacer>

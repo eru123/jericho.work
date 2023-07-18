@@ -4,6 +4,9 @@ namespace App\Plugin;
 
 use Memcached;
 
+/**
+ * Memcached wrapper
+ */
 class MC
 {
     static $pool = [];

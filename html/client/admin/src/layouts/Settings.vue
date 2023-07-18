@@ -1,64 +1,65 @@
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const drawer = ref(null)
 
-const sidebarOpen = ref(false)
-const sidebar = [
-    {
-        type: 'link',
-        label: 'Overview',
-        icon: 'home',
-        to: { name: 'Overview' },
-        active: router.currentRoute.value.name === 'Overview'
-    },
-    {
-        type: 'group',
-        label: 'Environment',
-        icon: 'cog',
-        children: [
-            {
-                type: 'link',
-                label: 'System',
-                icon: 'cog',
-                to: { name: 'SystemEnvironment' },
-                active: router.currentRoute.value.name === 'SystemEnvironment'
-            },
-            {
-                type: 'link',
-                label: 'Application',
-                icon: 'cog',
-                to: { name: 'ApplicationEnvironment' },
-            }
-        ]
-    },
-];
-
-watchEffect(() => {
-    console.log(router)
-    console.log(sidebar)
+const links = computed(() => {
+    return [
+        {
+            name: 'Overview',
+            icon: 'mdi-view-dashboard',
+            to: '/overview',
+            active: router.currentRoute.value.path === '/overview'
+        },
+        {
+            name: 'CDN',
+            icon: 'mdi-cloud',
+            to: '/cdn',
+            active: router.currentRoute.value.path === '/cdn'
+        },
+        {
+            name: 'Settings',
+            icon: 'mdi-cog',
+            to: '/settings',
+            active: router.currentRoute.value.path === '/settings'
+        },
+    ]
 })
+
+const navTitle = computed(() => links.value.find(link => link.active)?.name ?? 'Dashboard')
 
 </script>
 <template>
-    <div class="h-screen overflow-hidden">
-        <div class="min-h-full w-[250px] bg-blue-50">
-            <div v-for="(s, i) in sidebar" :key="i">
-                <router-link v-if="s.type == 'link'" :to="s.to">
-                    <i :class="`fas fa-${s.icon} mr-2`"></i>
-                    <span>{{ s.label }}</span>
-                </router-link>
-                <div v-else-if="s.type == 'group'">
-                    <button>
-                        <i :class="`fas fa-${s.icon} mr-2`"></i>
-                        <span>{{ s.label }}</span>
-                    </button>
-                    <div v-for="(c, ii) in s.children" v-if="c?.type == 'link'" :key="`${i}-${ii}`" :to="c.to">
-                        {{ c }}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <v-app>
+        <v-navigation-drawer v-model="drawer" :border="0">
+            <v-toolbar>
+                <v-toolbar-title>Admin</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn icon @click="drawer = !drawer">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <v-list :lines="false" ref="sidebarlist">
+                <v-list-subheader>MENU</v-list-subheader>
+                <v-list-item v-for="item in links" :key="item.name" :to="item.to" :active="item.active" color="primary">
+                    <template v-slot:prepend>
+                        <v-icon>{{ item.icon }}</v-icon>
+                    </template>
+                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-navigation-drawer>
+
+        <v-app-bar>
+            <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!drawer"></v-app-bar-nav-icon>
+            <v-toolbar-title>{{ navTitle }}</v-toolbar-title>
+        </v-app-bar>
+
+        <v-main>
+            <router-view />
+        </v-main>
+    </v-app>
 </template>
+  

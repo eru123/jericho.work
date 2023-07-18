@@ -1,9 +1,12 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useTheme } from 'vuetify'
+import usePersistentData from '@/composables/usePersistentData'
 
 const router = useRouter()
-const drawer = ref(null)
+const theme = useTheme()
+const drawer = usePersistentData('settings-drawer', null)
 
 const links = computed(() => {
     return [
@@ -23,11 +26,13 @@ const links = computed(() => {
 })
 
 const navTitle = computed(() => links.value.find(link => link.active)?.name ?? 'General')
+const darkMode = usePersistentData('dark-mode', false)
+watch(darkMode, () => theme.global.name.value = darkMode.value ? 'dark' : 'light', { immediate: true })
 
 </script>
 <template>
     <v-app>
-        <v-navigation-drawer v-model="drawer" :border="0">
+        <v-navigation-drawer v-model="drawer" :border="darkMode ? 0 : 1">
             <v-toolbar>
                 <v-toolbar-title>Settings</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -49,6 +54,10 @@ const navTitle = computed(() => links.value.find(link => link.active)?.name ?? '
         <v-app-bar>
             <v-app-bar-nav-icon @click="drawer = !drawer" v-if="!drawer"></v-app-bar-nav-icon>
             <v-toolbar-title>{{ navTitle }}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon @click="darkMode = !darkMode">
+                <v-icon>{{ darkMode ? 'mdi-weather-night' : 'mdi-weather-sunny' }}</v-icon>
+            </v-btn>
         </v-app-bar>
 
         <v-main>

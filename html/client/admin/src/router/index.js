@@ -6,7 +6,7 @@ const routes = [
         redirect: () => {
             // add logic for auth check here
             return {
-                path: '/overview',
+                path: '/general',
             }
         }
     },
@@ -17,9 +17,15 @@ const routes = [
         component: () => import('@/layouts/Settings.vue'),
         children: [
             {
-                path: '/overview',
-                name: 'Overview',
-                component: () => import('@/views/Overview.vue')
+                path: '/general',
+                name: 'General',
+                component: () => import('@/views/General.vue')
+            },
+
+            {
+                path: '/cdn',
+                name: 'CDN',
+                component: () => import('@/views/CDN.vue')
             }
         ]
     }

@@ -8,34 +8,28 @@ const drawer = ref(null)
 const links = computed(() => {
     return [
         {
-            name: 'Overview',
-            icon: 'mdi-view-dashboard',
-            to: '/overview',
-            active: router.currentRoute.value.path === '/overview'
+            name: 'General',
+            icon: 'mdi-cog',
+            to: '/general',
+            active: router.currentRoute.value.path === '/general'
         },
         {
             name: 'CDN',
             icon: 'mdi-cloud',
             to: '/cdn',
             active: router.currentRoute.value.path === '/cdn'
-        },
-        {
-            name: 'Settings',
-            icon: 'mdi-cog',
-            to: '/settings',
-            active: router.currentRoute.value.path === '/settings'
-        },
+        }
     ]
 })
 
-const navTitle = computed(() => links.value.find(link => link.active)?.name ?? 'Dashboard')
+const navTitle = computed(() => links.value.find(link => link.active)?.name ?? 'General')
 
 </script>
 <template>
     <v-app>
         <v-navigation-drawer v-model="drawer" :border="0">
             <v-toolbar>
-                <v-toolbar-title>Admin</v-toolbar-title>
+                <v-toolbar-title>Settings</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="drawer = !drawer">
                     <v-icon>mdi-close</v-icon>

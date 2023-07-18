@@ -11,10 +11,7 @@ import * as directives from 'vuetify/directives'
 const app = createApp(App)
 const vuetify = createVuetify({
     components,
-    directives,
-    theme: {
-        defaultTheme: 'dark',
-    },
+    directives
 })
 
 app.use(router)

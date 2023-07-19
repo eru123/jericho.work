@@ -1,0 +1,41 @@
+{
+    "vue": {
+        "prefix": "vue",
+        "body": [
+            "<script setup>",
+            "import { ref } from 'vue'",
+            "",
+            "$1",
+            "</script>",
+            "<template>",
+            "   <div>$2</div>",
+            "</template>",
+            "<style scoped>",
+            "$3",
+            "</style>"
+        ],
+        "description": "vue 3 setup"
+    },
+    "template": {
+        "prefix": "template",
+        "body": [
+            "<template>$1</template>"
+        ],
+        "description": "vue 3 template"
+    },
+    "setup": {
+        "prefix": "setup",
+        "body": [
+            "<script setup>",
+            "import { ref } from 'vue'",
+            "$1",
+            "</script>"
+        ],
+        "description": "vue 3 setup"
+    },
+    "style": {
+        "prefix": "style",
+        "body": "<style scoped>$1</style>",
+        "description": "vue 3 style"
+    },
+}

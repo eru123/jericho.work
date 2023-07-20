@@ -13,5 +13,4 @@ $router->error(function (Throwable $e) {
 });
 
 $router->static('/', [__DIR__ . '/../../client/admin/dist'], [], 'App\Controller\Admin::index');
-
 return $router;

@@ -36,7 +36,7 @@ const onFileChange = () => {
   }
   uploading.value = true
 
-  fetch('/upload', {
+  fetch('/cdn/upload', {
     method: 'POST',
     body: formData
   })

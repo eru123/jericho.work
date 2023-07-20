@@ -10,3 +10,4 @@ html/.env
 pnpm-lock.yaml
 package-lock.json
 html/logs/
+/*.com

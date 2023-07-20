@@ -8,19 +8,19 @@ use App\Plugin\Vite;
 
 function base_url($path = '')
 {
-    $base_url = env('BASE_URL', 'http://localhost');
+    $base_url = env('BASE_URL', '/');
     return rtrim($base_url, '/') . '/' . ltrim($path, '/');
 }
 
 function cdn_stream(string $id, string $name = null)
 {
-    $cdn_url = env('CDN_URL', 'http://localhost/cdn');
+    $cdn_url = env('BASE_URL') . '/cdn';
     return rtrim($cdn_url, '/') . "/stream/$id" . ($name ? "/$name" : '');
 }
 
 function cdn_download(string $id, string $name = null)
 {
-    $cdn_url = env('CDN_URL', 'http://localhost/cdn');
+    $cdn_url = env('BASE_URL') . '/cdn';
     return rtrim($cdn_url, '/') . "/download/$id" . ($name ? "/$name" : '');
 }
 
@@ -182,7 +182,7 @@ function writelog($content, $append = true, $file = null)
     if (!file_exists($file)) {
         touch($file);
     }
-    
+
     if (is_array($content) || is_object($content)) {
         $content = json_encode($content, JSON_PRETTY_PRINT);
     }

@@ -20,6 +20,8 @@ if ($public_dir && is_dir($public_dir)) {
 
 
 $cdn = require __APP__  . '/routes/cdn.php';
+$admin = require __APP__  . '/routes/admin.php';
 
 $router->child($cdn);
+$router->child($admin);
 return $router;

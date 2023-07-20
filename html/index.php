@@ -6,7 +6,7 @@ use App\Plugin\Domain;
 
 $domain = Domain::instance(__DIR__ . '/App/domains');
 $domain->createVirtualHost(env('DOMAIN'), 'main');
-$domain->createVirtualHost(env('CDN_DOMAIN'), 'cdn');
-$domain->createVirtualHost(env('ADMIN_DOMAIN'), 'admin');
+$domain->createVirtualHost(env('CDN_DOMAIN'), 'main');
+$domain->createVirtualHost(env('ADMIN_DOMAIN'), 'main');
 
 $domain->serve();

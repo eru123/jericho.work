@@ -2,7 +2,7 @@
     "git.enableCommitSigning": true,
     "git.autofetch": true,
     "files.exclude": {
-        "*.jericho.work": true
+        "*.jericho.work": true,
     },
     "vue.codeActions.enabled": false
 }

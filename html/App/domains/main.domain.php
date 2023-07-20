@@ -18,4 +18,8 @@ if ($public_dir && is_dir($public_dir)) {
     $router->static('/', [$public_dir], ['index.php', 'index.html']);
 }
 
+
+$cdn = require __APP__  . '/routes/cdn.php';
+
+$router->child($cdn);
 return $router;

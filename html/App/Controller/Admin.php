@@ -20,7 +20,8 @@ class Admin extends Controller
         $vite->data([
             'app_title' => 'Admin',
         ]);
+        $vite->header("<link rel=\"icon\" href=\"/admin/favicon.ico\">");
 
-        return $vite->render('', false);
+        return $vite->render();
     }
 }

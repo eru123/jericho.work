@@ -14,12 +14,12 @@ export default defineConfig({
     },
   },
   publicDir: 'public',
-  base: './',
+  base: '/cdn',
   build: {
     manifest: true,
     outDir: 'dist',
     emptyOutDir: true,
-    assetsDir: '__',
+    assetsDir: 'cdn/__',
     rollupOptions: {
       input: {
         main: 'src/main.js'

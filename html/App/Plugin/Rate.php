@@ -24,7 +24,7 @@ class Rate
 
     public function __construct()
     {
-        $this->mc = MC::instance();
+        $this->mc = MC::instance(env('APP_ENV', 'development'));
     }
 
     public static function ip(string $mode, int $limit, string $prefix = '')

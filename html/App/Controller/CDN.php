@@ -19,16 +19,12 @@ class CDN extends Controller
 
         $vite = Vite::instance();
         $vite->setDist(__DIR__ . '/../../client/cdn/dist');
-        
         $vite->setAppId('app');
         $vite->useTemplate('vite');
-
         $vite->data([
             'app_title' => 'OpenCDN',
         ]);
-
-        $vite->header("<link rel=\"icon\" href=\"/favicon.ico\">");
-
+        $vite->header("<link rel=\"icon\" href=\"/cdn/favicon.ico\">");
         $vite->seo([
             'title' => 'OpenCDN',
             'description' => 'Fast and Free Content Delivery Network (CDN) Alternative',
@@ -41,8 +37,8 @@ class CDN extends Controller
                 'unpkg',
                 'cloudflare',
             ],
-            'image' => env('CDN_URL') . '/cover.png',
-            'url' => env('CDN_URL'),
+            'image' => env('BASE_URL') . '/cdn/cover.png',
+            'url' => env('BASE_URL'),
             'type' => 'website'
         ]);
         return $vite->render();

@@ -10,12 +10,11 @@ export default defineConfig({
     },
   },
   publicDir: 'public',
-  base: './',
   build: {
     manifest: true,
     outDir: 'dist',
     emptyOutDir: true,
-    assetsDir: '__',
+    assetsDir: 'admin/__',
     rollupOptions: {
       input: {
         main: 'src/main.js'

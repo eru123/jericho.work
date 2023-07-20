@@ -33,7 +33,8 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
+    base: '/admin',
+    history: createWebHistory('/admin'),
     routes
 })
 

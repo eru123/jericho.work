@@ -13,7 +13,7 @@ class MC
     static $instance = null;
     private  $id;
 
-    public static function instance(string $id = 'app')
+    public static function instance(string $id = 'development')
     {
         if (static::$instance === null) {
             static::$instance = new static($id);
@@ -21,7 +21,7 @@ class MC
         return static::$instance;
     }
 
-    public function __construct(string $id = 'app')
+    public function __construct(string $id = 'development')
     {
         $this->id = $id;
         if (!isset(static::$pool[$id])) {

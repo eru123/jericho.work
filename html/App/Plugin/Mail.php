@@ -9,9 +9,18 @@ class Mail
 {
     static $instance = null;
     private $smtp;
+    private $copy = null;
     private $template = null;
     private $templateData = [];
-    private $avatar = null;
+    private $queue = false;
+    private $to = [];
+    private $cc = [];
+    private $bcc = [];
+    private $priority = 0;
+    private $subject = '';
+    private $body = ''; 
+    private $user_id = 0;
+    private $parent_id = 0;
 
     public static function instance(bool $debug = false)
     {
@@ -35,6 +44,20 @@ class Mail
 
         $this->smtp->fromName(env('SMTP_FROM_NAME'));
         $this->smtp->fromEmail(env('SMTP_FROM_EMAIL'));
+
+        $this->copy = clone $this->smtp;
+    }
+
+    public function enableQueue()
+    {
+        $this->queue = true;
+        return $this;
+    }
+
+    public function disableQueue()
+    {
+        $this->queue = false;
+        return $this;
     }
 
     public function smtp()
@@ -42,54 +65,53 @@ class Mail
         return $this->smtp;
     }
 
+    public function priority(int $priority)
+    {
+        $this->priority = $priority;
+        return $this;
+    }
+
+
     public function to(string ...$emails)
     {
-        foreach ($emails as $email) {
-            $this->smtp->to($email);
-        }
+        $this->to = $emails + $this->to;
+        return $this;
+    }
 
+    public function cc(string ...$emails)
+    {
+        $this->cc = $emails + $this->cc;
+        return $this;
+    }
+
+    public function bcc(string ...$emails)
+    {
+        $this->bcc = $emails + $this->bcc;
         return $this;
     }
 
     public function subject(string $subject)
     {
-        $this->smtp->subject($subject);
+        $this->subject = $subject;
         return $this;
     }
 
     public function body(string $body)
     {
-        $this->smtp->body($body);
+        $this->body = $body;
         return $this;
     }
 
     public function message(string $message)
     {
-        $this->smtp->body($message);
+        $this->body = $message;
         return $this;
-    }
-
-    public function avatar($path)
-    {
-        $path = realpath($path);
-        if (file_exists($path)) {
-            $this->avatar = file_get_contents($path);
-        }
-    }
-
-    public function avatarFromUrl(string $url)
-    {
-        $this->avatar = file_get_contents($url);
     }
 
     public function send()
     {
         if (!is_null($this->template)) {
             $msg = Format::template($this->template, $this->templateData, FORMAT_TEMPLATE_DOLLAR_CURLY);
-            if (!is_null($this->avatar)) {
-                $this->smtp->attachment($this->avatar, 'avatar.png', 'image/png');
-            }
-            $msg .= "<img src=\"cid:avatar\" />";
             $this->smtp->body($msg);
         }
 
@@ -119,5 +141,11 @@ class Mail
         $smtp->subject($subject);
         $smtp->body($message);
         return $smtp->send();
+    }
+
+    public function queue($data)
+    {
+        $db = DB::instance();
+        $db->insert('mail_queue', $data);
     }
 }

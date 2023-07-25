@@ -13,8 +13,9 @@ class MC
     static $instance = null;
     private  $id;
 
-    public static function instance(string $id = 'development')
+    public static function instance(?string $id = null)
     {
+        if (is_null($id)) $id = env('APP_ENV', 'development');
         if (static::$instance === null) {
             static::$instance = new static($id);
         }
@@ -47,9 +48,9 @@ class MC
         return static::$pool[$this->id]->set($key, $value);
     }
 
-    public function set(string $key, $value)
+    public function set(string $key, $value, int $expire = 0)
     {
-        return static::$pool[$this->id]->set($key, $value);
+        return static::$pool[$this->id]->set($key, $value, $expire);
     }
 
     public function delete(string $key)

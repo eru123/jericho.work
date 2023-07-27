@@ -37,12 +37,7 @@ class Rate
         $identifier = $prefix . str_replace(['.', ':'], '_', $date . "_" . $ip);
         $count = $s->mc()->get($identifier) ?? 0;
 
-        $limit_reach = false;
-
-        if ($count >= $limit) {
-            $limit_reach = true;
-        }
-
+        $limit_reach = $count >= $limit;
         $count += 1;
 
         switch ($mode) {

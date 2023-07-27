@@ -52,13 +52,14 @@ If you are going to tunnel or serve the dev server using different methods, make
  - Copy the Project into your Apache2 Document Root `/var/www`
  - Make sure that the `/var/www/html` folder is the default Server Directory
  - Enable SSL with DNS verification for wildcard subdomains
- - Configure the database
+ - Configure the database on localhost level
  - Configure the memcached on localhost level
  - Configure the cloudflare CDN caching
  - Configure the cloudflare R2 for file storage
  - Generate required API keys including the cache purge, cache configure and R2
  - Configure the .env
  - Install the project dependencies
+ - Configure CloudFlare Proxy or Other IP/DNS Proxy to enable extra layer of security and extra performance.
 ```bash
 cd html
 composer install

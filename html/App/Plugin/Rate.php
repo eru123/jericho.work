@@ -34,15 +34,10 @@ class Rate
         $mode = substr($d, 0, strlen($d) - strpos(strrev($d), $mode));
         $date = date($mode);
         $ip = get_ip();
-        $identifier = str_replace(['.', ':'], $prefix . '_', $date . "_" . $ip);
+        $identifier = $prefix . str_replace(['.', ':'], '_', $date . "_" . $ip);
         $count = $s->mc()->get($identifier) ?? 0;
 
-        $limit_reach = false;
-
-        if ($count >= $limit) {
-            $limit_reach = true;
-        }
-
+        $limit_reach = $count >= $limit;
         $count += 1;
 
         switch ($mode) {

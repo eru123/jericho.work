@@ -125,13 +125,90 @@ class Daemon
 
     function is_second_new()
     {
-        return $this->time !== $this->last_time;
+        return $this->time != $this->last_time;
     }
 
-    function is_second(int $s = 0)
+    function is_second(int ...$s)
     {
         if (!$this->is_second_new()) return false;
-        return $this->time % 60 === $s;
+        $ds = (int) date('s', $this->time);
+        return in_array($ds, $s, true);
+    }
+
+    function second()
+    {
+        return (int) date('s', $this->time);
+    }
+
+    function is_minute(int ...$m)
+    {
+        if (!$this->is_second(0)) return false;
+        $dm = (int) date('i', $this->time);
+        return in_array($dm, $m, true);
+    }
+
+    function minute()
+    {
+        return (int) date('i', $this->time);
+    }
+
+    function is_hour(int ...$h)
+    {
+        if (!$this->is_minute(0)) return false;
+        $dh = (int) date('H', $this->time);
+        return in_array($dh, $h, true);
+    }
+
+    function hour()
+    {
+        return (int) date('H', $this->time);
+    }
+
+    function is_day(int ...$d)
+    {
+        if (!$this->is_hour(0)) return false;
+        $dd = (int) date('d', $this->time);
+        return in_array($dd, $d, true);
+    }
+
+    function day()
+    {
+        return (int) date('d', $this->time);
+    }
+
+    function is_month(int ...$m)
+    {
+        if (!$this->is_day(0)) return false;
+        $dm = (int) date('m', $this->time);
+    }
+
+    function month()
+    {
+        return (int) date('m', $this->time);
+    }
+
+    function is_year(int ...$y)
+    {
+        if (!$this->is_month(0)) return false;
+        $dy = (int) date('Y', $this->time);
+        return in_array($dy, $y, true);
+    }
+
+    function year()
+    {
+        return (int) date('Y', $this->time);
+    }
+
+    function is_date(string $date = null)
+    {
+        if (!$this->is_second_new()) return false;
+        return date('Y-m-d H:i:s', $this->time) == $date;
+    }
+
+    function is_time(int $time = null)
+    {
+        if (!$this->is_second_new()) return false;
+        return $this->time == $time;
     }
 
     public function run(array $callbacks)

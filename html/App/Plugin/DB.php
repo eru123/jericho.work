@@ -11,6 +11,7 @@ class DB
     static $instance = null;
     private $pdo = null;
     private $stmt = null;
+    private $history = [];
 
     public static function instance()
     {
@@ -32,13 +33,33 @@ class DB
         $this->pdo = new PDO($dsn, $user, $pass);
     }
 
+    public function pdo(): PDO
+    {
+        return $this->pdo;
+    }
+
+    public function stmt(): PDOStatement
+    {
+        return $this->stmt;
+    }
+
     public function query(string $sql, array $params = []): PDOStatement
     {
         $sql = Raw::build($sql, $params);
+
+        if (env('APP_ENV') === 'development') {
+            $this->history[] = (string) $sql;
+        }
+
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute();
         $this->stmt = $stmt;
         return $stmt;
+    }
+
+    public function queryHistory(): array
+    {
+        return $this->history;
     }
 
     public function insert(string $table, array $data = []): PDOStatement
@@ -65,16 +86,20 @@ class DB
         return $this->pdo->lastInsertId();
     }
 
-    public function update(string $table, array $data = [], array $where = []): PDOStatement
+    public function update(string $table, array $data = [], array|string $where = null): PDOStatement
     {
         $keys = array_keys($data);
         $values = array_values($data);
         $sql = "UPDATE `$table` SET `" . implode('` = ?, `', $keys) . "` = ?";
-        if (!empty($where)) {
+        if (is_array($where)) {
             $sql .= " WHERE " . implode(' AND ', array_map(function ($k) {
                 return "`$k` = ?";
             }, array_keys($where)));
             $values = array_merge($values, array_values($where));
+        } else if (is_string($where)) {
+            $sql .= " WHERE $where";
+        } else {
+            $sql .= " WHERE 1";
         }
         return $this->query($sql, $values);
     }

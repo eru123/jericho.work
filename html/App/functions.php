@@ -176,9 +176,24 @@ function prepend_file($file, $content)
     return true;
 }
 
+function writelog_prefix($prefix)
+{
+    env_set('LOGFILE_PREFIX', $prefix);
+}
+
 function writelog($content, $append = true, $file = null)
 {
-    $file = $file ?? __DIR__ . '/../logs/' . date('Y-m-d') . '.log';
+    if (!is_dir(__LOGS__)) {
+        mkdir(__LOGS__, 0777, true);
+    }
+
+    $logdir = realpath(__LOGS__);
+    if (!$logdir) {
+        return false;
+    }
+
+    $prefix = env('LOGFILE_PREFIX');
+    $file = $file ?? $logdir . '/' . ($prefix ? $prefix : '') . date('Y-m-d') . '.log';
     if (!file_exists($file)) {
         touch($file);
     }
@@ -186,7 +201,7 @@ function writelog($content, $append = true, $file = null)
     if (is_array($content) || is_object($content)) {
         $content = json_encode($content, JSON_PRETTY_PRINT);
     }
-    $msg = "[\033[34m" . date("Y-m-d H:i:s") . "\033[0m] $content\n";
+    $msg = "[" . date("Y-m-d H:i:s") . "] {$content}" . PHP_EOL;
     if (!is_writable($file)) {
         return false;
     }

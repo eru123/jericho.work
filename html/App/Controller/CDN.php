@@ -18,7 +18,7 @@ class CDN extends Controller
         }
 
         $vite = Vite::instance();
-        $vite->setDist(__DIR__ . '/../../client/cdn/dist');
+        $vite->setDist(__CLIENT__ . '/cdn/dist');
         $vite->setAppId('app');
         $vite->useTemplate('vite');
         $vite->data([

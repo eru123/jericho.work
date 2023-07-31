@@ -14,7 +14,7 @@ class Admin extends Controller
         }
 
         $vite = Vite::instance();
-        $vite->setDist(__DIR__ . '/../../client/admin/dist');
+        $vite->setDist(__CLIENT__ . '/admin/dist');
         $vite->setAppId('app');
         $vite->useTemplate('vite');
         $vite->data([

@@ -28,8 +28,12 @@ class Domain
         $this->dir = $f;
     }
 
-    public function createVirtualHost(string $domain, string $record = null)
+    public function createVirtualHost(?string $domain, string $record = null)
     {
+        if (empty($domain)) {
+            return;
+        }
+
         $domain = strtolower($domain);
         if (!preg_match('/^(([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}|localhost)$/', $domain)) {
             Router::status_page(500, 'Internal Server Error', "Invalid domain name: \"$domain\"");

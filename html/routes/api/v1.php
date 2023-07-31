@@ -2,8 +2,18 @@
 
 use eru123\router\Router;
 
+// APIv1
+
 $v1 = new Router();
 $v1->base('/v1');
+
+// Auth
+
+$auth = new Router();
+$auth->base('/auth');
+$auth->post('/register', 'App\Controller\Auth@register');
+
+// Mail
 
 $mail = new Router();
 $mail->base('/mail');
@@ -18,6 +28,8 @@ $mail->post('/create', 'App\Controller\Mail@send');
 // $mail->post('/delete/$id', 'App\Controller\Mail@delete');
 // $mail->post('/list', 'App\Controller\Mail@list');
 
+// Mail Template
+
 $mailTemplate = new Router();
 $mailTemplate->base('/template');
 $mailTemplate->post('/create', 'App\Controller\MailTemplate@create');
@@ -31,5 +43,6 @@ $mailTemplate->post('/code/$code/update', 'App\Controller\MailTemplate@update');
 $mailTemplate->post('/code/$code/delete', 'App\Controller\MailTemplate@delete');
 $mail->child($mailTemplate);
 
+$v1->child($auth);
 $v1->child($mail);
 return $v1;

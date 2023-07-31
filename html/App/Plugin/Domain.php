@@ -30,7 +30,7 @@ class Domain
 
     public function createVirtualHost(?string $domain, string $record = null)
     {
-        if (!$domain) {
+        if (empty($domain)) {
             return;
         }
 

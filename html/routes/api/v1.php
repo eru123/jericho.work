@@ -12,6 +12,7 @@ $v1->base('/v1');
 $auth = new Router();
 $auth->base('/auth');
 $auth->post('/register', 'App\Controller\Auth@register');
+$auth->post('/login', 'App\Controller\Auth@login');
 
 // Mail
 

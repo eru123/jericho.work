@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Throwable;
+use Exception;
 use App\Models\Users;
 use App\Plugin\DB;
 use eru123\router\Context;
@@ -10,6 +11,38 @@ use eru123\helper\JWT;
 
 class Auth
 {
+    public function bootstrap(Context $c)
+    {
+        try {
+            $authorization = @getallheaders()['Authorization'] ?? null;
+            preg_match('/^(Bearer\s+)?(.+)$/', (string) $authorization, $matches);
+            $token = $matches[2] ?? null;
+            if (!$token) {
+                throw new Exception('Missing Authorization header');
+            }
+            $c->jwt = static::jwt()->decode($token);
+            $c->jwt_error = null;
+        } catch (Throwable $th) {
+            $c->jwt = null;
+            $c->jwt_error = $th->getMessage();
+        }
+    }
+
+    public function guard(Context $c)
+    {
+        if (!$c->jwt) {
+            http_response_code(401);
+            return [
+                'error' => $c->jwt_error ?? 'Missing Authorization header',
+            ];
+        }
+    }
+
+    public static function jwt(): JWT
+    {
+        return new JWT(env('JWT_SECRET', 'secret'), 'HS256');
+    }
+
     public function register(Context $c)
     {
         $rdata = $c->json();
@@ -86,11 +119,11 @@ class Auth
             'iat' => 'now',
         ];
 
-        $jwt = new JWT(env('JWT_SECRET', 'secret'), 'HS256');
-        return $jwt->encode($payload);
+        return static::jwt()->encode($payload);
     }
 
-    public function login(Context $c) {
+    public function login(Context $c)
+    {
         $data = $c->json();
         $required = ['user', 'password'];
         foreach ($required as $key) {
@@ -115,6 +148,44 @@ class Auth
         http_response_code(401);
         return [
             'error' => 'Invalid username or password',
+        ];
+    }
+
+    public function update(Context $c)
+    {
+        $rdata = $c->json();
+        $user_id = $c->jwt['id'];
+        $data = [];
+
+        $allowed = [
+            'user',
+            'password',
+            'alias',
+            'fname',
+            'mname',
+            'lname',
+            'pronoun',
+            'avatar',
+            'country',
+            'city',
+            'state',
+            'zip',
+            'address',
+        ];
+
+        foreach ($allowed as $key) {
+            if (isset($rdata[$key])) {
+                $data[$key] = $rdata[$key];
+            }
+        }
+
+        unset($rdata);
+        unset($allowed);
+
+        return [
+            'id' => $user_id,
+            'success' => 'Successfully updated profile',
+            'data' => $data
         ];
     }
 }

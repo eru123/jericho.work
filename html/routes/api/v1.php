@@ -16,6 +16,7 @@ $auth = new Router();
 $auth->base('/auth');
 $auth->post('/register', 'App\Controller\Auth@register');
 $auth->post('/login', 'App\Controller\Auth@login');
+$auth->post('/update', 'App\Controller\Auth@guard', 'App\Controller\Auth@update');
 
 // Mail
 

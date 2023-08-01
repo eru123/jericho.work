@@ -87,7 +87,7 @@ class Auth
         if ($stmt->rowCount() > 0) {
             try {
                 $id = DB::instance()->pdo()->lastInsertId();
-                $data = Users::get($id);
+                $data = Users::find($id);
                 $token = static::create_token($data, '1hr');
             } catch (Throwable $th) {
                 return [
@@ -182,10 +182,23 @@ class Auth
         unset($rdata);
         unset($allowed);
 
+        $stmt = Users::update($user_id, $data);
+        if ($stmt->rowCount() > 0) {
+            $data = Users::find($user_id);
+            return [
+                'success' => 'Successfully updated your account',
+                'data' => $data,
+            ];
+        }
+
+        http_response_code(400);
         return [
-            'id' => $user_id,
-            'success' => 'Successfully updated profile',
-            'data' => $data
+            'error' => 'Failed to update your account',
         ];
+    }
+
+    public function add_email(Context $c)
+    {
+        // TODO: Add email to user
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Throwable;
 use App\Models\Users;
 use App\Plugin\DB;
 use eru123\router\Context;
@@ -16,6 +17,7 @@ class Auth
         $required = ['user', 'password', 'fname', 'lname'];
         $allowed = [
             'user',
+            'password',
             'alias',
             'fname',
             'mname',
@@ -30,7 +32,7 @@ class Auth
         ];
 
         foreach ($required as $key) {
-            if (!isset($rdata[$key])) {
+            if (!isset($rdata[$key]) || empty($rdata[$key])) {
                 http_response_code(400);
                 return [
                     'error' => "Missing required field: $key",
@@ -50,9 +52,15 @@ class Auth
 
         $stmt = Users::insert($data);
         if ($stmt->rowCount() > 0) {
-            $id = DB::instance()->pdo()->lastInsertId();
-            $data = Users::get($id);
-            $token = static::create_token($data, '1hr');
+            try {
+                $id = DB::instance()->pdo()->lastInsertId();
+                $data = Users::get($id);
+                $token = static::create_token($data, '1hr');
+            } catch (Throwable $th) {
+                return [
+                    'error' => 'Registration successful, but failed to create login token, please login manually.',
+                ];
+            }
 
             http_response_code(201);
             return [
@@ -82,5 +90,31 @@ class Auth
         return $jwt->encode($payload);
     }
 
-    
+    public function login(Context $c) {
+        $data = $c->json();
+        $required = ['user', 'password'];
+        foreach ($required as $key) {
+            if (!isset($data[$key]) || empty($data[$key])) {
+                http_response_code(400);
+                return [
+                    'error' => "Missing required field: $key",
+                ];
+            }
+        }
+
+        $user = Users::login($data['user'], $data['password']);
+        if ($user) {
+            $token = static::create_token($user, '1hr');
+            return [
+                'success' => 'Successfully logged in',
+                'data' => $user,
+                'token' => $token,
+            ];
+        }
+
+        http_response_code(401);
+        return [
+            'error' => 'Invalid username or password',
+        ];
+    }
 }

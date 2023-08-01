@@ -6,6 +6,9 @@ use eru123\router\Router;
 
 $v1 = new Router();
 $v1->base('/v1');
+$v1->bootstrap([
+    'App\Controller\Auth@bootstrap'
+]);
 
 // Auth
 

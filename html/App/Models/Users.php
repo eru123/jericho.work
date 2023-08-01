@@ -5,10 +5,11 @@ namespace App\Models;
 use App\Plugin\DB;
 use eru123\orm\Raw;
 use Exception;
+use PDOStatement;
 
-class Users
+class Users implements Model
 {
-    public static function sanitize(array $data)
+    public static function sanitize(array $data): array
     {
         if (isset($data['password'])) {
             $data['hash'] = password_hash($data['password'], PASSWORD_DEFAULT);
@@ -164,7 +165,7 @@ class Users
         return static::sanitize($data);
     }
 
-    public static function insert(array $data)
+    public static function insert(array $data): PDOStatement
     {
         $sanitized = self::strict_data_check($data);
         $sanitized['created_at'] = date('Y-m-d H:i:s');
@@ -172,7 +173,7 @@ class Users
         return DB::instance()->insert('users', $sanitized);
     }
 
-    public static function insert_many(array $data)
+    public static function insert_many(array $data): PDOStatement
     {
         $now = date('Y-m-d H:i:s');
         $sanitized = array_map(function ($item) use ($now) {
@@ -184,7 +185,7 @@ class Users
         return DB::instance()->insert_many('users', $sanitized);
     }
 
-    public static function update(int|string $id, array $data)
+    public static function update(int|string $id, array $data): PDOStatement
     {
         static::reuse_password_check($id, $data);
         static::reuse_username_check($id, $data);
@@ -246,7 +247,16 @@ class Users
         }
     }
 
-    public static function delete(int|string $id)
+    public static function delete(int|string $id): PDOStatement
+    {
+        if (is_numeric($id)) {
+            return DB::instance()->update('users', ['deleted_at' => date('Y-m-d H:i:s')], ['id' => (int) $id]);
+        }
+
+        return DB::instance()->update('users', ['deleted_at' => date('Y-m-d H:i:s')], $id);
+    }
+
+    public static function deleteUnsafe(int|string $id): PDOStatement
     {
         if (is_numeric($id)) {
             return DB::instance()->delete('users', ['id' => (int) $id]);
@@ -351,7 +361,20 @@ class Users
         return null;
     }
 
-    public static function get(int|string $id): array|null
+    public static function purge(int|string $id = null): PDOStatement
+    {
+        if (is_null($id)) {
+            return DB::instance()->delete('users', '`deleted_at` IS NOT NULL');
+        }
+
+        if (is_numeric($id)) {
+            return DB::instance()->delete('users', (string) Raw::build('id = ? AND deleted_at IS NOT NULL', [$id]));
+        }
+
+        return DB::instance()->delete('users', $id);
+    }
+
+    public static function find(int|string $id): array|null
     {
         $res = null;
         if (is_numeric($id)) {
@@ -359,8 +382,8 @@ class Users
             $stmt = DB::instance()->query($sql, [$id]);
             $res = $stmt->fetch();
         } else {
-            $sql = "SELECT * FROM `users` WHERE `user` = ? AND `deleted_at` IS NULL";
-            $stmt = DB::instance()->query($sql, [$id]);
+            $sql = "SELECT * FROM `users` WHERE `deleted_at` IS NULL AND {$id}";
+            $stmt = DB::instance()->query($sql);
             $res = $stmt->fetch();
         }
 
@@ -374,6 +397,36 @@ class Users
             $res['providers'] = json_decode($res['providers']) ?? [];
             $res['mobile_verified'] = $res['mobile_verified'] == 1;
             $res['email_verified'] = $res['email_verified'] == 1;
+        }
+
+        return $res;
+    }
+
+    public static function find_many(int|string $id): array
+    {
+        $res = null;
+        if (is_numeric($id)) {
+            $sql = "SELECT * FROM `users` WHERE `id` = ? AND `deleted_at` IS NULL";
+            $stmt = DB::instance()->query($sql, [$id]);
+            $res = $stmt->fetchAll();
+        } else {
+            $sql = "SELECT * FROM `users` WHERE `deleted_at` IS NULL AND {$id}";
+            $stmt = DB::instance()->query($sql);
+            $res = $stmt->fetchAll();
+        }
+
+        if ($res) {
+            foreach ($res as &$r) {
+                unset($r['hash']);
+                unset($r['hash_h']);
+                $r['roles'] = json_decode($r['roles']) ?? [];
+                $r['addresses'] = json_decode($r['addresses']) ?? [];
+                $r['emails'] = json_decode($r['emails']) ?? [];
+                $r['mobiles'] = json_decode($r['mobiles']) ?? [];
+                $r['providers'] = json_decode($r['providers']) ?? [];
+                $r['mobile_verified'] = $r['mobile_verified'] == 1;
+                $r['email_verified'] = $r['email_verified'] == 1;
+            }
         }
 
         return $res;

@@ -22,12 +22,15 @@ devDependencies:
   postcss:
     specifier: ^8.4.27
     version: 8.4.27
+  sass:
+    specifier: ^1.64.2
+    version: 1.64.2
   tailwindcss:
     specifier: ^3.3.3
     version: 3.3.3
   vite:
     specifier: ^4.4.8
-    version: 4.4.8
+    version: 4.4.8(sass@1.64.2)
 
 packages:
 
@@ -318,7 +321,7 @@ packages:
       vite: ^4.0.0
       vue: ^3.2.25
     dependencies:
-      vite: 4.4.8
+      vite: 4.4.8(sass@1.64.2)
       vue: 3.3.4
     dev: true
 
@@ -633,6 +636,10 @@ packages:
       function-bind: 1.1.1
     dev: true
 
+  /immutable@4.3.2:
+    resolution: {integrity: sha512-oGXzbEDem9OOpDWZu88jGiYCvIsLHMvGw+8OXlpsvTFvIQplQbjg1B1cvKg8f7Hoch6+NGjpPsH1Fr+Mc2D1aA==}
+    dev: true
+
   /inflight@1.0.6:
     resolution: {integrity: sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==}
     dependencies:
@@ -897,6 +904,16 @@ packages:
       queue-microtask: 1.2.3
     dev: true
 
+  /sass@1.64.2:
+    resolution: {integrity: sha512-TnDlfc+CRnUAgLO9D8cQLFu/GIjJIzJCGkE7o4ekIGQOH7T3GetiRR/PsTWJUHhkzcSPrARkPI+gNWn5alCzDg==}
+    engines: {node: '>=14.0.0'}
+    hasBin: true
+    dependencies:
+      chokidar: 3.5.3
+      immutable: 4.3.2
+      source-map-js: 1.0.2
+    dev: true
+
   /source-map-js@1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
@@ -994,7 +1011,7 @@ packages:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
     dev: true
 
-  /vite@4.4.8:
+  /vite@4.4.8(sass@1.64.2):
     resolution: {integrity: sha512-LONawOUUjxQridNWGQlNizfKH89qPigK36XhMI7COMGztz8KNY0JHim7/xDd71CZwGT4HtSRgI7Hy+RlhG0Gvg==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
@@ -1025,6 +1042,7 @@ packages:
       esbuild: 0.18.17
       postcss: 8.4.27
       rollup: 3.27.0
+      sass: 1.64.2
     optionalDependencies:
       fsevents: 2.3.2
     dev: true

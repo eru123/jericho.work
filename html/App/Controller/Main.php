@@ -34,6 +34,14 @@ class Main extends Controller
             'app_title' => env('APP_TITLE', 'App'),
         ]);
 
+        $vite->seo([
+            'title' => env('APP_TITLE'),
+            'description' => "Your dream, your solution, let's make it.",
+            'image' => env('BASE_URL') . '/card.png',
+            'url' => env('BASE_URL'),
+            'type' => 'website'
+        ]);
+
         return $this->view();
     }
 
@@ -43,7 +51,7 @@ class Main extends Controller
             http_response_code(200);
             header('Content-Type: application/manifest+json');
         }
-        
+
         return [
             "name" => env('APP_TITLE', 'App'),
             "short_name" => env('APP_TITLE', 'App'),

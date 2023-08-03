@@ -5,5 +5,7 @@
         "*.jericho.work": true,
         "*.com": true
     },
-    "vue.codeActions.enabled": false
+    "vue.codeActions.enabled": false,
+    "css.lint.unknownAtRules": "ignore",
+    "scss.lint.unknownAtRules": "ignore"
 }

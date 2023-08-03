@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.277.5",
+            "version": "3.277.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "69539f82d8690be86f686ea5be1e572b44efcd8b"
+                "reference": "906caee3dc8ddffeb992062c84f4552dc2e2da19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/69539f82d8690be86f686ea5be1e572b44efcd8b",
-                "reference": "69539f82d8690be86f686ea5be1e572b44efcd8b",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/906caee3dc8ddffeb992062c84f4552dc2e2da19",
+                "reference": "906caee3dc8ddffeb992062c84f4552dc2e2da19",
                 "shasum": ""
             },
             "require": {
@@ -151,9 +151,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.277.5"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.277.7"
             },
-            "time": "2023-07-31T18:10:09+00:00"
+            "time": "2023-08-02T18:04:32+00:00"
         },
         {
             "name": "eru123/holyphp",
@@ -161,12 +161,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eru123/holyphp.git",
-                "reference": "00b7a30a10b64d7aa2fef1368fad1e061c058c75"
+                "reference": "6b4fb8d9daf6ed44c5226d0d6bd6e0dd39e7ecce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eru123/holyphp/zipball/00b7a30a10b64d7aa2fef1368fad1e061c058c75",
-                "reference": "00b7a30a10b64d7aa2fef1368fad1e061c058c75",
+                "url": "https://api.github.com/repos/eru123/holyphp/zipball/6b4fb8d9daf6ed44c5226d0d6bd6e0dd39e7ecce",
+                "reference": "6b4fb8d9daf6ed44c5226d0d6bd6e0dd39e7ecce",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-07-26T09:32:57+00:00"
+            "time": "2023-08-03T03:39:49+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -865,7 +865,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "dev-main",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
@@ -929,7 +929,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/main"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/1.x"
             },
             "funding": [
                 {

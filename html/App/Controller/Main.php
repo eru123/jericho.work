@@ -36,4 +36,32 @@ class Main extends Controller
 
         return $this->view();
     }
+
+    public function webmanifest()
+    {
+        if (!headers_sent()) {
+            http_response_code(200);
+            header('Content-Type: application/manifest+json');
+        }
+        
+        return [
+            "name" => env('APP_TITLE', 'App'),
+            "short_name" => env('APP_TITLE', 'App'),
+            "icons" => [
+                [
+                    "src" => "/android-chrome-192x192.png",
+                    "sizes" => "192x192",
+                    "type" => "image/png",
+                ],
+                [
+                    "src" => "/android-chrome-512x512.png",
+                    "sizes" => "512x512",
+                    "type" => "image/png",
+                ],
+            ],
+            "theme_color" => "#ffffff",
+            "background_color" => "#ffffff",
+            "display" => "standalone",
+        ];
+    }
 }

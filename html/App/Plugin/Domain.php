@@ -56,6 +56,25 @@ class Domain
         ];
     }
 
+    public function setDefaultRecord(string $record)
+    {
+        $rec = realpath($this->dir . "/$record.domain.php");
+        if (!$rec || is_dir($rec)) {
+            Router::status_page(500, 'Internal Server Error', "Record not found: \"$record\"");
+        }
+
+        $router = require($rec);
+        if (!($router instanceof Router)) {
+            Router::status_page(500, 'Internal Server Error', "Record must return instance of " . Router::class);
+        }
+
+        $this->vhosts[] = [
+            'domain' => null,
+            'record' => $rec,
+            'router' => &$router,
+        ];
+    } 
+
     public function serve()
     {
         if (empty($this->vhosts)) {
@@ -67,11 +86,21 @@ class Domain
         $sname = isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] ? $_SERVER['SERVER_NAME'] : 'localhost';
         $sname = strtolower($sname);
 
+        $default_handler = null;
+
         foreach ($this->vhosts as $vhost) {
-            if ($vhost['domain'] == $sname) {
+            if (is_null($vhost['domain'])) {
+                $default_handler = $vhost;
+                continue;
+            } else if ($vhost['domain'] == $sname) {
                 $vhost['router']->run();
                 exit;
             }
+        }
+
+        if (!is_null($default_handler)) {
+            $default_handler['router']->run();
+            exit;
         }
 
         $f = realpath($this->dir . "/domain.php");

@@ -16,19 +16,15 @@ class CDN extends Controller
         if ($c->file_path) {
             return null;
         }
-
-        $vite = Vite::instance();
-        $vite->setDist(__CLIENT__ . '/cdn/dist');
-        $vite->setAppId('app');
-        $vite->useTemplate('vite');
-        $vite->data([
-            'app_title' => 'OpenCDN',
-        ]);
-        $vite->header("<link rel=\"icon\" href=\"/cdn/favicon.ico\">");
-        $vite->seo([
+        Vite::dist(__CLIENT__ . '/cdn/dist/cdn');
+        Vite::manifest(__CLIENT__ . '/cdn/dist/manifest.json');
+        Vite::template('vite');
+        Vite::set('base_uri', '');
+        Vite::head('<link rel="icon" href="/cdn/favicon.ico">');
+        Vite::seo([
             'title' => 'OpenCDN',
             'description' => 'Fast and Free Content Delivery Network (CDN) Alternative',
-            'keywords' => [
+            'keywords' => implode([
                 'cdn',
                 'opencdn',
                 'fastcdn',
@@ -36,12 +32,13 @@ class CDN extends Controller
                 'jsdelivr',
                 'unpkg',
                 'cloudflare',
-            ],
+            ]),
             'image' => env('BASE_URL') . '/cdn/cover.png',
             'url' => env('BASE_URL'),
             'type' => 'website'
         ]);
-        return $vite->render();
+
+        return Vite::render([], true);
     }
 
     public function upload(Context $c)

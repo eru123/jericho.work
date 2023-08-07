@@ -40,7 +40,7 @@ class MailTemplate extends Controller
             $default = NULL;
         }
 
-        if ($code && DB::instance()->query('SELECT id, user_id, code FROM mail_templates WHERE code = ? AND user_id = ? AND deleted_at IS NULL', [$code, $user_id])->fetch(PDO::FETCH_ASSOC)) {
+        if ($code && DB::instance()->query('SELECT id, user_id, code FROM mail_templates WHERE code = ? AND user_id = ? AND deleted_at IS NULL', [$code, $user_id])->fetch()) {
             throw new Error('Template Code already exists', 400);
         }
 
@@ -83,7 +83,7 @@ class MailTemplate extends Controller
         }
 
         $where = implode(' AND ', $where);
-        $template = DB::instance()->query("SELECT * FROM mail_templates WHERE {$where} AND deleted_at IS NULL", $params)->fetch(PDO::FETCH_ASSOC);
+        $template = DB::instance()->query("SELECT * FROM mail_templates WHERE {$where} AND deleted_at IS NULL", $params)->fetch();
         if ($template) {
             $template['default'] = json_decode($template['default'], true);
             $template['active'] = (bool) $template['active'];
@@ -173,7 +173,7 @@ class MailTemplate extends Controller
         }
 
         if (isset($data['code']) && !empty($data['code']) && $data['code'] !== $old['code']) {
-            if (DB::instance()->query('SELECT id, user_id, code FROM mail_templates WHERE code = ? AND user_id = ? AND deleted_at IS NULL', [$data['code'], $user_id])->fetch(PDO::FETCH_ASSOC)) {
+            if (DB::instance()->query('SELECT id, user_id, code FROM mail_templates WHERE code = ? AND user_id = ? AND deleted_at IS NULL', [$data['code'], $user_id])->fetch()) {
                 throw new Error('Template Code already exists', 400);
             }
         } else if (isset($data['code']) && empty($data['code'])) {
@@ -309,7 +309,7 @@ class MailTemplate extends Controller
         $where_[] = 'deleted_at IS NOT NULL';
 
         $where_query = implode(' AND ', $where_);
-        return DB::instance()->query('SELECT * FROM mail_templates WHERE ' . $where_query)->fetch(PDO::FETCH_ASSOC);
+        return DB::instance()->query('SELECT * FROM mail_templates WHERE ' . $where_query)->fetch();
     }
 
     public function view_deleted(Context $c)

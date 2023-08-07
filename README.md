@@ -96,3 +96,14 @@ sudo service memcached status
 sudo service memcached stop
 sudo service memcached start
 ```
+
+
+### Quick Deploy
+Configure the .env then run the following commands
+```bash
+cd html
+composer install --no-interaction
+pnpm install
+gulp install
+gulp build
+```

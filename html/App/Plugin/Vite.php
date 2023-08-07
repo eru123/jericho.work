@@ -2,189 +2,188 @@
 
 namespace App\Plugin;
 
-use eru123\Helper\ArrayUtil as A;
-use eru123\helper\Format;
-use Exception;
+use eru123\router\Vite as RouterVite;
 
-class Vite
+class Vite extends RouterVite
 {
-    static $instance = null;
-    private $headers = [];
-    private $seo = [];
-    public $data = [];
-    private $template_dir = __DIR__ . '/../../client/template';
-    private $template = null;
-    private $entry = 'src/main.js';
-    private $manifest = 'manifest.json';
-    private $dist = null;
-
-    public static function instance(): static
+    public static function seo(array $data)
     {
-        if (static::$instance === null) {
-            static::$instance = new static();
-        }
-        return static::$instance;
-    }
-
-    public function useTemplate(string $template)
-    {
-        $f = realpath($this->template_dir . '/' . $template . '.html');
-        if ($f && file_exists($f)) {
-            $this->template = file_get_contents($f);
-            return;
+        if (isset($data['url'])) {
+            static::head('<meta property="og:url" content="' . $data['url'] . '">');
         }
 
-        throw new Exception("Template $template not found: " . $f);
-    }
+        if (isset($data['type'])) {
+            static::head('<meta property="og:type" content="' . $data['type'] . '">');
+            static::head('<meta name="twitter:card" content="' . $data['type'] . '">');
+        }
 
-    public function setDist(string $dist)
-    {
-        $this->dist = rtrim($dist, '/');
-    }
+        if (isset($data['title'])) {
+            static::head('<meta property="og:title" content="' . $data['title'] . '">');
+            static::head('<meta name="title" content="' . $data['title'] . '">');
+        }
 
-    public function setEntry(string $entry)
-    {
-        $this->entry = $entry;
-    }
+        if (isset($data['description'])) {
+            static::head('<meta property="og:description" content="' . $data['description'] . '">');
+            static::head('<meta name="description" content="' . $data['description'] . '">');
+        }
 
-    public function setManifest(string $manifest)
-    {
-        $this->manifest = ltrim($manifest, '/');
-    }
+        if (isset($data['image'])) {
+            static::head('<meta property="og:image" content="' . $data['image'] . '">');
+            static::head('<meta name="image" content="' . $data['image'] . '">');
+        }
 
-    public function setAppId(string $app_id)
-    {
-        $this->data['app_id'] = $app_id;
-    }
+        if (isset($data['app_id'])) {
+            static::head('<meta property="fb:app_id" content="' . $data['app_id'] . '">');
+        }
 
-    public function footer(string $footer)
-    {
-        if (isset($this->data['footers'])) {
-            $this->data['footers'] .= $footer;
-        } else {
-            $this->data['footers'] = $footer;
+        if (isset($data['locale'])) {
+            static::head('<meta property="og:locale" content="' . $data['locale'] . '">');
+            static::head('<meta name="locale" content="' . $data['locale'] . '">');
+        }
+
+        if (isset($data['keywords'])) {
+            static::head('<meta name="keywords" content="' . (is_array($data['keywords']) ? implode(',', $data['keywords']) : '') . '">');
+        }
+
+        if (isset($data['author'])) {
+            static::head('<meta name="author" content="' . $data['author'] . '">');
+        }
+
+        if (isset($data['publisher'])) {
+            static::head('<meta name="publisher" content="' . $data['publisher'] . '">');
+        }
+
+        if (isset($data['robots'])) {
+            static::head('<meta name="robots" content="' . $data['robots'] . '">');
+        }
+
+        if (isset($data['canonical'])) {
+            static::head('<link rel="canonical" href="' . $data['canonical'] . '">');
+        }
+
+        if (isset($data['prev'])) {
+            static::head('<link rel="prev" href="' . $data['prev'] . '">');
+        }
+
+        if (isset($data['next'])) {
+            static::head('<link rel="next" href="' . $data['next'] . '">');
+        }
+
+        if (isset($data['alternate'])) {
+            static::head('<link rel="alternate" href="' . $data['alternate'] . '">');
+        }
+
+        if (isset($data['amphtml'])) {
+            static::head('<link rel="amphtml" href="' . $data['amphtml'] . '">');
+        }
+
+        if (isset($data['manifest'])) {
+            static::head('<link rel="manifest" href="' . $data['manifest'] . '">');
+        }
+
+        if (isset($data['mask-icon'])) {
+            static::head('<link rel="mask-icon" href="' . $data['mask-icon'] . '">');
+        }
+
+        if (isset($data['theme-color'])) {
+            static::head('<meta name="theme-color" content="' . $data['theme-color'] . '">');
+        }
+
+        if (isset($data['apple-mobile-web-app-capable'])) {
+            static::head('<meta name="apple-mobile-web-app-capable" content="' . $data['apple-mobile-web-app-capable'] . '">');
+        }
+
+        if (isset($data['apple-mobile-web-app-status-bar-style'])) {
+            static::head('<meta name="apple-mobile-web-app-status-bar-style" content="' . $data['apple-mobile-web-app-status-bar-style'] . '">');
+        }
+
+        if (isset($data['apple-mobile-web-app-title'])) {
+            static::head('<meta name="apple-mobile-web-app-title" content="' . $data['apple-mobile-web-app-title'] . '">');
+        }
+
+        if (isset($data['msapplication-TileColor'])) {
+            static::head('<meta name="msapplication-TileColor" content="' . $data['msapplication-TileColor'] . '">');
+        }
+
+        if (isset($data['msapplication-TileImage'])) {
+            static::head('<meta name="msapplication-TileImage" content="' . $data['msapplication-TileImage'] . '">');
+        }
+
+        if (isset($data['msapplication-config'])) {
+            static::head('<meta name="msapplication-config" content="' . $data['msapplication-config'] . '">');
+        }
+
+        if (isset($data['application-name'])) {
+            static::head('<meta name="application-name" content="' . $data['application-name'] . '">');
+        }
+
+        if (isset($data['full-screen'])) {
+            static::head('<meta name="full-screen" content="' . $data['full-screen'] . '">');
+        }
+
+        if (isset($data['browser-mode'])) {
+            static::head('<meta name="browser-mode" content="' . $data['browser-mode'] . '">');
+        }
+
+        if (isset($data['night-mode'])) {
+            static::head('<meta name="night-mode" content="' . $data['night-mode'] . '">');
+        }
+
+        if (isset($data['layout-mode'])) {
+            static::head('<meta name="layout-mode" content="' . $data['layout-mode'] . '">');
+        }
+
+        if (isset($data['screen-orientation'])) {
+            static::head('<meta name="screen-orientation" content="' . $data['screen-orientation'] . '">');
+        }
+
+        if (isset($data['color-scheme'])) {
+            static::head('<meta name="color-scheme" content="' . $data['color-scheme'] . '">');
+        }
+
+        if (isset($data['viewport-fit'])) {
+            static::head('<meta name="viewport-fit" content="' . $data['viewport-fit'] . '">');
+        }
+
+        if (isset($data['google-site-verification'])) {
+            static::head('<meta name="google-site-verification" content="' . $data['google-site-verification'] . '">');
+        }
+
+        if (isset($data['yandex-verification'])) {
+            static::head('<meta name="yandex-verification" content="' . $data['yandex-verification'] . '">');
+        }
+
+        if (isset($data['msvalidate.01'])) {
+            static::head('<meta name="msvalidate.01" content="' . $data['msvalidate.01'] . '">');
+        }
+
+        if (isset($data['alexaVerifyID'])) {
+            static::head('<meta name="alexaVerifyID" content="' . $data['alexaVerifyID'] . '">');
+        }
+
+        if (isset($data['p:domain_verify'])) {
+            static::head('<meta name="p:domain_verify" content="' . $data['p:domain_verify'] . '">');
+        }
+
+        if (isset($data['norton-safeweb-site-verification'])) {
+            static::head('<meta name="norton-safeweb-site-verification" content="' . $data['norton-safeweb-site-verification'] . '">');
+        }
+
+        if (isset($data['csrf-token'])) {
+            static::head('<meta name="csrf-token" content="' . $data['csrf-token'] . '">');
+        }
+
+        if (isset($data['csrf-param'])) {
+            static::head('<meta name="csrf-param" content="' . $data['csrf-param'] . '">');
+        }
+
+        if (isset($data['referrer'])) {
+            static::head('<meta name="referrer" content="' . $data['referrer'] . '">');
         }
     }
 
-    public function extend(string $extend)
+    public static function data(array $data)
     {
-        if (isset($this->data['extends'])) {
-            $this->data['extends'] .= $extend;
-        } else {
-            $this->data['extends'] = $extend;
-        }
-    }
-
-    public function data(array $data)
-    {
-        $this->data = array_merge($this->data, $data);
-    }
-
-    public function header(string $header)
-    {
-        $this->headers[] = $header;
-    }
-
-    public function headers(array $headers)
-    {
-        $this->headers = array_merge($this->headers, $headers);
-    }
-
-    public function header_string()
-    {
-        return implode("\n", $this->headers) . $this->html_seo();
-    }
-
-    public function template(string $template)
-    {
-        $this->template = $template;
-    }
-
-    public function build($minify = false)
-    {
-        $res = Format::template(
-            $this->template,
-            array_merge(
-                $this->data,
-                [
-                    'headers' => $this->header_string(),
-                ]
-            ),
-            FORMAT_TEMPLATE_DOLLAR_CURLY
-        );
-
-        if ($minify) {
-            $res = preg_replace(
-                array(
-                    '/ {2,}/',
-                    '/<!--.*?-->|\t|(?:\r?\n[ \t]*)+/s',
-                ),
-                array(
-                    ' ',
-                    '',
-                ),
-                $res
-            );
-        }
-
-        return $res;
-    }
-
-    public function render($base = '', $minify = true)
-    {
-        $manifest = json_decode(file_get_contents($this->dist . '/' . $this->manifest), true);
-        $entry = isset($manifest[$this->entry]) ? $manifest[$this->entry]['file'] : null;
-        $css = isset($manifest[$this->entry]) ? $manifest[$this->entry]['css'] : [];
-        $base = rtrim($base, '/');
-        foreach ($css as $c) {
-            $path = $base . '/' . $c;
-            $this->header("<link rel=\"stylesheet\" href=\"$path\">");
-        }
-        $this->data([
-            'base' => $base,
-            'entry' => $entry,
-        ]);
-        return $this->build($minify);
-    }
-
-    public function seo(array $data)
-    {
-        $seo = $this->seo;
-        $this->seo = [
-            'url' => A::get($data, 'url', A::get($seo, 'url')),
-            'type' => A::get($data, 'type', A::get($seo, 'type')),
-            'title' => A::get($data, 'title', A::get($seo, 'title')),
-            'description' => A::get($data, 'description', A::get($seo, 'description')),
-            'image' => A::get($data, 'image', A::get($seo, 'image')),
-            'app_id' => A::get($data, 'app_id', A::get($seo, 'app_id')),
-            'locale' => A::get($data, 'locale', A::get($seo, 'locale')),
-            'author' => A::get($data, 'author', A::get($seo, 'author')),
-            'publisher' => A::get($data, 'publisher', A::get($seo, 'publisher')),
-            'keywords' => A::get($data, 'keywords', A::get($seo, 'keywords')),
-        ];
-    }
-
-    public function html_seo()
-    {
-        $meta = [];
-        !isset($this->seo['url']) || $meta[] = '<meta property="og:url" content="' . $this->seo['url'] . '">';
-        !isset($this->seo['type']) || $meta[] = '<meta property="og:type" content="' . $this->seo['type'] . '">';
-        !isset($this->seo['title']) || $meta[] = '<meta property="og:title" content="' . $this->seo['title'] . '">';
-        !isset($this->seo['description']) || $meta[] = '<meta property="og:description" content="' . $this->seo['description'] . '">';
-        !isset($this->seo['image']) || $meta[] = '<meta property="og:image" content="' . $this->seo['image'] . '">';
-        !isset($this->seo['app_id']) || $meta[] = '<meta property="fb:app_id" content="' . $this->seo['app_id'] . '">';
-        !isset($this->seo['locale']) || $meta[] = '<meta property="og:locale" content="' . $this->seo['locale'] . '">';
-
-        !isset($this->seo['type']) || $meta[] = '<meta name="twitter:card" content="' . $this->seo['type'] . '">';
-
-        !isset($this->seo['title']) || $meta[] = '<meta name="title" content="' . $this->seo['title'] . '">';
-        !isset($this->seo['description']) || $meta[] = '<meta name="description" content="' . $this->seo['description'] . '">';
-        !isset($this->seo['author']) || $meta[] = '<meta name="author" content="' . $this->seo['author'] . '">';
-        !isset($this->seo['publisher']) || $meta[] = '<meta name="publisher" content="' . $this->seo['publisher'] . '">';
-        !isset($this->seo['image']) || $meta[] = '<meta name="image" content="' . $this->seo['image'] . '">';
-        !isset($this->seo['locale']) || $meta[] = '<meta name="locale" content="' . $this->seo['locale'] . '">';
-        !isset($this->seo['keywords']) || $meta[] = '<meta name="keywords" content="' . (is_array($this->seo['keywords']) ? implode(',', $this->seo['keywords']) : '') . '">';
-
-        return implode("", $meta);
+        Vite::body('<script type="module">window.__SERVER_DATA__ = {...(window?.__SERVER_DATA__ || {}), ...' . json_encode($data) . '};</script>');
     }
 }

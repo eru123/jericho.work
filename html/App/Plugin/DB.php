@@ -13,7 +13,7 @@ class DB
     private $stmt = null;
     private $history = [];
 
-    public static function instance()
+    public static function instance(): static
     {
         if (static::$instance === null) {
             static::$instance = new static();
@@ -30,7 +30,10 @@ class DB
         $name = env('DB_NAME', 'main');
 
         $dsn = "mysql:host=$host;port=$port;dbname=$name;charset=utf8mb4";
-        $this->pdo = new PDO($dsn, $user, $pass);
+        $this->pdo = new PDO($dsn, $user, $pass , [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]);
     }
 
     public function pdo(): PDO
@@ -104,14 +107,25 @@ class DB
         return $this->query($sql, $values);
     }
 
-    public function delete(string $table, array $where = []): PDOStatement
+    public function delete(string $table, array|string  $where = null): PDOStatement
     {
         $sql = "DELETE FROM `$table`";
-        if (!empty($where)) {
+        $values = [];
+        if (is_array($where)) {
             $sql .= " WHERE " . implode(' AND ', array_map(function ($k) {
                 return "`$k` = ?";
             }, array_keys($where)));
+            $values = array_merge($values, array_values($where));
+        } else if (is_string($where)) {
+            $sql .= " WHERE $where";
+        } else {
+            $sql .= " WHERE 1";
         }
-        return $this->query($sql, array_values($where));
+        return $this->query($sql, array_values($values));
+    }
+
+    public static function build(string $sql, array $params = []): Raw
+    {
+        return Raw::build($sql, $params);
     }
 }

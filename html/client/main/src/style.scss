@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+    box-sizing: border-box;
+    user-select: none;
+}
+
+/**
+Smoothing scroll behavior
+*/
+
+html {
+    scroll-behavior: auto;
+}

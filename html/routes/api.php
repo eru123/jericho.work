@@ -2,7 +2,6 @@
 
 use App\Plugin\DB;
 use eru123\router\Router;
-use Throwable;
 
 $api = new Router();
 $api->base('/api');

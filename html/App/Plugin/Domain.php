@@ -56,7 +56,7 @@ class Domain
         ];
     }
 
-    public function setDefaultHandler(string $record)
+    public function setDefaultRecord(string $record)
     {
         $rec = realpath($this->dir . "/$record.domain.php");
         if (!$rec || is_dir($rec)) {

@@ -1,7 +1,8 @@
 <script setup>
 import PublicFooter from '@/components/PublicFooter.vue'
 import PublicHeader from '@/components/PublicHeader.vue'
-</script><template>
+</script>
+<template>
    <PublicHeader />
    <div class="landing-1">
       <h3>Your dream and solution,<span>let's make it!</span></h3>

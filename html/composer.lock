@@ -161,12 +161,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/eru123/holyphp.git",
-                "reference": "66334fc8b699acd10d999779b51e91f8ff2a7ec0"
+                "reference": "87aa903104540880b9adf093bcffd2d5d87afe13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/eru123/holyphp/zipball/66334fc8b699acd10d999779b51e91f8ff2a7ec0",
-                "reference": "66334fc8b699acd10d999779b51e91f8ff2a7ec0",
+                "url": "https://api.github.com/repos/eru123/holyphp/zipball/87aa903104540880b9adf093bcffd2d5d87afe13",
+                "reference": "87aa903104540880b9adf093bcffd2d5d87afe13",
                 "shasum": ""
             },
             "require": {
@@ -202,7 +202,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-08-07T11:08:15+00:00"
+            "time": "2023-08-07T14:00:12+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

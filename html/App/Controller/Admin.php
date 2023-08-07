@@ -13,15 +13,15 @@ class Admin extends Controller
             return null;
         }
 
-        $vite = Vite::instance();
-        $vite->setDist(__CLIENT__ . '/admin/dist');
-        $vite->setAppId('app');
-        $vite->useTemplate('vite');
-        $vite->data([
-            'app_title' => 'Admin',
+        Vite::dist(__CLIENT__ . '/admin/dist/admin');
+        Vite::manifest(__CLIENT__ . '/admin/dist/manifest.json');
+        Vite::template('vite');
+        Vite::set('base_uri', '');
+        Vite::head('<link rel="icon" href="/admin/favicon.ico">');
+        Vite::seo([
+            'title' => 'Admin'
         ]);
-        $vite->header("<link rel=\"icon\" href=\"/admin/favicon.ico\">");
 
-        return $vite->render();
+        return Vite::render([], true);
     }
 }

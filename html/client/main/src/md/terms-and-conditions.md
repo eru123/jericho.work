@@ -1,4 +1,6 @@
 # TERMS AND CONDITIONS
+###### August 4, 2023
+
 Your use of the computer software and internet services offered by SKIDD PH ("we," "us," or "our") is governed by these terms and conditions (the "Agreement"). You agree to be bound by these terms and conditions by accessing or using our software and services. Please read them carefully.
 ### Section A: Account Creation and Personal Information
  1. When creating an account, we require users to provide personal information, including but not limited to name, date of birth, contact details, and other common information. We collect this information to provide better services and enhance user experience.

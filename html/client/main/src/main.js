@@ -29,5 +29,6 @@ addIcons(
 const app = createApp(App)
 app.component("v-icon", OhVueIcon);
 app.component('v-link', Link)
+app.provide('$server', window?.__SERVER_DATA__ || null)
 app.use(router)
 app.mount('#app')

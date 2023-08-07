@@ -181,4 +181,9 @@ class Vite extends RouterVite
             static::head('<meta name="referrer" content="' . $data['referrer'] . '">');
         }
     }
+
+    public static function data(array $data)
+    {
+        Vite::body('<script type="module">window.__SERVER_DATA__ = {...(window?.__SERVER_DATA__ || {}), ...' . json_encode($data) . '};</script>');
+    }
 }

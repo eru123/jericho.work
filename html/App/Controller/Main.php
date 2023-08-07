@@ -61,6 +61,7 @@ class Main extends Controller
             "theme_color" => "#ffffff",
             "background_color" => "#ffffff",
             "display" => "standalone",
+            'start_url' => '/',
         ];
     }
 }

@@ -1,0 +1,10 @@
+/dev
+*/vendor/
+*/node_modules/
+html/.env
+/test*
+/html/test*
+/html/*test.php
+/*.jericho.work
+html/logs/
+/*.com

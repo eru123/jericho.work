@@ -36,14 +36,12 @@ RUN composer install -o
 COPY system/ /
 COPY html .
 
-RUN pnpm install \
-    # && pnpm install --prefix client/cdn \
-    # && pnpm install --prefix client/admin \
-    # && pnpm install --prefix client/main \
-    && gulp build
-    # && pnpm build --prefix client/cdn \
-    # && pnpm build --prefix client/admin \
-    # && pnpm build --prefix client/main
+RUN pnpm install --prefix client/cdn \
+    && pnpm install --prefix client/admin \
+    && pnpm install --prefix client/main \
+    && pnpm build --prefix client/cdn \
+    && pnpm build --prefix client/admin \
+    && pnpm build --prefix client/main
 
 EXPOSE 80
 ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]

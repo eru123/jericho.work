@@ -9,7 +9,7 @@ import LogoD from '@/assets/logo-dark.svg'
                 <img :src="LogoWD" alt="Logo" />
                 <img :src="LogoD" alt="Logo" />
             </router-link>
-            <div class="actions">
+            <div class="actions" v-if="false">
                 <router-link to="/login">Login</router-link>
                 <router-link to="/register">Register</router-link>
             </div>

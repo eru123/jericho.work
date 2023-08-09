@@ -1,7 +1,9 @@
 <script setup>
 import LogoWD from '@/assets/logo-w-dark.svg'
-const year = new Date().getFullYear()
+import useServerData from '@/composables/useServerData'
 
+const server = useServerData()
+const year = new Date().getFullYear()
 const items = [
     {
         title: 'Social',
@@ -28,7 +30,7 @@ const items = [
         links: [
             {
                 name: 'OpenCDN',
-                url: 'https://skiddph.com/cdn',
+                url: server?.CDN_URL ?? 'https://skiddph.com/cdn',
                 icon: 'bi-cloud-fill'
             },
             {

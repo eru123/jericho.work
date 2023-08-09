@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import useServerData from './composables/useServerData'
 import router from './router'
 import './style.scss'
 import App from './App.vue'
@@ -29,6 +30,6 @@ addIcons(
 const app = createApp(App)
 app.component("v-icon", OhVueIcon);
 app.component('v-link', Link)
-app.provide('$server', window?.__SERVER_DATA__ || null)
+app.provide('$server', useServerData())
 app.use(router)
 app.mount('#app')

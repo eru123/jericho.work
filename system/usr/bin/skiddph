@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Start memcached
+/usr/bin/memcached -u root -p 11211 -m 64 -c 1024 -P /var/run/memcached/memcached.pid -d
+
+# Test if memcached is running
+ps aux | grep memcached
+
+# run pnpm watch in background
+cd /app/client/main
+pnpm watch &
+
+# Start apache2
+/usr/sbin/httpd -D FOREGROUND

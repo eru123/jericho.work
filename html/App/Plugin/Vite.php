@@ -20,6 +20,7 @@ class Vite extends RouterVite
         if (isset($data['title'])) {
             static::head('<meta property="og:title" content="' . $data['title'] . '">');
             static::head('<meta name="title" content="' . $data['title'] . '">');
+            static::head('<title>' . $data['title'] . '</title>');
         }
 
         if (isset($data['description'])) {

@@ -16,6 +16,13 @@ class Main extends Controller
         Vite::head('<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">');
         Vite::head('<meta name="msapplication-TileColor" content="#2b5797">');
         Vite::head('<meta name="theme-color" content="#ffffff">');
+
+        Vite::data([
+            'APP_TITLE' => env('APP_TITLE', 'App'),
+            'BASE_URL' => env('BASE_URL'),
+            'CDN_URL' => env('CDN_URL', env('BASE_URL')),
+        ]);
+        
         return Vite::render($data, true);
     }
 

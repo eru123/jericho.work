@@ -5,7 +5,7 @@ WORKDIR /app
 RUN apk update \
     && apk upgrade \
     && apk add --update --no-cache \
-    npm curl apache2 php81-apache2 php81 \
+    npm curl apache2 memcached php81-apache2 php81 \
     php81-apcu php81-bcmath php81-bz2 \
     php81-calendar php81-ctype php81-curl \
     php81-dba php81-dom php81-embed \
@@ -26,9 +26,10 @@ RUN apk update \
     php81-sqlite3 php81-sysvmsg php81-sysvsem \
     php81-sysvshm php81-tidy php81-tokenizer \
     php81-xml php81-xmlreader php81-xmlwriter \
-    php81-xsl php81-zip php81-zlib \
+    php81-xsl php81-zip php81-zlib php81-pecl-memcached \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && npm i -g pnpm gulp
+    && npm i -g pnpm
+    # && env > /app/.env
 
 COPY html/composer.json html/composer.lock ./
 RUN composer install -o
@@ -36,12 +37,18 @@ RUN composer install -o
 COPY system/ /
 COPY html .
 
+RUN chmod +x /usr/bin/skiddph
 RUN pnpm install --prefix client/cdn \
     && pnpm install --prefix client/admin \
     && pnpm install --prefix client/main \
-    && pnpm build --prefix client/cdn \
-    && pnpm build --prefix client/admin \
-    && pnpm build --prefix client/main
+    && cd /app/client/admin && pnpm build \
+    && cd /app/client/main && pnpm build \
+    && cd /app/client/cdn && pnpm build
 
-EXPOSE 80
-ENTRYPOINT ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+# Production only - Delete FEs source code
+# && RUN find /app/client -mindepth 2 -maxdepth 2 -not -name 'dist'  -exec rm -rf {} \;
+# && RUN find /app/client -mindepth 1 -maxdepth 1 -not -name 'admin' -not -name 'cdn' -not -name 'main' -exec rm -rf {} \;
+
+EXPOSE 80 5173
+# START memcached and apache
+ENTRYPOINT ["/usr/bin/skiddph"]

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4f5c780f5cfdaead2f1a2b55a6931d60",
+    "content-hash": "00b2845799d985ce881fa50ec91ff720",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.277.9",
+            "version": "3.277.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "f2437a755b70756425bf8f1bd588a7c583891900"
+                "reference": "2f7c7f7d4c949469eca4e4c18fb5646aafb0375c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f2437a755b70756425bf8f1bd588a7c583891900",
-                "reference": "f2437a755b70756425bf8f1bd588a7c583891900",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/2f7c7f7d4c949469eca4e4c18fb5646aafb0375c",
+                "reference": "2f7c7f7d4c949469eca4e4c18fb5646aafb0375c",
                 "shasum": ""
             },
             "require": {
@@ -151,58 +151,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.277.9"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.277.12"
             },
-            "time": "2023-08-04T18:16:19+00:00"
-        },
-        {
-            "name": "eru123/holyphp",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eru123/holyphp.git",
-                "reference": "87aa903104540880b9adf093bcffd2d5d87afe13"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eru123/holyphp/zipball/87aa903104540880b9adf093bcffd2d5d87afe13",
-                "reference": "87aa903104540880b9adf093bcffd2d5d87afe13",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.1"
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "eru123/holyf.php"
-                ],
-                "psr-4": {
-                    "app\\": "app/",
-                    "eru123\\": "eru123/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache-2.0"
-            ],
-            "description": "A holy PHP library",
-            "support": {
-                "issues": "https://github.com/eru123/holyphp/issues",
-                "source": "https://github.com/eru123/holyphp/tree/main"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/eru123",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/skiddph",
-                    "type": "github"
-                }
-            ],
-            "time": "2023-08-07T14:00:12+00:00"
+            "time": "2023-08-09T18:09:09+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -952,12 +903,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "eru123/holyphp": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.2.0"
 }

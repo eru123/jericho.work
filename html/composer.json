@@ -3,18 +3,10 @@
     "require": {
         "aws/aws-sdk-php": "^3.275"
     },
-    "scripts": {
-        "post-install-cmd": [
-            "composer dump-autoload --optimize"
-        ],
-        "post-update-cmd": [
-            "composer dump-autoload --optimize"
-        ]
-    },
     "autoload": {
         "psr-4": {
             "App\\": "App/",
-            "eru123": "eru123/"
+            "eru123\\": "eru123/"
         },
         "files": [
             "App/functions.php"

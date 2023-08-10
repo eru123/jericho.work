@@ -6,7 +6,7 @@ import App from './App.vue'
 import Link from './components/Link.vue'
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import {
-    BiDiscord, 
+    BiDiscord,
     BiFacebook,
     BiLinkedin,
     BiEnvelopeFill,

@@ -5,23 +5,12 @@ namespace App\Plugin;
 use Exception;
 use eru123\email\provider\SMTP;
 use App\Models\Mails as MailModel;
+use App\Models\Smtps as SmtpsModel;
+use App\Plugin\MC;
 
 class Mailer
 {
-    const PRIORITY_NONE = 0;
-    const PRIORITY_LOW = 1;
-    const PRIORITY_NORMAL = 2;
-    const PRIORITY_HIGH = 3;
-    const PRIORITY_URGENT = 4;
-    const TYPE_TRANSACTIONAL = 'transactional';
-    const TYPE_MARKETING = 'marketing';
-    const TYPE_BULK = 'bulk';
-    const TYPE_AUTORESPONDER = 'autoresponder';
-    const TYPE_TRANSACTIONAL_MARKETING = 'transactional_marketing';
-    const STATUS_QUEUE = 1;
-    const STATUS_SENT = 2;
-    const STATUS_FAILED = 3;
-
+    const CACHE_PREFIX = 'mails_';
     protected static $pool = [];
     private $pool_key = null;
 
@@ -37,10 +26,10 @@ class Mailer
         } elseif ($config instanceof SMTP) {
             static::$pool[$key] = $config;
         } else {
-            $this->pool['key'] = new SMTP([
+            static::$pool[$key] = new SMTP([
                 'host' => env('SMTP_HOST'),
-                'port' => 587,
-                'secure' => 'tls',
+                'port' => env('SMTP_PORT', 587),
+                'secure' => env('SMTP_SECURE', 'tls'),
                 'auth' => true,
                 'debug' => $debug,
                 'username' => env('SMTP_USER'),
@@ -61,12 +50,12 @@ class Mailer
         return new static($key, $config, $debug);
     }
 
-    public static function queue(array $data = [])
+    public static function create_mail_data(array $data = []): array
     {
         $required = ['to', 'subject', 'body'];
         foreach ($required as $key) {
             if (!isset($data[$key])) {
-                throw new Exception("Required key {$key} not found");
+                throw new Exception("Required key '{$key}' not found");
             }
         }
 
@@ -113,7 +102,7 @@ class Mailer
 
         $priority = @$data['priority'] ?: 1;
         $type = @$data['type'] ?: 'transactional';
-        $status = SELF::STATUS_QUEUE;
+        $status = MailModel::STATUS_QUEUE;
         $sender_id = @$data['sender_id'] ?: 0;
         $parent_id = @$data['parent_id'] ?: 0;
         $user_id = @$data['user_id'] ?: 0;
@@ -137,7 +126,7 @@ class Mailer
         }
 
         if (isset($data['status'])) {
-            if (!in_array($data['status'], [SELF::STATUS_QUEUE, SELF::STATUS_SENT, SELF::STATUS_FAILED])) {
+            if (!in_array($data['status'], [MailModel::STATUS_QUEUE, MailModel::STATUS_SENT, MailModel::STATUS_FAILED])) {
                 throw new Exception("Invalid mail status");
             }
 
@@ -150,7 +139,7 @@ class Mailer
             unset($meta[$key]);
         }
 
-        $maildata = [
+        return [
             'parent_id' => (int) $parent_id,
             'user_id' => (int) $user_id,
             'sender_id' => (int) $sender_id,
@@ -164,15 +153,115 @@ class Mailer
             'status' => (int) $status,
             'meta' => $meta,
         ];
+    }
 
-        unset($meta);
-        unset($data);
-
+    public static function queue(array $data = [])
+    {
+        $maildata = static::create_mail_data($data);
         $insert = MailModel::insert($maildata);
         if (!$insert->rowCount()) {
             throw new Exception("Failed to insert mail data");
         }
 
         return true;
+    }
+
+    public function send(array $data = [])
+    {
+        $maildata = static::create_mail_data($data);
+        $success = static::$pool[$this->pool_key]->send($maildata);
+        $status = $success ? MailModel::STATUS_SENT : MailModel::STATUS_FAILED;
+        $maildata['status'] = $status;
+        if ($success) {
+            $maildata['message_id'] = static::$pool[$this->pool_key]->id();
+        }
+        $maildata['response'] = [
+            'provider' => static::$pool[$this->pool_key]->provider() ?? 'Unknown',
+            'logs' => static::$pool[$this->pool_key]->logs()
+        ];
+        return $maildata;
+    }
+
+    public static function send_queues(bool $debug = false)
+    {
+        $queues = MailModel::get_queues();
+        $senders = $queues['senders'];
+        $mails = $queues['mails'];
+        unset($queues);
+        $mc = MC::instance();
+        if (count($mails)) {
+            foreach ($mails as $mail) {
+                $sh = "php " . __SCRIPTS__ . "/mail_queue.php " . $mail['id'] . " > /dev/null 2>&1 &";
+                
+                if (PHP_OS_FAMILY == 'Linux') {
+                    echo $sh, PHP_EOL;
+                    echo shell_exec($sh), PHP_EOL;
+                    continue;
+                }
+
+                $smtp = null;
+                $sender = null;
+
+                if ($mail['sender_id'] == 0) {
+                    $sender = [
+                        'limit' => env('SMTP_LIMIT_PER_SECOND', 14),
+                    ];
+                    $smtp = static::instance('default', null, $debug);
+                } else if (isset($senders[$mail['sender_id']])) {
+                    $sender = $senders[$mail['sender_id']];
+                    $smtp = static::instance($sender['key'], $sender, $debug);
+                }
+
+                $sender_identifier = static::CACHE_PREFIX . $mail['sender_id'] . '_' . time();
+                $ctr = 0;
+
+                if ($smtp) {
+                    $ctr = $mc->get($sender_identifier);
+                    $limit = @$sender['limit'] ?? 0;
+                    if ($limit > 0) {
+                        if ($ctr >= $limit) {
+                            continue;
+                        }
+                    }
+                }
+
+                try {
+                    $newdata = $smtp->send($mail);
+                    MailModel::update($mail['id'], [
+                        'status' => $newdata['status'],
+                        'message_id' => $newdata['message_id'],
+                        'response' => $newdata['response']
+                    ]);
+                } catch (Exception $e) {
+                    $requeue = static::queue([
+                        'parent_id' => $mail['id'],
+                        'sender_id' => $mail['sender_id'],
+                        'user_id' => $mail['user_id'],
+                        'to' => $mail['to'],
+                        'cc' => $mail['cc'],
+                        'bcc' => $mail['bcc'],
+                        'subject' => $mail['subject'],
+                        'body' => $mail['body'],
+                        'priority' => MailModel::PRIORITY_NONE,
+                        'type' => $mail['type'],
+                        'status' => MailModel::STATUS_QUEUE
+                    ] + (@$mail['meta'] ?? []));
+                    if ($requeue) {
+                        MailModel::update($mail['id'], [
+                            'status' => MailModel::STATUS_FAILED,
+                            'response' => [
+                                'provider' => static::$pool[$smtp->pool_key]->provider() ?? 'Unknown',
+                                'logs' => static::$pool[$smtp->pool_key]->full_logs(),
+                                'error' => $e->getMessage()
+                            ]
+                        ]);
+                    }
+                }
+
+                $sender_identifier = static::CACHE_PREFIX . $mail['sender_id'] . '_' . time();
+                $ctr = $mc->get($sender_identifier);
+                $mc->set($sender_identifier, $ctr + 1, 60);
+            }
+        }
     }
 }

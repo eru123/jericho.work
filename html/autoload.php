@@ -8,6 +8,10 @@ define('__DOMAINS__', __DIR__ . '/domains');
 define('__ROUTES__', __DIR__ . '/routes');
 define('__LOGS__', __DIR__ . '/logs');
 
+if (!class_exists('Memcached')) {
+    include ("memcached.php");
+}
+
 require_once __DIR__ . '/vendor/autoload.php';
 eru123\config\DotEnv::load(__CWD__);
 

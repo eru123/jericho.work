@@ -10,3 +10,10 @@ define('__LOGS__', __DIR__ . '/logs');
 
 require_once __DIR__ . '/vendor/autoload.php';
 eru123\config\DotEnv::load(__CWD__);
+
+if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    $comh = ['X-Powered-By', 'Server'];
+    foreach ($comh as $header) {
+        header_remove($header);
+    }
+}

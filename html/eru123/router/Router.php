@@ -481,6 +481,83 @@ class Router
     }
 
     /**
+     * Get http status codes message/description
+     * @param int $code HTTP status code
+     * @return string
+     */
+    public static function http_message(int $code): string
+    {
+        $codes = [
+            100 => 'Continue',
+            101 => 'Switching Protocols',
+            102 => 'Processing', // WebDAV
+            103 => 'Early Hints',
+            200 => 'OK',
+            201 => 'Created',
+            202 => 'Accepted',
+            203 => 'Non-Authoritative Information', // HTTP/1.1
+            204 => 'No Content',
+            205 => 'Reset Content',
+            206 => 'Partial Content',
+            207 => 'Multi-status', // WebDAV
+            208 => 'Already Reported', // WebDAV
+            226 => 'IM Used', // HTTP Delta encoding
+            300 => 'Multiple Choices',
+            301 => 'Moved Permanently',
+            302 => 'Found', // Previously "Moved temporarily"
+            303 => 'See Other', // HTTP/1.1
+            304 => 'Not Modified', // HTTP/1.1
+            305 => 'Use Proxy', // HTTP/1.1
+            306 => 'Switch Proxy', // No longer used
+            307 => 'Temporary Redirect', // HTTP/1.1
+            308 => 'Permanent Redirect', // Experimental
+            400 => 'Bad Request',
+            401 => 'Unauthorized', // RFC 7235
+            402 => 'Payment Required',
+            403 => 'Forbidden',
+            404 => 'Not Found',
+            405 => 'Method Not Allowed', // HTTP/1.1
+            406 => 'Not Acceptable',
+            407 => 'Proxy Authentication Required', // RFC 7235
+            408 => 'Request Timeout',
+            409 => 'Conflict',
+            410 => 'Gone',
+            411 => 'Length Required', // HTTP/1.1
+            412 => 'Precondition Failed', // HTTP/1.1
+            413 => 'Payload Too Large', // HTTP/1.1
+            414 => 'URI Too Long', // HTTP/1.1
+            415 => 'Unsupported Media Type', // HTTP/1.1
+            416 => 'Range Not Satisfiable', // HTTP/1.1
+            417 => 'Expectation Failed',
+            418 => 'I\'m a teapot', // RFC 2324
+            421 => 'Misdirected Request',
+            422 => 'Unprocessable Entity', // WebDAV
+            423 => 'Locked', // WebDAV
+            424 => 'Failed Dependency', // WebDAV
+            425 => 'Too Early', // RFC 8470
+            426 => 'Upgrade Required',
+            428 => 'Precondition Required', // RFC 6585
+            429 => 'Too Many Requests', // RFC 6585
+            431 => 'Request Header Fields Too Large', // RFC 6585
+            449 => 'Retry With', // Microsoft
+            451 => 'Unavailable For Legal Reasons', // RFC 7725
+            500 => 'Internal Server Error',
+            501 => 'Not Implemented',
+            502 => 'Bad Gateway', // HTTP/1.1
+            503 => 'Service Unavailable',
+            504 => 'Gateway Timeout', // HTTP/1.1
+            505 => 'HTTP Version Not Supported',
+            506 => 'Variant Also Negotiates', // RFC 2295
+            507 => 'Insufficient Storage', // WebDAV
+            508 => 'Loop Detected', // WebDAV
+            510 => 'Not Extended', // RFC 2774
+            511 => 'Network Authentication Required', // RFC 6585
+        ];
+
+        return $codes[$code] ?? null;
+    }
+
+    /**
      * Run the router
      * @param string|null $base The base path to set, or null to use the current base path
      * @return void
@@ -494,11 +571,19 @@ class Router
         $map = $this->map();
 
         $default_fallback_handler = !empty($this->fallback) ? $this->fallback : function () {
-            return self::status_page(404, '404 Not Found', 'The requested URL was not found on this server.');
+            return static::status_page(404, '404 Not Found', 'The requested URL was not found on this server.');
         };
 
         $default_error_handler = !empty($this->error) ? $this->error : function (Throwable $e) {
-            return self::status_page(500, '500 Internal Server Error', 'The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.');
+            $err_code = (string) $e->getCode();
+            if (preg_match('/^[3-5][0-9]{2}$/', $err_code)) {
+                $err_code = (int) $err_code;
+                $err_msg = $e->getMessage();
+                $err_title = static::http_message($err_code);
+                return static::status_page($err_code, "{$err_code} {$err_title}", $err_msg);
+            }
+
+            return static::status_page(500, '500 Internal Server Error', 'The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.');
         };
 
         $default_response_handler = !empty($this->response) ? $this->response : function ($response) {

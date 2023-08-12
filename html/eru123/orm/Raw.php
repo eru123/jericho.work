@@ -16,8 +16,10 @@ class Raw
         if (!empty($params)) {
             $tmp_params = [];
             if (static::is_array($params)) {
+                $idxl = count($params);
                 foreach ($params as $index => $param) {
-                    $param_key = ':p__' . $index;
+                    $idxkey = str_pad($index, strlen($idxl), '0', STR_PAD_LEFT);
+                    $param_key = ':p__' . $idxkey;
                     $this->query = preg_replace('/\?/', $param_key, $this->query, 1);
                     $tmp_params[$param_key] = $param;
                 }
@@ -28,7 +30,7 @@ class Raw
                 $key = preg_replace('/^\:/', '', $key);
                 if ($param instanceof static) {
                     $value = $param->__toString();
-                } elseif (is_numeric($param)) {
+                } elseif (is_int($param) || is_float($param)) {
                     $value = $param;
                 } elseif (is_null($param)) {
                     $value = 'NULL';

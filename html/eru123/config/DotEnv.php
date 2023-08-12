@@ -29,8 +29,12 @@ class DotEnv
 
         foreach ($lines as $line) {
             try {
-                if (strpos(trim($line), '#') === 0) {
-                    continue;
+                $sym = ['//', '--', '#', ';'];
+                $ch0 = strlen($line) > 0 ? substr(trim($line), 0, 1) : false;
+                foreach ($sym as $s) {
+                    if ($ch0 === $s) {
+                        continue 2;
+                    }
                 }
 
                 env_set(...static::parse($line, $strict));

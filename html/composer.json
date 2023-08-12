@@ -9,7 +9,8 @@
             "eru123\\": "eru123/"
         },
         "files": [
-            "App/functions.php"
+            "App/functions.php",
+            "eru123/holyf.php"
         ]
     }
 }

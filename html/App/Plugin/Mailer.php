@@ -2,12 +2,25 @@
 
 namespace App\Plugin;
 
-use eru123\email\provider\SMTP;
 use Exception;
+use eru123\email\provider\SMTP;
+use App\Models\Mails as MailModel;
 
 class Mailer
 {
-
+    const PRIORITY_LOW = 1;
+    const PRIORITY_NORMAL = 2;
+    const PRIORITY_HIGH = 3;
+    const PRIORITY_URGENT = 4;
+    const TYPE_TRANSACTIONAL = 'transactional';
+    const TYPE_MARKETING = 'marketing';
+    const TYPE_BULK = 'bulk';
+    const TYPE_AUTORESPONDER = 'autoresponder';
+    const TYPE_TRANSACTIONAL_MARKETING = 'transactional_marketing';
+    const STATUS_QUEUE = 1;
+    const STATUS_SENT = 2;
+    const STATUS_FAILED = 3;
+    
     protected static $pool = [];
     private $pool_key = null;
 
@@ -97,12 +110,44 @@ class Mailer
             throw new Exception("No valid email address found");
         }
 
+        $priority = $data['priority'] ?: 1;
+        $type = $data['type'] ?: 'transactional';
+        $status = SELF::STATUS_QUEUE;
+
+        if (isset($data['status'])) {
+            if (!in_array($data['status'], [SELF::STATUS_QUEUE, SELF::STATUS_SENT, SELF::STATUS_FAILED])) {
+                throw new Exception("Invalid mail status");
+            }
+
+            $status = $data['status'];
+        }
+
+        $meta = clone $data;
+        $exclude = ['to', 'cc', 'bcc', 'subject', 'body', 'priority', 'type', 'status'];
+        foreach ($exclude as $key) {
+            unset($meta[$key]);
+        }
+
         $maildata = [
             'to' => $to,
             'cc' => $cc,
             'bcc' => $bcc,
             'subject' => $data['subject'],
             'body' => $data['body'],
+            'priority' => $priority,
+            'type' => $type,
+            'status' => $status,
+            'meta' => $meta,
         ];
+
+        unset($meta);
+        unset($data);
+
+        $insert = MailModel::insert($maildata);
+        if (!$insert->rowCount()) {
+            throw new Exception("Failed to insert mail data");
+        }
+
+        return true;
     }
 }

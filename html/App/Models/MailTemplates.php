@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use eru123\orm\Raw;
 use App\Plugin\DB;
 use PDOStatement;
 
-class MailTemplates extends Model
+class MailTemplates implements Model
 {
     public static function sanitize(array $data): array
     {

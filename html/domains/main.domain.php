@@ -1,8 +1,23 @@
 <?php
 
 use eru123\router\Router;
+use eru123\router\Context;
 
 $router = new Router();
+
+$router->bootstrap(function() {
+    $contacts = [
+        'Admin Mail' => env('ADMIN_MAIL'),
+        'Support Mail' => env('SUPPORT_MAIL'),
+        'Developer Mail' => env('DEV_MAIL'),
+    ];
+
+    foreach ($contacts as $name => $email) {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new Exception("Invalid email address for {$name}. Please contact the administrator.", 500);
+        }
+    }
+});
 
 $alternative_links = [
     'OpenCDN' => '/cdn',

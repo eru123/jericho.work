@@ -8,18 +8,21 @@ use Exception;
 
 class SMTP implements OutboundInterface
 {
-    private $config;
-    private $last_transaction_id;
+    private $config = [];
+    private $last_transaction_id = null;
+    private $last_transaction_provider = null;
+    private $response = [];
+    private $fullresponse = [];
 
     public function __construct(array $config = [])
     {
-        $this->buildConfig($config);
+        $this->build_config($config);
         if ($this->config['secure'] && !in_array($this->config['secure'], ['ssl', 'tls'])) {
             throw new Exception('Invalid secure type: ' . $this->config['secure']);
         }
     }
 
-    private function buildConfig(array $config = []): array
+    private function build_config(array $config = []): array
     {
         $cfg = array_merge([
             'host' => 'localhost',
@@ -104,7 +107,7 @@ class SMTP implements OutboundInterface
 
     public function connect(array $config = [], bool $debug = false)
     {
-        $cfg = $this->buildConfig($config);
+        $cfg = $this->build_config($config);
         !$debug || $this->debug('== Connecting to ' . $cfg['host'] . ':' . $cfg['port']);
 
         $socket = null;
@@ -138,19 +141,19 @@ class SMTP implements OutboundInterface
         return $this;
     }
 
-    public function fromName(string $name): static
+    public function from_name(string $name): static
     {
         $this->config['from_name'] = $name;
         return $this;
     }
 
-    public function fromEmail(string $email): static
+    public function from_email(string $email): static
     {
         $this->config['from_email'] = $email;
         return $this;
     }
 
-    public function replyTo(string $email): static
+    public function reply_to(string $email): static
     {
         if (!isset($this->config['reply_to'])) {
             $this->config['reply_to'] = [];
@@ -206,17 +209,17 @@ class SMTP implements OutboundInterface
         return $this;
     }
 
-    public function addTo(string $email): static
+    public function add_to(string $email): static
     {
         return $this->to($email);
     }
 
-    public function addCc(string $email): static
+    public function add_cc(string $email): static
     {
         return $this->cc($email);
     }
 
-    public function addBcc(string $email): static
+    public function add_bcc(string $email): static
     {
         return $this->bcc($email);
     }
@@ -241,26 +244,26 @@ class SMTP implements OutboundInterface
         return $this;
     }
 
-    public function useAuth(bool $auth = true): static
+    public function use_auth(bool $auth = true): static
     {
         $this->config['auth'] = $auth;
         return $this;
     }
 
-    public function useSSL(array $context = []): static
+    public function use_ssl(array $context = []): static
     {
         $this->config['ssl'] = empty($context) ? $this->config['ssl'] : $context;
         $this->config['secure'] = 'ssl';
         return $this;
     }
 
-    public function useTLS(): static
+    public function use_tls(): static
     {
         $this->config['secure'] = 'tls';
         return $this;
     }
 
-    public function useUnsecure(): static
+    public function use_unsecure(): static
     {
         $this->config['secure'] = false;
         return $this;
@@ -272,19 +275,19 @@ class SMTP implements OutboundInterface
         return $this;
     }
 
-    public function enableDebug(): static
+    public function enable_debug(): static
     {
         $this->config['debug'] = true;
         return $this;
     }
 
-    public function disableDebug(): static
+    public function disable_debug(): static
     {
         $this->config['debug'] = false;
         return $this;
     }
 
-    public function useDebug(bool $debug = true): static
+    public function use_debug(bool $debug = true): static
     {
         $this->config['debug'] = $debug;
         return $this;
@@ -296,13 +299,13 @@ class SMTP implements OutboundInterface
         return $this;
     }
 
-    public function useTimeout(int $seconds): static
+    public function use_timeout(int $seconds): static
     {
         $this->config['timeout'] = $seconds;
         return $this;
     }
 
-    public function usePort(int $port): static
+    public function use_port(int $port): static
     {
         $this->config['port'] = $port;
         return $this;
@@ -314,7 +317,7 @@ class SMTP implements OutboundInterface
         return $this;
     }
 
-    public function useHost(string $host): static
+    public function use_host(string $host): static
     {
         $this->config['host'] = $host;
         return $this;
@@ -326,7 +329,7 @@ class SMTP implements OutboundInterface
         return $this;
     }
 
-    public function useUsername(string $username): static
+    public function use_username(string $username): static
     {
         $this->config['username'] = $username;
         return $this;
@@ -338,7 +341,7 @@ class SMTP implements OutboundInterface
         return $this;
     }
 
-    public function usePassword(string $password): static
+    public function use_password(string $password): static
     {
         $this->config['password'] = $password;
         return $this;
@@ -350,7 +353,7 @@ class SMTP implements OutboundInterface
         return $this;
     }
 
-    public function useTime(int $time): static
+    public function use_time(int $time): static
     {
         $this->config['time'] = $time;
         return $this;
@@ -365,6 +368,10 @@ class SMTP implements OutboundInterface
     public function send(array $data = []): bool
     {
         $socket = null;
+        $this->last_transaction_id = null;
+        $this->last_transaction_provider = null;
+        $this->response = [];
+        $this->fullresponse = [];
 
         try {
             $data = array_merge([
@@ -500,7 +507,7 @@ class SMTP implements OutboundInterface
             $this->write($socket, '.');
 
             $datr = $this->read($socket);
-            $this->setLastTransactionId($datr);
+            $this->set_last_transaction_id($datr);
 
             $this->write($socket, 'QUIT');
             $this->read($socket);
@@ -521,6 +528,7 @@ class SMTP implements OutboundInterface
     {
         $this->debug(">> " . substr($data, 0, 64) . (strlen($data) > 64 ? '...' : ''));
         fwrite($socket, $data . (@$this->config['eol'] ?? "\r\n"));
+        $this->fullresponse[] = $data;
     }
 
     private function read($socket): string
@@ -536,10 +544,11 @@ class SMTP implements OutboundInterface
             }
         }
         $this->debug('<< ' . str_replace(["\r", "\n"], ["\r<< ", "\n<< "], trim($data)));
+        $this->response[] = $data;
         return $data;
     }
 
-    private function setLastTransactionId(string $response): void
+    private function set_last_transaction_id(string $response): void
     {
         $smtp_transaction_id_patterns = [
             'exim' => '/[\d]{3} OK id=(.*)/',
@@ -552,12 +561,13 @@ class SMTP implements OutboundInterface
             'Haraka' => '/[\d]{3} Message Queued \((.*)\)/',
             'ZoneMTA' => '/[\d]{3} Message queued as (.*)/',
             'Mailjet' => '/[\d]{3} OK queued as (.*)/',
-            'Gmail' => '/[\d]{3} 2.0.0 (.*) - gsmtp/',
+            'Gmail' => '/[\d]{3} 2.0.0 (.*) - gsmtp/'
         ];
 
         foreach ($smtp_transaction_id_patterns as $key => $pattern) {
             if (preg_match($pattern, $response, $matches)) {
-                $this->last_transaction_id = $matches[1];
+                $this->last_transaction_id = trim($matches[1]);
+                $this->last_transaction_provider = $key;
                 break;
             }
         }
@@ -570,6 +580,21 @@ class SMTP implements OutboundInterface
     public function id(): ?string
     {
         return $this->last_transaction_id;
+    }
+
+    public function provider(): ?string
+    {
+        return $this->last_transaction_provider;
+    }
+
+    public function logs(): array
+    {
+        return $this->response;
+    }
+
+    public function full_logs(): array
+    {
+        return $this->fullresponse;
     }
 
     public function __destruct()

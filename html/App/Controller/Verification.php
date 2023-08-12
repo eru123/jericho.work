@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Controller;
 
 use App\Plugin\DB;
 use eru123\orm\Raw;

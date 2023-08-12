@@ -6,7 +6,7 @@ use eru123\orm\Raw;
 use App\Plugin\DB;
 use PDOStatement;
 
-class Mails extends Model
+class Mails implements Model
 {
     public static function sanitize(array $data): array
     {
@@ -14,6 +14,7 @@ class Mails extends Model
         $allowed = [
             'parent_id',
             'user_id',
+            'sender_id',
             'message_id',
             'type',
             'subject',
@@ -21,6 +22,7 @@ class Mails extends Model
             'cc',
             'bcc',
             'body',
+            'attachments',
             'priority',
             'meta',
             'status',

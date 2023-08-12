@@ -8,6 +8,7 @@ use App\Models\Mails as MailModel;
 
 class Mailer
 {
+    const PRIORITY_NONE = 0;
     const PRIORITY_LOW = 1;
     const PRIORITY_NORMAL = 2;
     const PRIORITY_HIGH = 3;
@@ -20,7 +21,7 @@ class Mailer
     const STATUS_QUEUE = 1;
     const STATUS_SENT = 2;
     const STATUS_FAILED = 3;
-    
+
     protected static $pool = [];
     private $pool_key = null;
 
@@ -110,9 +111,30 @@ class Mailer
             throw new Exception("No valid email address found");
         }
 
-        $priority = $data['priority'] ?: 1;
-        $type = $data['type'] ?: 'transactional';
+        $priority = @$data['priority'] ?: 1;
+        $type = @$data['type'] ?: 'transactional';
         $status = SELF::STATUS_QUEUE;
+        $sender_id = @$data['sender_id'] ?: 0;
+        $parent_id = @$data['parent_id'] ?: 0;
+        $user_id = @$data['user_id'] ?: 0;
+        $attachments = @$data['attachments'] ?: [];
+
+        if (!is_array($attachments)) {
+            if (is_numeric($attachments)) {
+                $attachments = [intval($attachments)];
+            } else {
+                throw new Exception("Invalid attachment: " . $attachments);
+            }
+        }
+
+        $invalid_attachments = [];
+        foreach ($attachments as $key => $value) {
+            if (!is_numeric($value)) {
+                $invalid_attachments[] = $value;
+            } else if (!is_int($value) && !is_float($value)) {
+                $attachments[$key] = intval($value);
+            }
+        }
 
         if (isset($data['status'])) {
             if (!in_array($data['status'], [SELF::STATUS_QUEUE, SELF::STATUS_SENT, SELF::STATUS_FAILED])) {
@@ -122,21 +144,24 @@ class Mailer
             $status = $data['status'];
         }
 
-        $meta = clone $data;
-        $exclude = ['to', 'cc', 'bcc', 'subject', 'body', 'priority', 'type', 'status'];
+        $meta = $data;
+        $exclude = ['to', 'cc', 'bcc', 'subject', 'body', 'priority', 'type', 'status', 'sender_id', 'parent_id', 'user_id'];
         foreach ($exclude as $key) {
             unset($meta[$key]);
         }
 
         $maildata = [
+            'parent_id' => (int) $parent_id,
+            'user_id' => (int) $user_id,
+            'sender_id' => (int) $sender_id,
             'to' => $to,
             'cc' => $cc,
             'bcc' => $bcc,
             'subject' => $data['subject'],
             'body' => $data['body'],
-            'priority' => $priority,
+            'priority' => (int) $priority,
             'type' => $type,
-            'status' => $status,
+            'status' => (int) $status,
             'meta' => $meta,
         ];
 

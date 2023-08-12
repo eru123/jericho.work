@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use eru123\orm\Raw;
 use App\Plugin\DB;
 use PDOStatement;
 

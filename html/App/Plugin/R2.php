@@ -56,7 +56,7 @@ class R2
         ]);
     }
 
-    public function put(array $data = [], $fdata)
+    public function put(array $data = [], $fdata = null)
     {
         $defaults = [
             'Bucket' => $this->r2_bucket,

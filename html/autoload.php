@@ -1,15 +1,15 @@
 <?php
 
 define('__CWD__', __DIR__);
-define('__CLIENT__', __DIR__ . '/client');
-define('__APP__', __DIR__ . '/App');
-define('__SCRIPTS__', __DIR__ . '/scripts');
-define('__DOMAINS__', __DIR__ . '/domains');
-define('__ROUTES__', __DIR__ . '/routes');
-define('__LOGS__', __DIR__ . '/logs');
+define('__CLIENT__', __DIR__ . DIRECTORY_SEPARATOR . 'client');
+define('__APP__', __DIR__ . DIRECTORY_SEPARATOR . 'App');
+define('__SCRIPTS__', __DIR__ . DIRECTORY_SEPARATOR . 'scripts');
+define('__DOMAINS__', __DIR__ . DIRECTORY_SEPARATOR . 'domains');
+define('__ROUTES__', __DIR__ . DIRECTORY_SEPARATOR . 'routes');
+define('__LOGS__', __DIR__ . DIRECTORY_SEPARATOR . 'logs');
 
 if (!class_exists('Memcached')) {
-    include ("memcached.php");
+    include("memcached.php");
 }
 
 require_once __DIR__ . '/vendor/autoload.php';

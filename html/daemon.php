@@ -18,10 +18,5 @@ $d->run([
             cmd(['mail_queues'], true);
             echo "[{$date}]\tcycle: {$cyc}\tmem: {$mem}/{$mac}MB\n";
         }
-    },
-    function (Daemon $c) {
-        if ($c->is_second(0)) {
-            echo "second 0\n";
-        }
     }
 ]);

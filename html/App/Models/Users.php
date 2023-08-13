@@ -51,7 +51,7 @@ class Users implements Model
         $sanitized = [];
         foreach ($allowed as $key) {
             if (isset($data[$key])) {
-                if ($data[$key] instanceof Raw || is_string($data[$key]) || is_numeric($data[$key])) {
+                if ($data[$key] instanceof Raw || is_string($data[$key]) || is_int($data[$key]) || is_float($data[$key])) {
                     $sanitized[$key] = $data[$key];
                 } else if (is_array($data[$key]) || is_object($data[$key])) {
                     $sanitized[$key] = json_encode($data[$key]);
@@ -269,8 +269,8 @@ class Users implements Model
     {
         $data = static::strict_data_check(['email' => $email]);
         $email = $data['email'];
-        $sql = "SELECT COUNT(*) FROM `users` WHERE `email` = ? AND `email_verified` = 1 AND `deleted_at` IS NULL";
-        $stmt = DB::instance()->query($sql, [$email]);
+        $sql = "SELECT COUNT(*) FROM `users` WHERE (`email` = ? OR JSON_CONTAINS(`emails`, ?)) AND `email_verified` = 1 AND `deleted_at` IS NULL";
+        $stmt = DB::instance()->query($sql, [$email, json_encode([$email])]);
         return $stmt->fetchColumn() > 0;
     }
 
@@ -278,8 +278,8 @@ class Users implements Model
     {
         $data = static::strict_data_check(['mobile' => $mobile]);
         $mobile = $data['mobile'];
-        $sql = "SELECT COUNT(*) FROM `users` WHERE `mobile` = ? AND `mobile_verified` = 1 AND `deleted_at` IS NULL";
-        $stmt = DB::instance()->query($sql, [$mobile]);
+        $sql = "SELECT COUNT(*) FROM `users` WHERE (`mobile` = ? OR JSON_CONTAINS(`mobiles`, ?)) AND `mobile_verified` = 1 AND `deleted_at` IS NULL";
+        $stmt = DB::instance()->query($sql, [$mobile, json_encode([$mobile])]);
         return $stmt->fetchColumn() > 0;
     }
 
@@ -347,13 +347,25 @@ class Users implements Model
             if (password_verify($pass, $user['hash'])) {
                 unset($user['hash']);
                 unset($user['hash_h']);
-                $user['roles'] = json_decode($user['roles']) ?? [];
-                $user['addresses'] = json_decode($user['addresses']) ?? [];
-                $user['emails'] = json_decode($user['emails']) ?? [];
-                $user['mobiles'] = json_decode($user['mobiles']) ?? [];
-                $user['providers'] = json_decode($user['providers']) ?? [];
+                $user['roles'] = json_decode(@$user['roles'] ?? 'null');
+                $user['addresses'] = json_decode(@$user['addresses'] ?? 'null');
+                $user['emails'] = json_decode(@$user['emails'] ?? 'null');
+                $user['mobiles'] = json_decode(@$user['mobiles'] ?? 'null');
+                $user['providers'] = json_decode(@$user['providers'] ?? 'null');
                 $user['mobile_verified'] = $user['mobile_verified'] == 1;
                 $user['email_verified'] = $user['email_verified'] == 1;
+                if (!empty($user['alias'])) {
+                    $user['name'] = $user['alias'];
+                } else {
+                    $nl = ['pronoun', 'fname', 'mname', 'lname', 'suffix'];
+                    $na = [];
+                    foreach ($nl as $n) {
+                        if (isset($user[$n]) && !empty($user[$n])) {
+                            $na[] = $user[$n];
+                        }
+                    }
+                    $user['name'] = count($na) ? implode(' ', $na) : 'User';
+                }
                 return $user;
             }
         }
@@ -374,7 +386,7 @@ class Users implements Model
         return DB::instance()->delete('users', $id);
     }
 
-    public static function find(int|string $id): array|null
+    public static function find(int|string $id): array|null|false
     {
         $res = null;
         if (is_numeric($id)) {
@@ -390,13 +402,25 @@ class Users implements Model
         if ($res) {
             unset($res['hash']);
             unset($res['hash_h']);
-            $res['roles'] = json_decode($res['roles']) ?? [];
-            $res['addresses'] = json_decode($res['addresses']) ?? [];
-            $res['emails'] = json_decode($res['emails']) ?? [];
-            $res['mobiles'] = json_decode($res['mobiles']) ?? [];
-            $res['providers'] = json_decode($res['providers']) ?? [];
+            $res['roles'] = json_decode(@$res['roles'] ?? 'null');
+            $res['addresses'] = json_decode(@$res['addresses'] ?? 'null');
+            $res['emails'] = json_decode(@$res['emails'] ?? 'null');
+            $res['mobiles'] = json_decode(@$res['mobiles'] ?? 'null');
+            $res['providers'] = json_decode(@$res['providers'] ?? 'null');
             $res['mobile_verified'] = $res['mobile_verified'] == 1;
             $res['email_verified'] = $res['email_verified'] == 1;
+            if (!empty($res['alias'])) {
+                $res['name'] = $res['alias'];
+            } else {
+                $nl = ['pronoun', 'fname', 'mname', 'lname', 'suffix'];
+                $na = [];
+                foreach ($nl as $n) {
+                    if (isset($res[$n]) && !empty($res[$n])) {
+                        $na[] = $res[$n];
+                    }
+                }
+                $res['name'] = count($na) ? implode(' ', $na) : 'User';
+            }
         }
 
         return $res;
@@ -419,13 +443,25 @@ class Users implements Model
             foreach ($res as &$r) {
                 unset($r['hash']);
                 unset($r['hash_h']);
-                $r['roles'] = json_decode($r['roles']) ?? [];
-                $r['addresses'] = json_decode($r['addresses']) ?? [];
-                $r['emails'] = json_decode($r['emails']) ?? [];
-                $r['mobiles'] = json_decode($r['mobiles']) ?? [];
-                $r['providers'] = json_decode($r['providers']) ?? [];
+                $r['roles'] = json_decode(@$r['roles'] ?? 'null');
+                $r['addresses'] = json_decode(@$r['addresses'] ?? 'null');
+                $r['emails'] = json_decode(@$r['emails'] ?? 'null');
+                $r['mobiles'] = json_decode(@$r['mobiles'] ?? 'null');
+                $r['providers'] = json_decode(@$r['providers'] ?? 'null');
                 $r['mobile_verified'] = $r['mobile_verified'] == 1;
                 $r['email_verified'] = $r['email_verified'] == 1;
+                if (!empty($r['alias'])) {
+                    $r['name'] = $r['alias'];
+                } else {
+                    $nl = ['pronoun', 'fname', 'mname', 'lname', 'suffix'];
+                    $na = [];
+                    foreach ($nl as $n) {
+                        if (isset($r[$n]) && !empty($r[$n])) {
+                            $na[] = $r[$n];
+                        }
+                    }
+                    $r['name'] = count($na) ? implode(' ', $na) : 'User';
+                }
             }
         }
 

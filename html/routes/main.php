@@ -15,4 +15,6 @@ return function (Router &$main) {
     $main->fallback('App\Controller\Main@index');
     $main->any('/site.webmanifest', 'App\Controller\Main@webmanifest');
     $main->get('/', 'App\Controller\Main@index');
+
+    $main->get('/verify/$code', 'App\Controller\Main@verify');
 };

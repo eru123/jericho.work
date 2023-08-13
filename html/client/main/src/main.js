@@ -13,7 +13,9 @@ import {
     BiCloudFill,
     FaDatabase,
     MdPolicy,
-    MdHandshake
+    MdHandshake,
+    BiCheckCircle,
+    BiXCircle 
 } from "oh-vue-icons/icons";
 
 addIcons(
@@ -24,7 +26,9 @@ addIcons(
     BiCloudFill,
     FaDatabase,
     MdPolicy,
-    MdHandshake
+    MdHandshake,
+    BiCheckCircle,
+    BiXCircle 
 );
 
 const app = createApp(App)

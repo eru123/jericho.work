@@ -182,86 +182,16 @@ class Mailer
         return $maildata;
     }
 
-    public static function send_queues(bool $debug = false)
+    public static function send_queues()
     {
-        $queues = MailModel::get_queues();
-        $senders = $queues['senders'];
-        $mails = $queues['mails'];
-        unset($queues);
-        $mc = MC::instance();
+        $mails = @MailModel::get_queues()['mails'] ?? [];
         if (count($mails)) {
             foreach ($mails as $mail) {
-                $sh = "php " . __SCRIPTS__ . "/mail_queue.php " . $mail['id'] . " > /dev/null 2>&1 &";
-                
-                if (PHP_OS_FAMILY == 'Linux') {
-                    echo $sh, PHP_EOL;
-                    echo shell_exec($sh), PHP_EOL;
-                    continue;
-                }
-
-                $smtp = null;
-                $sender = null;
-
-                if ($mail['sender_id'] == 0) {
-                    $sender = [
-                        'limit' => env('SMTP_LIMIT_PER_SECOND', 14),
-                    ];
-                    $smtp = static::instance('default', null, $debug);
-                } else if (isset($senders[$mail['sender_id']])) {
-                    $sender = $senders[$mail['sender_id']];
-                    $smtp = static::instance($sender['key'], $sender, $debug);
-                }
-
-                $sender_identifier = static::CACHE_PREFIX . $mail['sender_id'] . '_' . time();
-                $ctr = 0;
-
-                if ($smtp) {
-                    $ctr = $mc->get($sender_identifier);
-                    $limit = @$sender['limit'] ?? 0;
-                    if ($limit > 0) {
-                        if ($ctr >= $limit) {
-                            continue;
-                        }
-                    }
-                }
-
-                try {
-                    $newdata = $smtp->send($mail);
-                    MailModel::update($mail['id'], [
-                        'status' => $newdata['status'],
-                        'message_id' => $newdata['message_id'],
-                        'response' => $newdata['response']
-                    ]);
-                } catch (Exception $e) {
-                    $requeue = static::queue([
-                        'parent_id' => $mail['id'],
-                        'sender_id' => $mail['sender_id'],
-                        'user_id' => $mail['user_id'],
-                        'to' => $mail['to'],
-                        'cc' => $mail['cc'],
-                        'bcc' => $mail['bcc'],
-                        'subject' => $mail['subject'],
-                        'body' => $mail['body'],
-                        'priority' => MailModel::PRIORITY_NONE,
-                        'type' => $mail['type'],
-                        'status' => MailModel::STATUS_QUEUE
-                    ] + (@$mail['meta'] ?? []));
-                    if ($requeue) {
-                        MailModel::update($mail['id'], [
-                            'status' => MailModel::STATUS_FAILED,
-                            'response' => [
-                                'provider' => static::$pool[$smtp->pool_key]->provider() ?? 'Unknown',
-                                'logs' => static::$pool[$smtp->pool_key]->full_logs(),
-                                'error' => $e->getMessage()
-                            ]
-                        ]);
-                    }
-                }
-
-                $sender_identifier = static::CACHE_PREFIX . $mail['sender_id'] . '_' . time();
-                $ctr = $mc->get($sender_identifier);
-                $mc->set($sender_identifier, $ctr + 1, 60);
+                cmd(['mail_queue', '-q', $mail['id']], true);
+                continue;
             }
         }
+        
+        return count($mails);
     }
 }

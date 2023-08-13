@@ -53,7 +53,7 @@ interface Model
      * @param int|string $id
      * @return array|null
      */
-    public static function find(int|string $id): array|null;
+    public static function find(int|string $id): array|null|false;
     /**
      * Select many rows from the database
      * @param int|string $id

@@ -215,7 +215,10 @@ class Daemon
     {
         $daemon_pid = $this->mem_get('daemon_pid');
         if ($daemon_pid) {
-            if (posix_kill($daemon_pid, 0)) {
+            $posix = function_exists('posix_kill') && posix_kill($daemon_pid, 0);
+            $gnu = PHP_OS_FAMILY === 'Linux' && shell_exec(cmdp(['ps', 'aux', '|', 'grep', $daemon_pid, '|', 'wc', '-l'])) > 0;
+            $win = PHP_OS_FAMILY === 'Windows' && !empty(trim((string) shell_exec(cmdp(['tasklist', '|', 'findstr', $daemon_pid]))));
+            if ($posix || $gnu || $win) {
                 echo "Daemon is already running with PID: " . $daemon_pid . PHP_EOL;
                 exit;
             }
@@ -244,7 +247,7 @@ class Daemon
 
             foreach ($callbacks as $callback) {
                 $cb = Callback::make($callback);
-            
+
                 if (is_callable($cb)) {
                     call_user_func_array($callback, [&$this]);
                 }

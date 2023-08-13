@@ -15,32 +15,13 @@ $d->run([
             $mem = rtrim(number_format($c->musage(), 2), '0.');
             $mac = $c->malloc();
             $cyc = $c->cycle();
+            cmd(['mail_queues'], true);
             echo "[{$date}]\tcycle: {$cyc}\tmem: {$mem}/{$mac}MB\n";
         }
     },
     function (Daemon $c) {
         if ($c->is_second(0)) {
             echo "second 0\n";
-        }
-    },
-    function (Daemon $c) {
-        if ($c->is_second(15)) {
-            echo "second 15\n";
-        }
-    },
-    function (Daemon $c) {
-        if ($c->is_second(30)) {
-            echo "second 30\n";
-        }
-    },
-    function (Daemon $c) {
-        if ($c->is_minute(0)) {
-            echo "minute 0\n";
-        }
-    },
-    function (Daemon $c) {
-        if ($c->is_minute(18)) {
-            echo "minute 18\n";
         }
     }
 ]);

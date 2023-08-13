@@ -19,6 +19,7 @@ if (isset($args['q']) && !empty($args['q'])) {
     }
 
     $mc->set($proc, 1, 30);
+    Mailer::new_process();
 
     $mail = Mails::find($id);
     if (!$mail || @$mail['status'] != Mails::STATUS_QUEUE) {
@@ -41,6 +42,14 @@ if (isset($args['q']) && !empty($args['q'])) {
         $smtp = Smtps::find($mail['smtp_id']);
         if (!$smtp) {
             echo "SMTP not found.", PHP_EOL;
+            Mailer::end_process();
+            Mails::update($mail['id'], [
+                'status' => Mails::STATUS_FAILED,
+                'response' => [
+                    'error' => 'SMTP not found.'
+                ]
+            ]);
+            $mc->delete($proc);
             exit(1);
         }
 
@@ -52,7 +61,7 @@ if (isset($args['q']) && !empty($args['q'])) {
     $ctr = intval($mc->get($mail_identifier));
     if ($ctr >= $limit) {
         echo "SMTP limit reached.", PHP_EOL;
-        $mc->delete($proc);
+        Mailer::end_process();
         exit(1);
     }
 
@@ -89,5 +98,7 @@ if (isset($args['q']) && !empty($args['q'])) {
                 ]
             ]);
         }
+
+        Mailer::end_process();
     }
 }

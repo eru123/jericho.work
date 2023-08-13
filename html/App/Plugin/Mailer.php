@@ -191,7 +191,28 @@ class Mailer
                 continue;
             }
         }
-        
         return count($mails);
+    }
+
+    public static function new_process()
+    {
+        $identifier = static::CACHE_PREFIX . 'processing_count';
+        $mc = MC::instance();
+        $mc->set($identifier, ($mc->get($identifier) ?? 0) + 1, 60);
+    }
+
+    public static function end_process()
+    {
+        $identifier = static::CACHE_PREFIX . 'processing_count';
+        $mc = MC::instance();
+        $mc->set($identifier, ($mc->get($identifier) ?? 0) - 1, 60);
+    }
+
+    public static function total_process()
+    {
+        $identifier = static::CACHE_PREFIX . 'processing_count';
+        $mc = MC::instance();
+        $cnt = $mc->get($identifier) ?? 0;
+        return $cnt < 0 ? 0 : $cnt;
     }
 }

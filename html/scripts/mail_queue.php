@@ -18,7 +18,7 @@ if (isset($args['q']) && !empty($args['q'])) {
         exit(1);
     }
 
-    $mc->set($proc, 1, 60);
+    $mc->set($proc, 1, 30);
 
     $mail = Mails::find($id);
     if (!$mail || @$mail['status'] != Mails::STATUS_QUEUE) {
@@ -52,6 +52,7 @@ if (isset($args['q']) && !empty($args['q'])) {
     $ctr = intval($mc->get($mail_identifier));
     if ($ctr >= $limit) {
         echo "SMTP limit reached.", PHP_EOL;
+        $mc->delete($proc);
         exit(1);
     }
 

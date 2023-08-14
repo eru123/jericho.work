@@ -22,13 +22,13 @@ class MC
         return static::$instance;
     }
 
-    public function __construct(string $id = 'development')
+    public function __construct(string $id)
     {
         $this->id = $id;
         if (!isset(static::$pool[$id])) {
             static::$pool[$id] = new Memcached($id);
             if (!count(static::$pool[$id]->getServerList())) {
-                static::$pool[$id]->addServer(getenv('MEMCACHED_HOST'), getenv('MEMCACHED_PORT'));
+                static::$pool[$id]->addServer(env('MEMCACHED_HOST'), env('MEMCACHED_PORT'));
             }
         }
     }

@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use eru123\orm\Raw;
 use App\Plugin\DB;
 use PDOStatement;
 
-class MailTemplates extends Model
+class MailTemplates implements Model
 {
     public static function sanitize(array $data): array
     {
@@ -94,7 +95,7 @@ class MailTemplates extends Model
         return DB::instance()->delete('mail_templates', $id);
     }
 
-    public static function find(int|string $id): array|null
+    public static function find(int|string $id): array|null|false
     {
         if (is_numeric($id)) {
             return DB::instance()->query('SELECT * FROM `mail_templates` WHERE `id` = ? AND `deleted_at` IS NULL', [$id])->fetch();

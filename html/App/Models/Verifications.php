@@ -15,6 +15,7 @@ class Verifications implements Model
             'type',
             'identifier',
             'code',
+            'hash',
             'action',
             'status',
             'expires_at',
@@ -100,7 +101,7 @@ class Verifications implements Model
         return DB::instance()->delete('verifications', $id);
     }
 
-    public static function find(int|string $id): array|null
+    public static function find(int|string $id): array|null|false
     {
         if (is_numeric($id)) {
             return DB::instance()->query('SELECT * FROM `verifications` WHERE `id` = ? AND `deleted_at` IS NULL', [$id])->fetch();

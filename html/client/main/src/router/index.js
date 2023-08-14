@@ -4,6 +4,7 @@ import Landing from '@/views/Landing.vue'
 import MDLayout from '@/layouts/PublicMarkdown.vue'
 import MDPrivacyPolicy from '@/md/privacy-policy.md'
 import MDTermsAndConditions from '@/md/terms-and-conditions.md'
+import Verify from '@/views/Verify.vue'
 
 const routes = [
     {
@@ -27,6 +28,11 @@ const routes = [
                 component: MDTermsAndConditions
             }
         ]
+    },
+    {
+        path: '/verify/:token',
+        name: 'Verify',
+        component: Verify
     }
 ];
 

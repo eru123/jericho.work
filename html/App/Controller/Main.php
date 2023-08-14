@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Plugin\Vite;
+use App\Plugin\DB;
 use eru123\router\Context;
 
 class Main extends Controller
@@ -16,6 +17,38 @@ class Main extends Controller
         Vite::head('<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">');
         Vite::head('<meta name="msapplication-TileColor" content="#2b5797">');
         Vite::head('<meta name="theme-color" content="#ffffff">');
+
+        Vite::data([
+            'APP_TITLE' => env('APP_TITLE', 'App'),
+            'BASE_URL' => env('BASE_URL'),
+            'CDN_URL' => env('CDN_URL', env('BASE_URL')),
+        ]);
+
+        if (env('APP_ENV') === 'development') {
+            if (!isset($debug['debug'])) {
+                $debug['debug'] = [];
+            }
+
+            $debug['debug']['response_debug'] = true;
+            $debug['debug']['db_query'] = DB::instance()->queryHistory();
+            $debug['debug']['memory'] = [
+                'usage' => ceil(memory_get_usage() / 1024 / 1024) . 'MB',
+                'usage_alloc' => ceil(memory_get_usage(true) / 1024 / 1024) . 'MB',
+                'peak' => ceil(memory_get_peak_usage() / 1024 / 1024) . 'MB',
+                'peak_alloc' => ceil(memory_get_peak_usage(true) / 1024 / 1024) . 'MB',
+            ];
+
+            $debug['debug']['request'] = [
+                'method' => $_SERVER['REQUEST_METHOD'],
+                'uri' => $_SERVER['REQUEST_URI'],
+                'query' => $_GET,
+                'body' => (json_decode(file_get_contents('php://input'), true) ?? null) ?: $_POST,
+                'headers' => getallheaders(),
+            ];
+
+            Vite::data($debug);
+        }
+        
         return Vite::render($data, true);
     }
 
@@ -32,6 +65,27 @@ class Main extends Controller
             'url' => env('BASE_URL'),
             'type' => 'website'
         ]);
+
+        return $this->view();
+    }
+
+    public function verify(Context $c)
+    {
+        if ($c->file_path) {
+            return null;
+        }
+
+        $code = $c->params['code'] ?? null;
+
+        Vite::seo([
+            'title' => "Mail Verification | ".env('APP_TITLE', 'App'),
+            'description' => "Mail Verification",
+            'image' => env('BASE_URL') . '/card.png',
+            'url' => env('BASE_URL'),
+            'type' => 'website'
+        ]);
+
+        Vite::data(Verification::verify_from_link($code));
 
         return $this->view();
     }

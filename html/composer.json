@@ -1,23 +1,16 @@
 {
     "minimum-stability": "dev",
     "require": {
-        "eru123/holyphp": "dev-main",
         "aws/aws-sdk-php": "^3.275"
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "composer dump-autoload --optimize"
-        ],
-        "post-update-cmd": [
-            "composer dump-autoload --optimize"
-        ]
     },
     "autoload": {
         "psr-4": {
-            "App\\": "App/"
+            "App\\": "App/",
+            "eru123\\": "eru123/"
         },
         "files": [
-            "App/functions.php"
+            "App/functions.php",
+            "eru123/holyf.php"
         ]
     }
 }

@@ -30,7 +30,7 @@ class DB
         $name = env('DB_NAME', 'main');
 
         $dsn = "mysql:host=$host;port=$port;dbname=$name;charset=utf8mb4";
-        $this->pdo = new PDO($dsn, $user, $pass , [
+        $this->pdo = new PDO($dsn, $user, $pass, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         ]);
@@ -70,6 +70,11 @@ class DB
         $keys = array_keys($data);
         $values = array_values($data);
         $sql = "INSERT INTO `$table` (`" . implode('`, `', $keys) . "`) VALUES (" . implode(', ', array_fill(0, count($values), '?')) . ")";
+        for ($i = 0; $i < count($values); $i++) {
+            if (is_array($values[$i])) {
+                $values[$i] = count($values[$i]) ? json_encode($values[$i]) : null;
+            }
+        }
         return $this->query($sql, $values);
     }
 
@@ -78,7 +83,13 @@ class DB
         $keys = array_keys($data[0]);
         $values = [];
         foreach ($data as $d) {
-            $values = array_merge($values, array_values($d));
+            $rowdata = array_values($d);
+            for ($i = 0; $i < count($rowdata); $i++) {
+                if (is_array($rowdata[$i])) {
+                    $rowdata[$i] = count($rowdata[$i]) ? json_encode($rowdata[$i]) : null;
+                }
+            }
+            $values = array_merge($values, $rowdata);
         }
         $sql = "INSERT INTO `$table` (`" . implode('`, `', $keys) . "`) VALUES " . implode(', ', array_fill(0, count($data), '(' . implode(', ', array_fill(0, count($keys), '?')) . ')'));
         return $this->query($sql, $values);
@@ -94,6 +105,11 @@ class DB
         $keys = array_keys($data);
         $values = array_values($data);
         $sql = "UPDATE `$table` SET `" . implode('` = ?, `', $keys) . "` = ?";
+        for ($i = 0; $i < count($values); $i++) {
+            if (is_array($values[$i])) {
+                $values[$i] = count($values[$i]) ? json_encode($values[$i]) : null;
+            }
+        }
         if (is_array($where)) {
             $sql .= " WHERE " . implode(' AND ', array_map(function ($k) {
                 return "`$k` = ?";

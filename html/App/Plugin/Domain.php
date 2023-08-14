@@ -81,8 +81,6 @@ class Domain
             Router::status_page(500, 'Internal Server Error', "No virtual host found");
         }
 
-        out($this->vhosts);
-
         $sname = isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME'] ? $_SERVER['SERVER_NAME'] : 'localhost';
         $sname = strtolower($sname);
 

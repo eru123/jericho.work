@@ -2,7 +2,8 @@
     "recommendations": [
         "github.copilot-chat",
         "github.copilot",
-        "Vue.volar",
-        "Vue.vscode-typescript-vue-plugin"
+        "vue.volar",
+        "vue.vscode-typescript-vue-plugin",
+        "misterj.vue-volar-extention-pack"
     ]
 }

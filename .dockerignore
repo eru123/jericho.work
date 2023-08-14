@@ -1,0 +1,14 @@
+/dev
+*/vendor/
+*/node_modules/
+/html/vendor/
+/html/node_modules/
+/html/client/cdn/node_modules/
+/html/client/admin/node_modules/
+/html/client/main/node_modules/
+/test*
+/html/test*
+/html/*test.php
+/*.jericho.work
+html/logs/
+/*.com

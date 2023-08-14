@@ -1,9 +1,8 @@
 <script setup>
-import PublicFooter from '@/components/PublicFooter.vue'
-import PublicHeader from '../components/PublicHeader.vue';
+import PublicFooter from "@/components/PublicFooter.vue";
+import PublicHeader from "../components/PublicHeader.vue";
 
-const props = defineProps(['md'])
-
+const props = defineProps(["md"]);
 </script>
 <template>
     <PublicHeader />
@@ -48,10 +47,11 @@ const props = defineProps(['md'])
         }
 
         ol {
-            @apply list-decimal ;
+            @apply list-decimal;
         }
 
-        ul, ol {
+        ul,
+        ol {
             @apply my-4 pl-8;
             li {
                 @apply mb-2;

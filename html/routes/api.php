@@ -8,7 +8,12 @@ $api->base('/api');
 
 $api->response(function ($data) {
     if (is_array($data) xor is_object($data)) {
-        headers_sent() or header('Content-Type: application/json');
+        if (!headers_sent()) {
+            header('Content-Type: application/json');
+            // header('Access-Control-Allow-Origin: *');
+            // header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+            // header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+        }
         $data = (array) $data;
         $res = [];
 
@@ -24,6 +29,14 @@ $api->response(function ($data) {
                 'usage_alloc' => ceil(memory_get_usage(true) / 1024 / 1024) . 'MB',
                 'peak' => ceil(memory_get_peak_usage() / 1024 / 1024) . 'MB',
                 'peak_alloc' => ceil(memory_get_peak_usage(true) / 1024 / 1024) . 'MB',
+            ];
+
+            $data['debug']['request'] = [
+                'method' => $_SERVER['REQUEST_METHOD'],
+                'uri' => $_SERVER['REQUEST_URI'],
+                'query' => $_GET,
+                'body' => (json_decode(file_get_contents('php://input'), true) ?? null) ?: $_POST,
+                'headers' => getallheaders(),
             ];
         } else {
             unset($data['debug']);

@@ -32,18 +32,19 @@ RUN apk update \
     # && env > /app/.env
 
 COPY html/composer.json html/composer.lock ./
-RUN composer install -o
+# RUN composer install -o
 
 COPY system/ /
 COPY html .
+COPY check /
 
 RUN chmod +x /usr/bin/skiddph
-RUN pnpm install --prefix client/cdn \
-    && pnpm install --prefix client/admin \
-    && pnpm install --prefix client/main \
-    && cd /app/client/admin && pnpm build \
-    && cd /app/client/main && pnpm build \
-    && cd /app/client/cdn && pnpm build
+# RUN pnpm install --prefix client/cdn \
+#     && pnpm install --prefix client/admin \
+#     && pnpm install --prefix client/main \
+#     && cd /app/client/admin && pnpm build \
+#     && cd /app/client/main && pnpm build \
+#     && cd /app/client/cdn && pnpm build
 
 # Production only - Delete FEs source code
 # && RUN find /app/client -mindepth 2 -maxdepth 2 -not -name 'dist'  -exec rm -rf {} \;

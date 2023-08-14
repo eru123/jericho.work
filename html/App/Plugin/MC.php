@@ -13,7 +13,7 @@ class MC
     static $instance = null;
     private  $id;
 
-    public static function instance(?string $id = null)
+    public static function instance(?string $id = null): static|null
     {
         if (is_null($id)) $id = env('APP_ENV', 'development');
         if (static::$instance === null) {

@@ -1,8 +1,11 @@
 <?php
 
-require_once __DIR__ . '/html/autoload.php';
+if (file_exists(__DIR__ . '/html/autoload.php')) {
+    require_once __DIR__ . '/html/autoload.php';
+} else {
+    require_once __DIR__ . '/autoload.php';
+}
 
-// list all loaded extensions
 echo "[Test] Loaded extensions: ", count(get_loaded_extensions()), PHP_EOL;
 
 $test_scripts = [

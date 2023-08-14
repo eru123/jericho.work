@@ -2,4 +2,14 @@
 
 require_once __DIR__ . '/html/autoload.php';
 
-echo cmd(['test_mc']);
+// list all loaded extensions
+echo "[Test] Loaded extensions: ", count(get_loaded_extensions()), PHP_EOL;
+
+$test_scripts = [
+    ['test_mc'],
+    ['test_db'],
+    ['test_fedev'],
+];
+
+foreach ($test_scripts as $args) echo cmd($args);
+echo "[Test] Done", PHP_EOL;

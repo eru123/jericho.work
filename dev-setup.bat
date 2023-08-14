@@ -24,4 +24,4 @@ pnpm install
 pnpm run build
 
 @REM Install the composer dependencies and cd back to the original directory
-composer install -d %ROOT_DIR%/html --no-interaction -o && cd %CURRENT_DIR%
+composer install -d %ROOT_DIR%html --no-interaction -o && cd %CURRENT_DIR%

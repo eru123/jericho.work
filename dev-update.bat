@@ -24,4 +24,4 @@ pnpm update
 pnpm run build
 
 @REM Update the composer dependencies and cd back to the original directory
-composer update -d %ROOT_DIR%/html --no-interaction -o && cd %CURRENT_DIR%
+composer update -d %ROOT_DIR%html --no-interaction -o && cd %CURRENT_DIR%

@@ -184,7 +184,7 @@ function cmdp(string|array $cmd): string
             array_unshift($cmd, 'php', $f);
         }
     }
-    $cmd = is_array($cmd) ? implode(' ', array_map(PHP_OS_FAMILY === 'Windows' ? 'escape_win32_argv' : 'escapeshellarg', $cmd)) : $cmd;
+    $cmd = is_array($cmd) ? implode(' ', array_map(PHP_OS_FAMILY === 'Windows' ? 'escape_win32_argv' : 'trim', $cmd)) : $cmd;
     return $cmd;
 }
 
@@ -193,4 +193,9 @@ function cmd(string|array $cmd, $parallel = false): string|false|null
     $cmd = cmdp($cmd);
     $cmd = PHP_OS_FAMILY === 'Windows' ? escape_win32_cmd($cmd) : $cmd;
     return $parallel ? parallel_exec($cmd) : noshell_exec($cmd);
+}
+
+function xshell(string|array $cmd): string|false|null
+{
+    return shell_exec(cmdp($cmd));
 }

@@ -215,10 +215,15 @@ class Daemon
     {
         $daemon_pid = $this->mem_get('daemon_pid');
         if ($daemon_pid) {
-            $posix = function_exists('posix_kill') && posix_kill($daemon_pid, 0);
-            $gnu = PHP_OS_FAMILY === 'Linux' && shell_exec(cmdp(['ps', 'aux', '|', 'grep', $daemon_pid, '|', 'wc', '-l'])) > 0;
-            $win = PHP_OS_FAMILY === 'Windows' && !empty(trim((string) shell_exec(cmdp(['tasklist', '|', 'findstr', $daemon_pid]))));
-            if ($posix || $gnu || $win) {
+            $is_running = false;
+            if (function_exists('posix_kill')) {
+                $is_running = posix_kill($daemon_pid, 0);
+            } else if (PHP_OS_FAMILY === 'Linux') {
+                $is_running = empty(trim(cmd(['kill', '-0', $daemon_pid])));
+            } elseif (PHP_OS_FAMILY === 'Windows') {
+                $is_running = !empty(trim((string) shell_exec(cmdp(['tasklist', '|', 'findstr', $daemon_pid]))));
+            }
+            if ($is_running) {
                 echo "Daemon is already running with PID: " . $daemon_pid . PHP_EOL;
                 exit;
             }

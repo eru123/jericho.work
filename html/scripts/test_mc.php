@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/autoload.php';
 
 use App\Plugin\MC;
@@ -26,4 +27,4 @@ for ($i = 0; $i < $test_count + 1; $i++) {
     $last_code = $code;
 }
 
-echo "[Test] OK Memcached passed $passed/$test_count tests", PHP_EOL;
+echo "[Test] OK Memcached passed $passed out of $test_count tests", PHP_EOL;

@@ -4,10 +4,14 @@ require_once __DIR__ . '/autoload.php';
 
 use App\Plugin\MC;
 
-$loaded = extension_loaded('memcached');
-echo "[Test] " . ($loaded ? 'OK Memcached extension loaded' : 'FAILED Memcached extension not loaded') . PHP_EOL;
+$ext_loaded = extension_loaded('memcached');
+echo "[Test] " . ($ext_loaded ? 'OK Memcached extension loaded' : 'FAILED Memcached extension not loaded') . PHP_EOL;
 
-if (!$loaded) {
+$class_loaded = class_exists('Memcached');
+echo "[Test] " . ($class_loaded ? 'OK Memcached class loaded' : 'FAILED Memcached class not loaded') . PHP_EOL;
+
+if (!$ext_loaded && !$class_loaded) {
+    echo "[Test] FAILED No Memcached extension or class loaded", PHP_EOL;
     exit;
 }
 

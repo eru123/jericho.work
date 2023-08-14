@@ -8,7 +8,7 @@ define('__DOMAINS__', __DIR__ . DIRECTORY_SEPARATOR . 'domains');
 define('__ROUTES__', __DIR__ . DIRECTORY_SEPARATOR . 'routes');
 define('__LOGS__', __DIR__ . DIRECTORY_SEPARATOR . 'logs');
 
-if (!class_exists('Memcached')) {
+if (!class_exists('Memcached') && PHP_OS_FAMILY == 'Windows') {
     include("memcached.php");
 }
 

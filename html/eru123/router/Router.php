@@ -324,6 +324,11 @@ class Router
         array_unshift($callbacks, $precallback);
         array_push($callbacks, $postcallback);
 
+        $callbacks[] = new StaticRouteObject([
+            'dir' => $dir,
+            'index' => $index
+        ]);
+
         return $this->request('STATIC', $url, ...$callbacks);
     }
 
@@ -400,12 +405,21 @@ class Router
 
             $static = [];
             foreach ($router->routes as $route) {
+                $rcbs = array_merge($callbacks, $router->bootstraps, $route['callbacks']);
+                $static_route = null;
+                foreach ($rcbs as $i => $cb) {
+                    if ($cb instanceof StaticRouteObject) {
+                        $static_route = $cb->array();
+                        unset($rcbs[$i]);
+                    }
+                }
                 if ($route['method'] == 'STATIC') {
                     $static[] = [
                         'router' => $router,
                         'method' => strtoupper(trim($route['method'])),
                         'path' => $prefix . $router->base() . $route['path'],
-                        'callbacks' => array_merge($callbacks, $router->bootstraps, $route['callbacks'])
+                        'callbacks' => $rcbs,
+                        'arguments' => $static_route
                     ];
                     continue;
                 }
@@ -413,7 +427,7 @@ class Router
                     'router' => $router,
                     'method' => strtoupper(trim($route['method'])),
                     'path' => $prefix . $router->base() . $route['path'],
-                    'callbacks' => array_merge($callbacks, $router->bootstraps, $route['callbacks'])
+                    'callbacks' => $rcbs,
                 ];
             }
 

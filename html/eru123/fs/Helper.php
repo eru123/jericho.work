@@ -35,7 +35,7 @@ class Helper
         return (float) ($value * $values[$unit]);
     }
 
-    public static function get_mime_list(): array
+    public static function get_mimes(): array
     {
         return [
             '123' => 'application/vnd.lotus-1-2-3',
@@ -1044,14 +1044,15 @@ class Helper
 
     public static function get_mime(string $filename): string|false
     {
-        $filename = strtolower($filename);
         if (function_exists('pathinfo')) {
             $ext = pathinfo($filename, PATHINFO_EXTENSION);
         } else {
             $ext = substr($filename, strrpos($filename, '.') + 1);
         }
 
+        $ext = strtolower($ext);
         $mimes = self::get_mimes();
+        
         if (isset($mimes[$ext])) {
             return $mimes[$ext];
         }

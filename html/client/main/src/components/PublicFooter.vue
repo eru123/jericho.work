@@ -6,6 +6,31 @@ const server = useServerData();
 const year = new Date().getFullYear();
 const items = [
     {
+        title: "About Us",
+        links: [
+            {
+                name: "Email us",
+                url: "mailto:hello@skiddph.com",
+                icon: "bi-envelope-fill",
+            },
+            {
+                name: "Privacy Policy",
+                url: "/privacy-policy",
+                icon: "md-policy",
+            },
+            {
+                name: "Terms and Conditions",
+                url: "/terms-and-conditions",
+                icon: "md-handshake",
+            },
+            {
+                name: "Google Reviews",
+                url: "https://g.page/r/CVx7yccU-v3cEAI/review",
+                icon: "bi-google",
+            },
+        ],
+    },
+    {
         title: "Social",
         links: [
             {
@@ -43,31 +68,6 @@ const items = [
                 url: "https://skiddph.com",
                 icon: "fa-database",
             },
-        ],
-    },
-    {
-        title: "About Us",
-        links: [
-            {
-                name: "Email us",
-                url: "mailto:hello@skiddph.com",
-                icon: "bi-envelope-fill",
-            },
-            {
-                name: "Privacy Policy",
-                url: "/privacy-policy",
-                icon: "md-policy",
-            },
-            {
-                name: "Terms and Conditions",
-                url: "/terms-and-conditions",
-                icon: "md-handshake",
-            },
-            {
-                name: "Google Reviews",
-                url: "https://g.page/r/CVx7yccU-v3cEAI/review",
-                icon: "bi-google",
-            }
         ],
     },
 ];
@@ -114,7 +114,7 @@ footer {
     }
 
     & > div:last-child {
-        @apply grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-screen-md mx-auto px-4 py-2;
+        @apply grid grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-screen-md mx-auto px-4 py-2;
 
         div {
             @apply flex flex-col justify-start items-start;
@@ -129,7 +129,7 @@ footer {
 
             li {
                 .footer-link {
-                    @apply flex items-center text-sm font-normal text-primary-50 hover:bg-primary-800 pl-4 pr-2 py-1;
+                    @apply flex items-center text-sm font-normal text-primary-50 hover:bg-primary-800 px-2 py-1;
 
                     .ov-icon {
                         @apply mr-2;

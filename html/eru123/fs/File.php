@@ -22,14 +22,8 @@ class File
         }
 
         $this->name = basename($this->path);
-
-        if (function_exists('pathinfo')) {
-            $this->ext = pathinfo($this->path, PATHINFO_EXTENSION);
-        } else {
-            $this->ext = substr($this->name, strrpos($this->name, '.') + 1);
-        }
-
-        $this->mime = Helper::get_mime($this->ext);
+        
+        $this->mime = Helper::get_mime($this->name);
         $this->size = filesize($this->path);
     }
 

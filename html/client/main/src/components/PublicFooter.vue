@@ -30,7 +30,7 @@ const items = [
         links: [
             {
                 name: "OpenCDN",
-                url: server?.CDN_URL ?? "https://skiddph.com/cdn",
+                url: (server?.BASE_URL ?? "") + "/cdn",
                 icon: "bi-cloud-fill",
             },
             {
@@ -46,7 +46,7 @@ const items = [
         ],
     },
     {
-        title: "Company",
+        title: "About Us",
         links: [
             {
                 name: "Email us",
@@ -63,6 +63,11 @@ const items = [
                 url: "/terms-and-conditions",
                 icon: "md-handshake",
             },
+            {
+                name: "Google Reviews",
+                url: "https://g.page/r/CVx7yccU-v3cEAI/review",
+                icon: "bi-google",
+            }
         ],
     },
 ];
@@ -78,7 +83,11 @@ const items = [
                 <h3>{{ item.title }}</h3>
                 <ul>
                     <li v-for="link in item.links" :key="link.name">
-                        <v-link :to="link.url" rel="noopener">
+                        <v-link
+                            :to="link.url"
+                            rel="noopener"
+                            class="footer-link"
+                        >
                             <v-icon :name="link.icon" />
                             {{ link.name }}
                         </v-link>
@@ -105,10 +114,10 @@ footer {
     }
 
     & > div:last-child {
-        @apply grid grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-screen-lg mx-auto px-4 py-2;
+        @apply grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-screen-md mx-auto px-4 py-2;
 
         div {
-            @apply flex flex-col justify-start items-center;
+            @apply flex flex-col justify-start items-start;
         }
 
         h3 {
@@ -119,8 +128,8 @@ footer {
             @apply flex flex-col;
 
             li {
-                a {
-                    @apply flex items-center text-sm font-normal text-primary-50 hover:bg-primary-800 px-2 py-1;
+                .footer-link {
+                    @apply flex items-center text-sm font-normal text-primary-50 hover:bg-primary-800 pl-4 pr-2 py-1;
 
                     .ov-icon {
                         @apply mr-2;

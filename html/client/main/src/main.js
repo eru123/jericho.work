@@ -9,19 +9,21 @@ import {
     BiDiscord,
     BiFacebook,
     BiLinkedin,
+    BiGoogle,
     BiEnvelopeFill,
     BiCloudFill,
     FaDatabase,
     MdPolicy,
     MdHandshake,
     BiCheckCircle,
-    BiXCircle 
+    BiXCircle
 } from "oh-vue-icons/icons";
 
 addIcons(
     BiDiscord,
     BiFacebook,
     BiLinkedin,
+    BiGoogle,
     BiEnvelopeFill,
     BiCloudFill,
     FaDatabase,

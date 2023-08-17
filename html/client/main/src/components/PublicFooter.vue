@@ -27,7 +27,7 @@ const items = [
                 name: "Google Reviews",
                 url: "https://g.page/r/CVx7yccU-v3cEAI/review",
                 icon: "bi-google",
-            },
+            }
         ],
     },
     {
@@ -60,12 +60,12 @@ const items = [
             },
             {
                 name: "e-Kartero",
-                url: "https://skiddph.com",
+                url: /**(server?.BASE_URL ?? "") +*/ "/feature-not-available",
                 icon: "bi-envelope-fill",
             },
             {
                 name: "Dev MySQL",
-                url: "https://skiddph.com",
+                url: /**(server?.BASE_URL ?? "") +*/ "/feature-not-available",
                 icon: "fa-database",
             },
         ],

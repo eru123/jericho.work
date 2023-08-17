@@ -27,6 +27,11 @@ const items = [
                 name: "Google Reviews",
                 url: "https://g.page/r/CVx7yccU-v3cEAI/review",
                 icon: "bi-google",
+            },
+            {
+                name: "Facebook Reviews",
+                url: "https://facebook.com/skiddph/reviews",
+                icon: "bi-facebook",
             }
         ],
     },

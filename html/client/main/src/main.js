@@ -17,7 +17,8 @@ import {
     MdHandshake,
     BiCheckCircle,
     BiXCircle,
-    CoLinkBroken
+    CoLinkBroken,
+    MdAppsoutageTwotone
 } from "oh-vue-icons/icons";
 
 addIcons(
@@ -32,7 +33,8 @@ addIcons(
     MdHandshake,
     BiCheckCircle,
     BiXCircle,
-    CoLinkBroken
+    CoLinkBroken,
+    MdAppsoutageTwotone
 );
 
 const app = createApp(App)

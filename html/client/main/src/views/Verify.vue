@@ -1,37 +1,44 @@
 <script setup>
 import useServerData from "@/composables/useServerData";
-import PublicFooter from "@/components/PublicFooter.vue";
-import PublicHeader from "@/components/PublicHeader.vue";
+import PublicPage from "@/components/PublicPage.vue";
 
 const $server = useServerData();
 </script>
 <template>
-    <PublicHeader />
-    <div class="container">
-		<v-icon name="bi-x-circle" v-if="$server?.error" class="icon error"/>
-		<v-icon name="bi-check-circle" v-if="!$server?.error" class="icon success"/>
-        <h1>{{ $server?.title }}</h1>
-        <p v-if="$server?.success || $server?.error">
-            {{ $server?.success || $server?.error }}
-        </p>
-    </div>
-    <PublicFooter />
+    <PublicPage>
+        <div class="container">
+            <v-icon
+                name="bi-x-circle"
+                v-if="$server?.error"
+                class="icon error"
+            />
+            <v-icon
+                name="bi-check-circle"
+                v-if="!$server?.error"
+                class="icon success"
+            />
+            <h1>{{ $server?.title }}</h1>
+            <p v-if="$server?.success || $server?.error">
+                {{ $server?.success || $server?.error }}
+            </p>
+        </div>
+    </PublicPage>
 </template>
 <style scoped lang="scss">
 .container {
     @apply w-full max-w-screen-md mx-auto min-h-[calc(100vh-3.5rem)] flex flex-col justify-center items-center text-center px-4 py-8;
 
-	.icon {
-		@apply mb-6 h-[4rem] w-[4rem];
+    .icon {
+        @apply mb-6 h-[4rem] w-[4rem];
 
-		&.success {
-			@apply text-green-600;
-		}
+        &.success {
+            @apply text-green-600;
+        }
 
-		&.error {
-			@apply text-red-500;
-		}
-	}
+        &.error {
+            @apply text-red-500;
+        }
+    }
 
     h1 {
         @apply text-2xl font-semibold text-primary-900 mb-2;

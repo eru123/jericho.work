@@ -5,6 +5,7 @@ import MDLayout from '@/layouts/PublicMarkdown.vue'
 import MDPrivacyPolicy from '@/md/privacy-policy.md'
 import MDTermsAndConditions from '@/md/terms-and-conditions.md'
 import Verify from '@/views/Verify.vue'
+import NotFound from '@/views/NotFound.vue'
 
 const routes = [
     {
@@ -33,6 +34,10 @@ const routes = [
         path: '/verify/:token',
         name: 'Verify',
         component: Verify
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        component: NotFound
     }
 ];
 

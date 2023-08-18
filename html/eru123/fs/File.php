@@ -87,7 +87,7 @@ class File
 
     public function render(): void
     {
-        if (strtolower($this->ext) == 'php' || in_array($this->mime, ['text/x-php', 'application/x-php'])) {
+        if (strtolower($this->ext || '') == 'php' || in_array($this->mime, ['text/x-php', 'application/x-php'])) {
             $f = $this->path;
             (function () use ($f) {
                 include $f; // temp fix for php files

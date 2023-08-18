@@ -27,7 +27,7 @@ class FakeStmt
         return $this->data['rows'];
     }
 
-    public function fetch(): array|false
+    public function fetch(): null|array|false
     {
         return array_shift($this->rows);
     }

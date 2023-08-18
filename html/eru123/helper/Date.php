@@ -100,35 +100,17 @@ class Date
         foreach ($rgx_time as $key => $rgx) {
             if (preg_match($rgx, $query, $matches)) {
                 $time = (float) $matches[2];
-                switch ($key) {
-                    case 'ms':
-                        break;
-                    case 's':
-                        $time = $time * 1000;
-                        break;
-                    case 'm':
-                        $time = $time * 60000;
-                        break;
-                    case 'h':
-                        $time = $time * 3600000;
-                        break;
-                    case 'd':
-                        $time = $time * 86400000;
-                        break;
-                    case 'w':
-                        $time = $time * 604800000;
-                        break;
-                    case 'M':
-                        $time = $time * 2592000000;
-                        break;
-                    case 'y':
-                        $time = $time * 31536000000;
-                        break;
-                    case 'ly':
-                        $time = $time * 31622400000;
-                        break;
-                }
-                break;
+                $time = match ($key) {
+                    's' => $time * 1000,
+                    'm' => $time * 60000,
+                    'h' => $time * 3600000,
+                    'd' => $time * 86400000,
+                    'w' => $time * 604800000,
+                    'M' => $time * 2592000000,
+                    'y' => $time * 31536000000,
+                    'ly' => $time * 31622400000,
+                    default => $time,
+                };
             }
         }
 

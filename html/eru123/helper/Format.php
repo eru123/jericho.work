@@ -92,68 +92,38 @@ class Format
 
     public static function template(string $template, array $params = [], int $flag = FORMAT_TEMPLATE_DOLLAR_CURLY)
     {
-        switch ($flag) {
-            case FORMAT_TEMPLATE_DOLLAR:
-                $rgx = '/\$(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?/';
-                break;
-            case FORMAT_TEMPLATE_CURLY:
-                $rgx = '/\{(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?\}/';
-                break;
-            case FORMAT_TEMPLATE_PERCENT:
-                $rgx = '/%(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?%/';
-                break;
-            case FORMAT_TEMPLATE_PERCENT_CURLY:
-                $rgx = '/%\{(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?\}%/';
-                break;
-            case FORMAT_TEMPLATE_COLON:
-                $rgx = '/:(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?:/';
-                break;
-            case FORMAT_TEMPLATE_LEFT_COLON:
-                $rgx = '/:(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?/';
-                break;
-            case FORMAT_TEMPLATE_RIGHT_COLON:
-                $rgx = '/(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?:/';
-                break;
-            case FORMAT_TEMPLATE_DOUBLE_LEFT_COLON:
-                $rgx = '/::(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?/';
-                break;
-            case FORMAT_TEMPLATE_DOUBLE_RIGHT_COLON:
-                $rgx = '/(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?::/';
-                break;
-            case FORMAT_TEMPLATE_DOUBLE_COLON:
-                $rgx = '/::(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?::/';
-                break;
-            case FORMAT_TEMPLATE_DOLLAR_CURLY:
-            default:
-                $rgx = '/\$\{(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?\}/';
-        }
+        $rgx = match ($flag) {
+            FORMAT_TEMPLATE_DOLLAR => '/\$(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?/',
+            FORMAT_TEMPLATE_CURLY => '/\{(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?\}/',
+            FORMAT_TEMPLATE_PERCENT => '/%(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?%/',
+            FORMAT_TEMPLATE_PERCENT_CURLY => '/%\{(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?\}%/',
+            FORMAT_TEMPLATE_COLON => '/:(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?:/',
+            FORMAT_TEMPLATE_LEFT_COLON => '/:(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?/',
+            FORMAT_TEMPLATE_RIGHT_COLON => '/(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?:/',
+            FORMAT_TEMPLATE_DOUBLE_LEFT_COLON => '/::(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?/',
+            FORMAT_TEMPLATE_DOUBLE_RIGHT_COLON => '/(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?::/',
+            FORMAT_TEMPLATE_DOUBLE_COLON => '/::(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?::/',
+            FORMAT_TEMPLATE_DOLLAR_CURLY => '/\$\{(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?\}/',
+            default => '/\$\{(\s+)?([a-zA-Z]([a-zA-Z0-9_]+)?)(\s+)?\}/',
+        };
 
         $matches = [];
         preg_match_all($rgx, $template, $matches);
         $keys = $matches[2];
         $values = [];
         foreach ($keys as $key) {
-            if (isset($params[$key])) {
-                $values[] = $params[$key];
-            } else {
-                $values[] = '';
-            }
+            $values[] = isset($params[$key]) ? $params[$key] : '';
         }
         return str_replace($matches[0], $values, $template);
     }
 
     public static function eval_template(string $template, array $params = [], int $flag = FORMAT_EVAL_TEMPLATE_DOLLAR)
     {
-        switch ($flag) {
-            case FORMAT_EVAL_TEMPLATE_CURLY:
-                $rgx = '/\{\{(.*?)\}\}/';
-                break;
-            case FORMAT_EVAL_TEMPLATE_DOLLAR:
-            default:
-                $rgx = '/\$\{\{(.*?)\}\}/';
-                break;
-        }
-
+        $rgx = match ($flag) {
+            FORMAT_EVAL_TEMPLATE_DOLLAR => '/\$\{\{(.*?)\}\}/',
+            FORMAT_EVAL_TEMPLATE_CURLY => '/\{\{(.*?)\}\}/',
+            default => '/\$\{\{(.*?)\}\}/',
+        };
         $matches = [];
         preg_match_all($rgx, $template, $matches);
         extract($params);

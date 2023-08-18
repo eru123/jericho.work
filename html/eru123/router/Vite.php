@@ -2,7 +2,6 @@
 
 namespace eru123\router;
 
-use Exception;
 use eru123\helper\Format;
 
 class Vite
@@ -224,13 +223,13 @@ class Vite
         if (!$dev) {
             $manifest_path = realpath(static::$str_manifest);
             if (!$manifest_path || !file_exists($manifest_path)) {
-                throw new Exception('Manifest file not found');
+                throw new ViteExeption('Manifest file not found');
             }
 
             $manifest = json_decode(file_get_contents($manifest_path), true);
             $entry = $tpl_data['entry'];
             if (!isset($manifest[$entry]) || !isset($manifest[$entry]['isEntry']) || !$manifest[$entry]['isEntry']) {
-                throw new Exception('Invalid manifest file or entry file path');
+                throw new ViteExeption('Invalid manifest file or entry file path');
             }
 
             $css = isset($manifest[$entry]['css']) ? $manifest[$entry]['css'] : [];

@@ -56,7 +56,7 @@ class DB
         return $this->stmt;
     }
 
-    public function query(string $sql, array $params = [], bool $cached = true): FakeStmt|PDOStatement
+    public function query(string $sql, array $params = [], bool $cached = false): FakeStmt|PDOStatement
     {
         $sql = Raw::build($sql, $params);
 

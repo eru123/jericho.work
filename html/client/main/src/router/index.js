@@ -7,6 +7,7 @@ import MDTermsAndConditions from '@/md/terms-and-conditions.md'
 import Verify from '@/views/Verify.vue'
 import NotFound from '@/views/NotFound.vue'
 import FeatureNotAvailable from '@/views/FeatureNotAvailable.vue'
+import Register from '@/views/Register.vue'
 
 const routes = [
     {
@@ -35,6 +36,11 @@ const routes = [
         path: '/verify/:token',
         name: 'Verify',
         component: Verify
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register
     },
     {
         path: '/feature-not-available',

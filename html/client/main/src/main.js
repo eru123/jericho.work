@@ -18,7 +18,8 @@ import {
     BiCheckCircle,
     BiXCircle,
     CoLinkBroken,
-    MdAppsoutageTwotone
+    MdAppsoutageTwotone,
+    IoLogoAppleAr 
 } from "oh-vue-icons/icons";
 
 addIcons(
@@ -34,7 +35,8 @@ addIcons(
     BiCheckCircle,
     BiXCircle,
     CoLinkBroken,
-    MdAppsoutageTwotone
+    MdAppsoutageTwotone,
+    IoLogoAppleAr 
 );
 
 const app = createApp(App)

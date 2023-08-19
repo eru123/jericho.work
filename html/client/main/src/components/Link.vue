@@ -20,7 +20,7 @@ const handleClick = (e) => {
     if (isExternalLink.value) {
         return;
     }
-    
+
     if (props.disabled) {
         e.preventDefault();
         return;
@@ -64,7 +64,6 @@ const handleClick = (e) => {
     <a
         v-bind="attrs"
         :href="to"
-        :class="isActive ? 'active' : ''"
         @click="handleClick"
         :target="
             !props?.target

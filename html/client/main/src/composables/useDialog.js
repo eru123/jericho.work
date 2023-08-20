@@ -23,7 +23,7 @@ const createDialog = (obj) => {
     obj.key = createUniqueKey();
     obj.close = () => remove(obj.key);
     data.value.push(obj);
-    return obj.key;
+    return obj;
 };
 
 export const clear = () => {
@@ -110,6 +110,13 @@ export const createCustom = (component) => {
     return createDialog({
         component,
         type: "custom",
+    });
+};
+
+export const createLoading = (message = null) => {
+    return createDialog({
+        message,
+        type: "loading",
     });
 };
 

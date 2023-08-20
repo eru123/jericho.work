@@ -1,51 +1,59 @@
-import { ref } from 'vue'
-import useServerData from './useServerData'
-
-export const $server = useServerData()
-export const data = ref({})
+import { ref } from "vue";
+import useServerData, { BASE_URL } from "./useServerData";
+import { createError } from "./useDialog";
+export const $server = useServerData();
+export const data = ref({});
 
 export const post = (url, data) => {
-    const base_url = $server?.BASE_URL || window.location.origin
-    const url_obj = new URL(url, base_url)
+    const url_obj = new URL(url, BASE_URL);
     return fetch(url_obj, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
-    }).then(res => res.json())
-}
+        body: JSON.stringify(data),
+    }).then((res) => res.json());
+};
 
 export const get = (url, data) => {
-    const base_url = $server?.BASE_URL || window.location.origin
-    const url_obj = new URL(url, base_url)
+    const url_obj = new URL(url, BASE_URL);
     for (const key in data) {
-        url_obj.searchParams.append(key, data[key])
+        url_obj.searchParams.append(key, data[key]);
     }
-    return fetch(url_obj).then(res => res.json())
-}
+    return fetch(url_obj).then((res) => res.json());
+};
 
 export const loginWithData = (token, data) => {
-    data.value = data
-    data.value.token = token
-}
+    data.value = data;
+    data.value.token = token;
+};
 
 export const logout = () => {
-    data.value = {}
-}
+    data.value = {};
+};
 
 export const register = (data) => {
-    return post('/api/v1/auth/register', data)
-        .then(res => {
-            if (res.success) {
-                loginWithData(res?.token, res?.data)
+    return post("/api/v1/auth/register", data)
+        .then((res) => {
+            if (res?.error) {
+                throw new Error(res.error);
             }
-            return res
+
+            if (res?.token && res?.data) {
+                loginWithData(res.token, res.data);
+                return res;
+            }
+
+            throw new Error("Invalid server response");
         })
-}
+        .catch((err) => {
+            createError("Registration Error", err?.message);
+            return null;
+        })
+};
 
 export default {
     data,
     post,
-    get
-}
+    get,
+};

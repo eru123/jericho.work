@@ -1,6 +1,13 @@
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import PublicPage from "@/components/PublicPage.vue";
+import {
+    createInfo,
+    createError,
+    createConfirm,
+    createLoading,
+} from "@/composables/useDialog";
+import { register } from "@/composables/useApi";
 
 const fname = ref("");
 const mname = ref("");
@@ -34,23 +41,69 @@ const showAlias = computed(
         (fname.value && mname.value && lname.value)
 );
 const alias = ref(null);
-
+const enforceRequired = ref(false);
 const form = ref(null);
 
 const submit = () => {
+    const requiredFields = [fname, lname, user, pass, cpass];
+
+    for (const field of requiredFields) {
+        if (!field.value) {
+            enforceRequired.value = true;
+            return createError("Error", "Please fill out all required fields.");
+        }
+    }
+
+    if (!form.value.checkValidity()) {
+        console.log(data);
+        return createError("Error", "Please fill out all required fields.");
+    }
+
+    if (pass.value !== cpass.value) {
+        return createError("Error", "Passwords do not match.");
+    }
+
     const data = {
         fname: fname.value,
-        mname: mname.value,
         lname: lname.value,
         user: user.value,
-        pass: pass.value,
+        password: pass.value,
         alias: alias.value,
     };
 
-    if (form.value.checkValidity()) {
-        console.log(data);
+    if (mname.value) {
+        data.mname = mname.value;
     }
+    const loading = createLoading("Please wait...");
+    return createConfirm(
+        "Confirmation",
+        "Please that all information is correct. Click OK to proceed.",
+        (c1) => {
+            return register(data)
+                .then((res) => {
+                    if (res && res?.success) {
+                        return createInfo("Success", res.success, (c2) => {
+                            window.location.href = "/";
+                            c1();
+                            c2();
+                        });
+                    }
+
+                    c1();
+                })
+                .catch((err) => {
+                    return createError(
+                        "Error",
+                        err?.message || "An error has occurred."
+                    );
+                })
+                .finally(() => {
+                    loading.close();
+                });
+        }
+    );
 };
+
 </script>
 <template>
     <PublicPage>
@@ -59,21 +112,44 @@ const submit = () => {
                 <h1>Register</h1>
                 <div class="form-group">
                     <label for="user">Username</label>
-                    <input type="text" id="user" v-model="user" required />
+                    <input
+                        type="text"
+                        id="user"
+                        v-model="user"
+                        :required="enforceRequired"
+                        autocomplete="off"
+                    />
                 </div>
                 <div class="form-group">
                     <label for="fname">First Name</label>
-                    <input type="text" id="fname" v-model="fname" required />
+                    <input
+                        type="text"
+                        id="fname"
+                        v-model="fname"
+                        :required="enforceRequired"
+                        autocomplete="off"
+                    />
                 </div>
                 <div class="form-group">
                     <label for="mname"
                         >Middle Name <span>(optional)</span></label
                     >
-                    <input type="text" id="mname" v-model="mname" />
+                    <input
+                        type="text"
+                        id="mname"
+                        v-model="mname"
+                        autocomplete="off"
+                    />
                 </div>
                 <div class="form-group">
                     <label for="lname">Last Name</label>
-                    <input type="text" id="lname" v-model="lname" required />
+                    <input
+                        type="text"
+                        id="lname"
+                        v-model="lname"
+                        :required="enforceRequired"
+                        autocomplete="off"
+                    />
                 </div>
                 <div class="form-group" v-if="showAlias">
                     <label for="lname">Display Name</label>
@@ -81,7 +157,7 @@ const submit = () => {
                         id="alias"
                         v-model="alias"
                         v-if="showAlias"
-                        required
+                        :required="enforceRequired"
                     >
                         <option
                             v-for="a in aliases"
@@ -95,15 +171,26 @@ const submit = () => {
                 </div>
                 <div class="form-group">
                     <label for="pass">Password</label>
-                    <input type="password" id="pass" v-model="pass" required />
+                    <input
+                        type="password"
+                        id="pass"
+                        autocomplete="new-password"
+                        v-model="pass"
+                        :required="enforceRequired"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                        title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
+                    />
                 </div>
                 <div class="form-group">
                     <label for="cpass">Confirm Password</label>
                     <input
                         type="password"
                         id="cpass"
+                        autocomplete="new-password"
                         v-model="cpass"
-                        required
+                        :required="enforceRequired"
+                        pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                        title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
                     />
                 </div>
                 <div class="note">

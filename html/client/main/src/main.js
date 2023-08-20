@@ -24,6 +24,10 @@ import {
     MdDangerousOutlined,
     CoWarning,
     BiQuestionCircle,
+    BiHourglassBottom,
+    BiHourglassSplit,
+    // BiHourglassTop,
+    // BiHourglass,
 } from "oh-vue-icons/icons";
 
 addIcons(
@@ -44,7 +48,11 @@ addIcons(
     BiInfoCircle,
     MdDangerousOutlined,
     CoWarning,
-    BiQuestionCircle
+    BiQuestionCircle,
+    BiHourglassBottom,
+    BiHourglassSplit,
+    // BiHourglassTop,
+    // BiHourglass,
 );
 
 const app = createApp(App);

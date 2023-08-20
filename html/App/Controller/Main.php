@@ -8,6 +8,14 @@ use eru123\router\Context;
 
 class Main extends Controller
 {
+    private function safe_request_uri()
+    {
+        $uri = $_SERVER['REQUEST_URI'];
+        $uri = explode('?', $uri)[0];
+        $uri = explode('#', $uri)[0];
+        return htmlspecialchars($uri);
+    }
+
     public function view(array $data = [])
     {
         Vite::head('<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">');
@@ -22,6 +30,7 @@ class Main extends Controller
             'APP_TITLE' => env('APP_TITLE', 'App'),
             'BASE_URL' => env('BASE_URL'),
             'CDN_URL' => env('CDN_URL', env('BASE_URL')),
+            'REQUEST_URI' => $this->safe_request_uri(),
         ]);
 
         if (env('APP_ENV') === 'development') {
@@ -48,7 +57,7 @@ class Main extends Controller
 
             Vite::data($debug);
         }
-        
+
         return Vite::render($data, true);
     }
 
@@ -78,7 +87,7 @@ class Main extends Controller
         $code = $c->params['code'] ?? null;
 
         Vite::seo([
-            'title' => "Mail Verification | ".env('APP_TITLE', 'App'),
+            'title' => "Mail Verification | " . env('APP_TITLE', 'App'),
             'description' => "Mail Verification",
             'image' => env('BASE_URL') . '/card.png',
             'url' => env('BASE_URL'),

@@ -1,8 +1,8 @@
-import { ref } from "vue";
 import useServerData, { BASE_URL } from "./useServerData";
+import usePersistentData from "./usePersistentData";
 import { createError } from "./useDialog";
 export const $server = useServerData();
-export const data = ref({});
+export const localData = usePersistentData("user", null);
 
 export const post = (url, data) => {
     const url_obj = new URL(url, BASE_URL);
@@ -24,12 +24,12 @@ export const get = (url, data) => {
 };
 
 export const loginWithData = (token, data) => {
-    data.value = data;
-    data.value.token = token;
+    localData.value = data;
+    localData.value.token = token;
 };
 
 export const logout = () => {
-    data.value = {};
+    localData.value = null;
 };
 
 export const register = (data) => {
@@ -53,7 +53,7 @@ export const register = (data) => {
 };
 
 export default {
-    data,
+    data: localData,
     post,
     get,
 };

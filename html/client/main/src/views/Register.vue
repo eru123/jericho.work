@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import PublicPage from "@/components/PublicPage.vue";
 import {
     createInfo,
@@ -103,6 +103,10 @@ const submit = () => {
         }
     );
 };
+
+watch([fname, mname, lname], () => {
+    alias.value = null;
+});
 
 </script>
 <template>

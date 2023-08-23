@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import md from 'vite-plugin-vue-markdown'
+import md from 'unplugin-vue-markdown/vite'
 // import { code, meta, link } from "md-powerpack";
 import MarkdownItAnchor from 'markdown-it-anchor'
 import MarkdownItPrism from 'markdown-it-prism'

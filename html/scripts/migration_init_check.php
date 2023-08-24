@@ -79,18 +79,11 @@ try {
                 echo "[Migration] FAILED $file is not readable", PHP_EOL;
             }
             $sanitized_files[] = $file;
-            // $sql = file_get_contents($file);
-            // $stmt = $pdo->prepare($sql);
-            // $stmt->execute();
-            // echo "[Migration] OK Executed $file", PHP_EOL;
         }
 
-        $basenames = array_map(function ($file) {
-            return basename($file);
-        }, $sanitized_files);
-        $placeholders = array_map(function () {
-            return '?';
-        }, $basenames);
+        $basenames = array_map(fn ($file) => basename($file), $sanitized_files);
+        $placeholders = array_map(fn () => '?', $basenames);
+
         $sql = "SELECT * FROM `migrations` WHERE `name` NOT IN (" . implode(", ", $placeholders) . ")";
         $stmt = $pdo->prepare("SELECT * FROM `migrations` WHERE `name` IN (" . implode(", ", $placeholders) . ")");
         $stmt->execute($basenames);
@@ -99,28 +92,36 @@ try {
         foreach ($result as $row) {
             $key = array_search($row['name'], $basenames);
             if ($key !== false) {
-                unset($basenames[$key]);
+                unset($sanitized_files[$key]);
             }
         }
+
+        usort($sanitized_files, function ($a, $b) {
+            $a = explode('_', basename($a));
+            $b = explode('_', basename($b));
+            $a = (int) $a[0];
+            $b = (int) $b[0];
+            return $a - $b;
+        });
+
         try {
-            $pdo->beginTransaction();
-            for ($i = 0; $i < count($basenames); $i++) {
-                $file = $sanitized_files[$i];
+            foreach ($sanitized_files as $file) {
                 $sql = file_get_contents($file);
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute();
+                $stmt->closeCursor();
+
                 echo "[Migration] OK Executed $file", PHP_EOL;
                 $stmt = $pdo->prepare("INSERT INTO `migrations` (`type`, `name`) VALUES ('migration', ?)");
-                $stmt->execute([$basenames[$i]]);
+                $stmt->execute([basename($file)]);
+                $stmt->closeCursor();
             }
-            echo "[Migration] OK Migration comitting changes", PHP_EOL;
-            $pdo->commit();
+
             echo "[Migration] OK Migration done", PHP_EOL;
-        } catch (Exception $e) {
+        } catch (Exception) {
             echo "[Migration] FAILED Migrations: ", $e->getMessage(), PHP_EOL;
-            $pdo->rollBack();
         }
     }
-} catch (Exception $e) {
+} catch (Exception) {
     echo "[Migration] FAILED ", $e->getMessage(), PHP_EOL;
 }

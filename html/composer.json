@@ -12,5 +12,8 @@
             "App/functions.php",
             "eru123/holyf.php"
         ]
-    }
+    },
+    "bin": [
+        "bin/cmd"
+    ]
 }

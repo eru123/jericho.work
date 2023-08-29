@@ -2,28 +2,10 @@
 	"Version": "2012-10-17",
 	"Statement": [
 		{
-			"Sid": "Statement1",
+			"Sid": "AllowSkiddPhAppPolicy",
 			"Effect": "Allow",
 			"Action": [
-			    "iam:CreateUser",
-                "iam:UpdateUser",
-                "iam:DeleteUser",
-                "iam:CreateGroup",
-                "iam:UpdateGroup",
-                "iam:DeleteGroup",
-                "iam:CreateRole",
-                "iam:UpdateRole",
-                "iam:DeleteRole",
-                "iam:CreatePolicy",
-                "iam:DeletePolicy",
-                "iam:AttachUserPolicy",
-                "iam:DetachUserPolicy",
-                "iam:AttachGroupPolicy",
-                "iam:DetachGroupPolicy",
-                "iam:AttachRolePolicy",
-                "iam:DetachRolePolicy",
-                "iam:CreateAccessKey",
-                "iam:PutUserPolicy",
+			    "iam:*",
                 "ses:*"
 			],
             "Resource": "*"

@@ -52,6 +52,5 @@ RUN pnpm install --prefix client/cdn \
 RUN find /app/client -mindepth 2 -maxdepth 2 -not -name 'dist'  -exec rm -rf {} \;
 RUN find /app/client -mindepth 1 -maxdepth 1 -not -name 'admin' -not -name 'cdn' -not -name 'main' -exec rm -rf {} \;
 
-EXPOSE 80 5173
-# START memcached and apache
+EXPOSE 80
 ENTRYPOINT ["/usr/bin/skiddph"]

@@ -12,9 +12,5 @@ printenv > /app/.env
 # Run system checks
 /usr/bin/php /check
 
-# run pnpm watch in background
-# cd /app/client/main
-# pnpm watch &
-
 # Start apache2
 /usr/sbin/httpd -D FOREGROUND

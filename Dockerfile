@@ -29,7 +29,8 @@ RUN apk update \
     php81-xsl php81-zip php81-zlib php81-pecl-memcached \
     # busybox-extras \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && npm i -g pnpm
+    && npm i -g pnpm \
+    && rm -rf /var/cache/apk/*
     # && env > /app/.env
 
 COPY html/composer.json html/composer.lock ./

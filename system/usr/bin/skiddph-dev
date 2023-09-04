@@ -24,6 +24,9 @@ cd /app && composer install -o
 # Run system checks
 /usr/bin/php /check
 
+# Start Daemon
+/usr/bin/php /app/daemon.php &
+
 # Main Client watch changes
 cd /app/client/main
 pnpm watch &

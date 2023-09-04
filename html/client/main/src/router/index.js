@@ -8,6 +8,7 @@ import Verify from '@/views/Verify.vue'
 import NotFound from '@/views/NotFound.vue'
 import FeatureNotAvailable from '@/views/FeatureNotAvailable.vue'
 import Register from '@/views/Register.vue'
+import Login from '@/views/Login.vue'
 
 const routes = [
     {
@@ -41,6 +42,11 @@ const routes = [
         path: '/register',
         name: 'Register',
         component: Register
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login
     },
     {
         path: '/feature-not-available',

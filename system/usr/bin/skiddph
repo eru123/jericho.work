@@ -12,5 +12,8 @@ printenv > /app/.env
 # Run system checks
 /usr/bin/php /check
 
+# Start Daemon
+/usr/bin/php /app/daemon.php &
+
 # Start apache2
 /usr/sbin/httpd -D FOREGROUND

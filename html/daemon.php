@@ -16,7 +16,7 @@ $d->run([
             $mac = $c->malloc();
             $cyc = $c->cycle();
             cmd(['mail_queues'], true);
-            echo "[{$date}]\tcycle: {$cyc}\tmem: {$mem}/{$mac}MB\n";
+            // echo "[{$date}]\tcycle: {$cyc}\tmem: {$mem}/{$mac}MB\n";
         }
     }
 ]);

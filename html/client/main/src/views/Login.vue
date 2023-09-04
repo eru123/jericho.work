@@ -25,7 +25,6 @@ const submit = () => {
   }
 
   if (!form.value.checkValidity()) {
-    console.log(data);
     return createError("Error", "Please fill out all required fields.");
   }
 

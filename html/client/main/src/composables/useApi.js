@@ -68,6 +68,26 @@ export const login = (data) => {
     });
 };
 
+export const add_mail = (email) => {
+  return post("/api/v1/auth/mail/add", { email })
+    .then((res) => {
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      if (res?.data) {
+        localData.value = res.data;
+        return res;
+      }
+
+      throw new Error("Invalid server response");
+    })
+    .catch((err) => {
+      createError("Add Mail Error", err?.message);
+      return null;
+    });
+};
+
 export default {
   data: localData,
   post,

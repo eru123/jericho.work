@@ -198,11 +198,11 @@ watch([fname, mname, lname], () => {
                     />
                 </div>
                 <div class="note">
-                    By registering an account, you ahve agreed to our
-                    <v-link to="/terms-and-conditions"
+                    By registering an account, you have agreed to our
+                    <v-link target="_blank" to="/terms-and-conditions"
                         >Terms and Conditions</v-link
                     >, and that you have read our
-                    <v-link to="/privacy-policy">Privacy Policy</v-link>.
+                    <v-link target="_blank" to="/privacy-policy">Privacy Policy</v-link>.
                 </div>
                 <div class="actions">
                     <button type="submit">Register</button>

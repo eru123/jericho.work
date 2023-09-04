@@ -4,6 +4,7 @@ import Landing from "@/views/Landing.vue";
 import MDLayout from "@/layouts/PublicMarkdown.vue";
 import MDPrivacyPolicy from "@/md/privacy-policy.md";
 import MDTermsAndConditions from "@/md/terms-and-conditions.md";
+import AddMail from "@/views/AddMail.vue";
 import Verify from "@/views/Verify.vue";
 import NotFound from "@/views/NotFound.vue";
 import FeatureNotAvailable from "@/views/FeatureNotAvailable.vue";
@@ -49,6 +50,11 @@ const routes = [
     path: "/verify/:token",
     name: "Verify",
     component: Verify,
+  },
+  {
+    path: "/add-mail",
+    name: "AddMail",
+    component: AddMail,
   },
   {
     path: "/register",

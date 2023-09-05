@@ -32,8 +32,15 @@ class Auth
     {
         if (!$c->jwt) {
             http_response_code(401);
+
+            $msg = "Not authorized";
+
+            if (env('APP_ENV') === 'development') {
+                $msg .= ': ' . ($c->jwt_error ?? 'Missing Authorization header');
+            }
+
             return [
-                'error' => $c->jwt_error ?? 'Missing Authorization header',
+                'error' => $msg,
             ];
         }
     }

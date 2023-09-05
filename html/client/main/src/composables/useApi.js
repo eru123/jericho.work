@@ -48,13 +48,16 @@ export const register = (data) => {
     })
     .catch((err) => {
       createError("Registration Error", err?.message);
-      return null;
     });
 };
 
 export const login = (data) => {
   return post("/api/v1/auth/login", data)
     .then((res) => {
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
       if (res?.token && res?.data) {
         loginWithData(res.token, res.data);
         return res;
@@ -64,7 +67,6 @@ export const login = (data) => {
     })
     .catch((err) => {
       createError("Login Error", err?.message);
-      return null;
     });
 };
 

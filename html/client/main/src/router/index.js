@@ -22,11 +22,13 @@ const routes = [
     beforeEnter: (to, from, next) => {
       if (userData?.value?.token) {
         if (!userData?.value?.email_verified) {
-            next("/add-mail");
+          return next("/add-mail");
         }
 
-        next("/dashboard");
+        return next("/dashboard");
       }
+
+      return next();
     },
   },
   {
@@ -62,8 +64,9 @@ const routes = [
     component: Register,
     beforeEnter: (to, from, next) => {
       if (userData?.value?.token) {
-        next("/");
+        return next("/");
       }
+      return next();
     },
   },
   {
@@ -72,8 +75,10 @@ const routes = [
     component: Login,
     beforeEnter: (to, from, next) => {
       if (userData?.value?.token) {
-        next("/");
+
+        return next("/");
       }
+      return next();
     },
   },
   {
@@ -97,10 +102,10 @@ export const paths = routes
     (all, cur) =>
       cur?.children
         ? all.concat(
-            cur.children.map((c) =>
-              c.path.charAt(0) === "/" ? c.path : cur.path + c.path
-            )
+          cur.children.map((c) =>
+            c.path.charAt(0) === "/" ? c.path : cur.path + c.path
           )
+        )
         : all.concat(cur.path.charAt(0) === "/" ? cur.path : `/${cur.path}`),
     []
   )

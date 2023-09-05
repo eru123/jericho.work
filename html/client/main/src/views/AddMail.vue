@@ -74,7 +74,7 @@ const submit = () => {
 }
 
 .add-mail {
-  @apply m-0 sm:bg-gray-100 sm:p-4 sm:rounded-md sm:border sm:border-gray-400 w-full max-w-[320px];
+  @apply m-0 md:bg-gray-100 md:p-4 md:rounded-md md:border md:border-gray-400 w-full max-w-[320px];
 
   .form-group {
     @apply flex flex-col mb-4;

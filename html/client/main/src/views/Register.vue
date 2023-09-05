@@ -20,9 +20,11 @@ const aliases = computed(() => {
     if (fname.value && mname.value && lname.value) {
         return [
             `${fname.value} ${lname.value}`,
+            `${fname.value} ${String(mname.value)[0]}. ${lname.value}`,
             `${fname.value} ${mname.value} ${lname.value}`,
             `${fname.value} ${lname.value} ${mname.value}`,
             `${lname.value}, ${fname.value}`,
+            `${lname.value}, ${fname.value} ${String(mname.value)[0]}.`,
             `${lname.value}, ${fname.value} ${mname.value}`,
         ];
     } else if (fname.value && lname.value) {
@@ -77,7 +79,7 @@ const submit = () => {
     const loading = createLoading("Please wait...");
     return createConfirm(
         "Confirmation",
-        "Please that all information is correct. Click OK to proceed.",
+        "Please confirm that all information is correct. Click OK to proceed.",
         (c1) => {
             return register(data)
                 .then((res) => {

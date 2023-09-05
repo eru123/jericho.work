@@ -64,7 +64,6 @@ const submit = () => {
             id="user"
             v-model="user"
             :required="enforceRequired"
-            autocomplete="off"
           />
         </div>
         <div class="form-group">
@@ -72,11 +71,8 @@ const submit = () => {
           <input
             type="password"
             id="pass"
-            autocomplete="new-password"
             v-model="pass"
             :required="enforceRequired"
-            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
-            title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
           />
         </div>
         <div class="note">

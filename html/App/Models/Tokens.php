@@ -73,4 +73,9 @@ class Tokens implements Model
     {
         return DB::instance()->query('SELECT * FROM `tokens` WHERE `token` = ?', [$id])->fetchAll();
     }
+
+    public static function get_all_by_type(string $type): PDOStatement
+    {
+        return DB::instance()->query('SELECT * FROM `tokens` WHERE `type` = ? AND `expired_at` > NOW()', [$type]);
+    }
 }

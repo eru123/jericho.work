@@ -21,6 +21,9 @@ cd /app && composer install -o
 # Migration
 /usr/bin/php /migrate
 
+# Load revoked tokens
+/usr/bin/php /script load_revoked_tokens
+
 # Run system checks
 /usr/bin/php /check
 

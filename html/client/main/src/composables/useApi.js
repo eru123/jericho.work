@@ -2,7 +2,7 @@ import useServerData, { BASE_URL } from "./useServerData";
 import usePersistentData from "./usePersistentData";
 import { createError } from "./useDialog";
 export const $server = useServerData();
-export const localData = usePersistentData("user", null);
+export const $user = usePersistentData("user", null);
 
 export const post = (url, data) => {
   const url_obj = new URL(url, BASE_URL);
@@ -24,12 +24,8 @@ export const get = (url, data) => {
 };
 
 export const loginWithData = (token, data) => {
-  localData.value = data;
-  localData.value.token = token;
-};
-
-export const logout = () => {
-  localData.value = null;
+  $user.value = data;
+  $user.value.token = token;
 };
 
 export const register = (data) => {
@@ -78,7 +74,7 @@ export const add_mail = (email) => {
       }
 
       if (res?.data) {
-        localData.value = res.data;
+        $user.value = res.data;
         return res;
       }
 
@@ -90,8 +86,26 @@ export const add_mail = (email) => {
     });
 };
 
+export const logout = () => {
+  return post("/api/v1/auth/logout", {})
+    .then((res) => {
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      return res;
+    })
+    .catch((err) => {
+      createError("Logout Error", err?.message);
+    })
+    .finally((res) => {
+      $user.value = null;
+      return res;
+    });
+};
+
 export default {
-  data: localData,
+  data: $user,
   post,
   get,
 };

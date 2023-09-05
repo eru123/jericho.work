@@ -12,20 +12,16 @@ export default defineConfig({
       include: [/\.vue$/, /\.md$/],
     }),
     md({
-      // default options passed to markdown-it
       // see: https://markdown-it.github.io/markdown-it/
       markdownItOptions: {
         html: true,
         linkify: true,
         typographer: true,
       },
-      // A function providing the Markdown It instance gets the ability to apply custom settings/plugins
       markdownItSetup(md) {
-        // for example
         md.use(MarkdownItAnchor)
         md.use(MarkdownItPrism)
       },
-      // Class names for the wrapper div
       wrapperClasses: 'markdown-body'
     }),
   ],

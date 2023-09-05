@@ -22,9 +22,11 @@ class Auth
             }
             $c->jwt = static::jwt()->decode($token);
             $c->jwt_error = null;
+            $c->jwt_token = $token;
         } catch (Throwable $th) {
             $c->jwt = null;
             $c->jwt_error = $th->getMessage();
+            $c->jwt_token = null;
         }
     }
 
@@ -202,6 +204,11 @@ class Auth
         return [
             'error' => 'Failed to update your account',
         ];
+    }
+
+    public function logout(Context $c)
+    {
+
     }
 
     public function add_email(Context $c)

@@ -26,6 +26,7 @@ import {
     BiQuestionCircle,
     BiHourglassBottom,
     BiHourglassSplit,
+    HiSolidUserCircle,
     // BiHourglassTop,
     // BiHourglass,
 } from "oh-vue-icons/icons";
@@ -51,6 +52,7 @@ addIcons(
     BiQuestionCircle,
     BiHourglassBottom,
     BiHourglassSplit,
+    HiSolidUserCircle,
     // BiHourglassTop,
     // BiHourglass,
 );

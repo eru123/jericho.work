@@ -109,7 +109,7 @@ footer {
   @apply bg-primary-900 text-primary-50 flex justify-center items-center flex-col py-4;
 
   & > div:first-child {
-    @apply flex flex-col justify-start items-center mt-4 mb-8 w-full max-w-screen-lg mx-auto px-4;
+    @apply flex flex-col justify-start items-center mt-4 mb-8 w-full max-w-screen-xl mx-auto px-4;
 
     img {
       @apply w-auto h-[2.3rem] mr-2 my-[.1rem];

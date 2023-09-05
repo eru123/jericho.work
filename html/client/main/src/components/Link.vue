@@ -17,8 +17,6 @@ const isExternalLink = computed(() => {
 const attrs = useAttrs();
 
 const handleClick = (e) => {
-    console.log("handleClick.props", props);
-    console.log("handleClick.attrs", attrs);
     if (isExternalLink.value) {
         return;
     }

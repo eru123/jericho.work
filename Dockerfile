@@ -39,6 +39,7 @@ RUN composer install -o
 COPY system/ /
 COPY html .
 COPY check /
+COPY script /
 COPY migrate /
 
 RUN chmod +x /usr/bin/skiddph

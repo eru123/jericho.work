@@ -6,8 +6,9 @@ use App\Plugin\Mailer;
 
 try {
     $processed = mailer::send_queues();
-    $date = date('Y-m-d H:i:s');
-    writelog("[{$date}]\tProcessed Mail Queues: {$processed}");
+    if (intval($processed) > 0) {
+        writelog("Processed Mail Queues: {$processed}");
+    }
 } catch (Exception $e) {
     throw $e;
 }

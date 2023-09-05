@@ -69,7 +69,7 @@ if (isset($args['q']) && !empty($args['q'])) {
 
     try {
         $newdata = $mailer->send($mail);
-        writelog(implode("", ["Mail Logs for queue-" . $args['q']] + @$newdata['response']['logs'] ?? []));
+        writelog(implode("", ["Mail Logs for queue-" . $args['q'] . PHP_EOL] + @$newdata['response']['logs'] ?? []));
         Mails::update($mail['id'], [
             'status' => $newdata['status'],
             'message_id' => $newdata['message_id'],

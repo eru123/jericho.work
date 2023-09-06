@@ -13,5 +13,8 @@ $d->run([
         if ($c->is_second_new()) {
             cmd(['mail_queues'], true);
         }
+        if ($c->is_minute(0)) {
+            cmd(['load_revoked_tokens'], true);
+        }
     }
 ]);

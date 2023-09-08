@@ -35,5 +35,5 @@ COPY system/ /
 
 RUN chmod +x /usr/bin/skiddph-dev
 
-EXPOSE 80 5173
+EXPOSE 80 3000
 ENTRYPOINT ["/usr/bin/skiddph-dev"]

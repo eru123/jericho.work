@@ -6,13 +6,19 @@ export const $user = usePersistentData("user", null);
 
 export const post = (url, data) => {
   const url_obj = new URL(url, BASE_URL);
-  return fetch(url_obj, {
+  const headers = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  }).then((res) => res.json());
+  };
+
+  if ($user.value?.token) {
+    headers.headers["Authorization"] = `Bearer ${$user.value.token}`;
+  }
+
+  return fetch(url_obj, headers).then((res) => res.json());
 };
 
 export const get = (url, data) => {
@@ -20,7 +26,16 @@ export const get = (url, data) => {
   for (const key in data) {
     url_obj.searchParams.append(key, data[key]);
   }
-  return fetch(url_obj).then((res) => res.json());
+
+  const headers = {
+    method: "GET",
+  };
+
+  if ($user.value?.token) {
+    headers.headers["Authorization"] = `Bearer ${$user.value.token}`;
+  }
+
+  return fetch(url_obj, headers).then((res) => res.json());
 };
 
 export const loginWithData = (token, data) => {
@@ -87,21 +102,13 @@ export const add_mail = (email) => {
 };
 
 export const logout = () => {
-  return post("/api/v1/auth/logout", {})
-    .then((res) => {
-      if (res?.error) {
-        throw new Error(res.error);
-      }
+  return post("/api/v1/auth/logout").then((res) => {
+    if (res?.error) {
+      throw new Error(res.error);
+    }
 
-      return res;
-    })
-    .catch((err) => {
-      return createError("Logout Error", err?.message || "Unknown error occur");
-    })
-    .finally((res) => {
-      $user.value = null;
-      return res;
-    });
+    return res;
+  });
 };
 
 export default {

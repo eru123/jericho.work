@@ -51,7 +51,7 @@ const handleClick = (e) => {
         return;
     }
 
-    if (props.target && props.target !== "_self") {
+    if (attrs?.target && attrs.target !== "_self") {
         return;
     }
 
@@ -66,14 +66,14 @@ const handleClick = (e) => {
         :href="to"
         @click="handleClick"
         :target="
-            !props?.target
+            !attrs?.target
                 ? isExternalLink
                     ? '_blank'
                     : typeof props.to === 'string' &&
                       routerPaths.includes(props.to)
                     ? '_self'
                     : '_blank'
-                : props.target
+                :attrs.target
         "
     >
         <slot />

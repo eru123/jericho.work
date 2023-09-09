@@ -11,12 +11,10 @@ $d->mem_limit('128M');
 $d->run([
     function (Daemon $c) {
         if ($c->is_second_new()) {
-            $date = date('Y-m-d H:i:s');
-            $mem = rtrim(number_format($c->musage(), 2), '0.');
-            $mac = $c->malloc();
-            $cyc = $c->cycle();
             cmd(['mail_queues'], true);
-            echo "[{$date}]\tcycle: {$cyc}\tmem: {$mem}/{$mac}MB\n";
+        }
+        if ($c->is_minute(0)) {
+            cmd(['load_revoked_tokens'], true);
         }
     }
 ]);

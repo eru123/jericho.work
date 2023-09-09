@@ -8,3 +8,4 @@ html/.env
 /*.jericho.work
 html/logs/
 /*.com
+.pnpm-store

@@ -5,26 +5,86 @@ namespace App\Controller;
 use Throwable;
 use Exception;
 use App\Models\Users;
+use App\Models\Tokens;
+use App\Plugin\MC;
 use App\Plugin\DB;
 use eru123\router\Context;
 use eru123\helper\JWT;
 
 class Auth
 {
+    const REVOKED_CACHE_PREFIX = 'revoked_token_';
+
+    public function revoke_token($token): bool
+    {
+        try {
+            $mc = MC::instance();
+            $data = static::jwt()->decode($token);
+            $exp = @$data['exp'] ?? null;
+            $exp = $exp ? date('Y-m-d H:i:s', strtotime($exp)) : null;
+            $uid = @$data['id'] ?? 0;
+            $data = [
+                'token' => $token,
+                'user_id' => $uid,
+                'type' => 'revoked',
+                'expired_at' => $exp,
+            ];
+            $stmt = Tokens::insert($data);
+            if ($stmt->rowCount() > 0) {
+                $mc->set(static::REVOKED_CACHE_PREFIX . $token, $exp, strtotime($exp) - time());
+                return true;
+            }
+
+            throw new Exception('Failed to revoke token');
+        } catch (Throwable) {
+            return false;
+        }
+
+        return false;
+    }
+
+    public function is_revoked($token): bool
+    {
+        $mc = MC::instance();
+        $exp = $mc->get(static::REVOKED_CACHE_PREFIX . $token);
+        if ($exp) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function store_revoked_tokens()
+    {
+        $mc = MC::instance();
+        $stmt = Tokens::get_all_by_type('revoked');
+        while ($row = $stmt->fetch()) {
+            $mc->set(static::REVOKED_CACHE_PREFIX . $row['token'], $row['expired_at'], strtotime($row['expired_at']) - time());
+        }
+    }
+
     public function bootstrap(Context $c)
     {
         try {
             $authorization = @getallheaders()['Authorization'] ?? null;
             preg_match('/^(Bearer\s+)?(.+)$/', (string) $authorization, $matches);
             $token = $matches[2] ?? null;
+            
             if (!$token) {
                 throw new Exception('Missing Authorization header');
             }
+
+            if ($this->is_revoked($token)) {
+                throw new Exception('Token is revoked');
+            }
+
             $c->jwt = static::jwt()->decode($token);
             $c->jwt_error = null;
+            $c->jwt_token = $token;
         } catch (Throwable $th) {
             $c->jwt = null;
             $c->jwt_error = $th->getMessage();
+            $c->jwt_token = null;
         }
     }
 
@@ -32,8 +92,15 @@ class Auth
     {
         if (!$c->jwt) {
             http_response_code(401);
+
+            $msg = "Not authorized";
+
+            if (env('APP_ENV') === 'development') {
+                $msg .= ': ' . ($c->jwt_error ?? 'Missing Authorization header');
+            }
+
             return [
-                'error' => $c->jwt_error ?? 'Missing Authorization header',
+                'error' => $msg,
             ];
         }
     }
@@ -194,6 +261,23 @@ class Auth
         http_response_code(400);
         return [
             'error' => 'Failed to update your account',
+        ];
+    }
+
+    public function logout(Context $c)
+    {
+        if ($c->jwt_token) {
+            $revoked = $this->revoke_token($c->jwt_token);
+            if ($revoked) {
+                return [
+                    'success' => 'Successfully logged out',
+                ];
+            }
+        }
+
+        http_response_code(400);
+        return [
+            'error' => 'Failed to logout',
         ];
     }
 

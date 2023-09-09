@@ -1,10 +1,22 @@
 #!/bin/sh
 
-# Copy all system variable to .env file
-printenv > /app/.env
+# CDN Client
+cd /app/client/cdn
+pnpm install && pnpm build
+
+# Admin Client
+cd /app/client/admin
+pnpm install && pnpm build
+
+# Main Client
+cd /app/client/main
+pnpm install
 
 # Start memcached
 /usr/bin/memcached -u root -p 11211 -m 64 -c 1024 -P /var/run/memcached/memcached.pid -d
+
+# Install composer
+cd /app && composer install -o
 
 # Migration
 /usr/bin/php /migrate
@@ -17,6 +29,10 @@ printenv > /app/.env
 
 # Start Daemon
 /usr/bin/php /app/daemon.php &
+
+# Main Client watch changes
+cd /app/client/main
+pnpm dev &
 
 # Start apache2
 /usr/sbin/httpd -D FOREGROUND

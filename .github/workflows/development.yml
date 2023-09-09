@@ -1,0 +1,20 @@
+name: Development
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    environment: 
+      name: Development
+      url: https://skiddph-dev.skiddph.com
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update Server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            ${{ secrets.SSH_CMD }}

@@ -21,4 +21,4 @@ if (!file_exists($f)) {
 }
 
 $script_args = array_slice($argv, 2);
-echo cmd([$script, ...$script_args]);
+echo cmd([$script, ...$script_args], false);

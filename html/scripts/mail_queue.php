@@ -14,7 +14,7 @@ if (isset($args['q']) && !empty($args['q'])) {
     $id = $args['q'];
     $proc = Mailer::CACHE_PREFIX . 'queue_process_' . $id;
     if ($mc->get($proc)) {
-        echo "Mail queue {$id} is being processed.", PHP_EOL;
+        writelog("Mail queue {$id} is being processed.");
         exit(1);
     }
 
@@ -23,7 +23,7 @@ if (isset($args['q']) && !empty($args['q'])) {
 
     $mail = Mails::find($id);
     if (!$mail || @$mail['status'] != Mails::STATUS_QUEUE) {
-        echo "Mail queue not found.", PHP_EOL;
+        writelog("Mail queue not found.");
         exit(1);
     }
 
@@ -41,7 +41,7 @@ if (isset($args['q']) && !empty($args['q'])) {
     } else {
         $smtp = Smtps::find($mail['smtp_id']);
         if (!$smtp) {
-            echo "SMTP not found.", PHP_EOL;
+            writelog("SMTP not found.");
             Mailer::end_process();
             Mails::update($mail['id'], [
                 'status' => Mails::STATUS_FAILED,
@@ -60,7 +60,7 @@ if (isset($args['q']) && !empty($args['q'])) {
 
     $ctr = intval($mc->get($mail_identifier));
     if ($ctr >= $limit) {
-        echo "SMTP limit reached.", PHP_EOL;
+        writelog("SMTP limit reached.");
         Mailer::end_process();
         exit(1);
     }
@@ -69,6 +69,7 @@ if (isset($args['q']) && !empty($args['q'])) {
 
     try {
         $newdata = $mailer->send($mail);
+        writelog(implode("", ["Mail Logs for queue-" . $args['q'] . PHP_EOL] + @$newdata['response']['logs'] ?? []));
         Mails::update($mail['id'], [
             'status' => $newdata['status'],
             'message_id' => $newdata['message_id'],

@@ -13,13 +13,13 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
       - name: rsync over SSH
         run: rsync -r ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PATH }}
-      - name: run command on server
-        run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} ${{ secrets.SSH_CMD }}
       # - name: run command on server
-      #   uses: appleboy/ssh-action@v1.0.0
-      #   with:
-      #     host: ${{ secrets.SSH_HOST }}
-      #     username: ${{ secrets.SSH_USER }}
-      #     key: ${{ secrets.SSH_KEY }}
-      #     script: |
-      #       ${{ secrets.SSH_CMD }}
+      #   run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} ${{ secrets.SSH_CMD }}
+      - name: run command on server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            ${{ secrets.SSH_CMD }}

@@ -96,7 +96,7 @@ export const logout = () => {
       return res;
     })
     .catch((err) => {
-      createError("Logout Error", err?.message);
+      return createError("Logout Error", err?.message || "Unknown error occur");
     })
     .finally((res) => {
       $user.value = null;

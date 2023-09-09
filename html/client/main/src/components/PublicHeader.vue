@@ -4,108 +4,136 @@ import LogoWD from "@/assets/logo-w-dark.svg";
 import LogoD from "@/assets/logo-dark.svg";
 import { usePersistentData } from "@/composables/usePersistentData";
 import { logout } from "@/composables/useApi";
+import {
+  createInfo,
+  createConfirm,
+  createLoading,
+} from "@/composables/useDialog";
+
 const user = usePersistentData("user", null);
 const authed = computed(() => user.value?.token);
+
+const confirmLogout = () => {
+  createConfirm("Logout", "Are you sure you want to logout?", (c1) => {
+    const loading = createLoading("Logging out...");
+    logout()
+      .then(() => {
+        createInfo("Logged out", "You have been logged out.", (c2) => {
+          c1();
+          user.value = null;
+          window.location.href = "/login";
+          c2();
+        });
+      })
+      .catch((err) => {
+        createInfo("Error", err.message, (e1) => {
+          c1();
+          e1();
+        });
+      })
+      .finally(() => {
+        loading.close();
+      });
+  });
+};
 </script>
 <template>
-    <header>
-        <nav>
-            <router-link to="/" class="brand">
-                <img :src="LogoWD" alt="Logo" />
-                <img :src="LogoD" alt="Logo" />
-            </router-link>
-            <div class="actions">
-                <router-link v-if="!authed" to="/login"> Login </router-link>
-                <router-link v-if="!authed" to="/register">
-                    Register
-                </router-link>
-                <a class="dropdown">
-                    <v-icon name="hi-solid-user-circle" class="icon"></v-icon>
-                    <span class="shortname">
-                        {{ user?.fname ?? user?.user }}
-                    </span>
-                    <span class="longname">
-                        {{ user?.name ?? user?.fname ?? user?.user }}
-                    </span>
-                    <div class="items">
-                        <router-link to="/profile">Profile</router-link>
-                        <button> Logout </button>
-                    </div>
-                </a>
-            </div>
-        </nav>
-    </header>
+  <header>
+    <nav>
+      <router-link to="/" class="brand">
+        <img :src="LogoWD" alt="Logo" />
+        <img :src="LogoD" alt="Logo" />
+      </router-link>
+      <div class="actions">
+        <router-link v-if="!authed" to="/login"> Login </router-link>
+        <router-link v-if="!authed" to="/register"> Register </router-link>
+        <a class="dropdown" v-if="authed">
+          <v-icon name="hi-solid-user-circle" class="icon"></v-icon>
+          <span class="shortname">
+            {{ user?.fname ?? user?.user }}
+          </span>
+          <span class="longname">
+            {{ user?.name ?? user?.fname ?? user?.user }}
+          </span>
+          <div class="items">
+            <router-link to="/profile">Profile</router-link>
+            <button @click="confirmLogout">Logout</button>
+          </div>
+        </a>
+      </div>
+    </nav>
+  </header>
 </template>
 <style scoped lang="scss">
 header {
-    @apply bg-primary-900 text-primary-50 flex justify-center sticky top-0 z-50;
+  @apply bg-primary-900 text-primary-50 flex justify-center sticky top-0 z-50;
 
-    nav {
-        @apply mx-auto flex justify-between items-center w-full px-4 py-2;
+  nav {
+    @apply mx-auto flex justify-between items-center w-full px-4 py-2;
 
-        .brand {
-            @apply flex items-center;
+    .brand {
+      @apply flex items-center;
 
-            img:first-child {
-                @apply w-auto h-[2.3rem] mr-2 my-[.1rem] hidden md:block;
-            }
+      img:first-child {
+        @apply w-auto h-[2.3rem] mr-2 my-[.1rem] hidden md:block;
+      }
 
-            img:last-child {
-                @apply w-auto h-[2.5rem] mr-2 block md:hidden;
-            }
-        }
-
-        .actions {
-            @apply flex items-center;
-
-            & > a {
-                @apply px-4 py-2 rounded-md text-sm font-normal text-primary-50 hover:bg-primary-800;
-                @apply flex items-center;
-
-                &.dropdown {
-                    @apply relative;
-
-                    svg.icon {
-                        @apply w-6 h-6 mr-2;
-                    }
-
-                    .shortname {
-                        @apply block md:hidden;
-                    }
-
-                    .longname {
-                        @apply hidden md:block;
-                    }
-
-                    .items {
-                        @apply absolute top-full right-0 w-48 bg-primary-900 rounded-md shadow-lg py-1 z-10;
-                        @apply hidden;
-
-                        & > * {
-                            @apply text-left w-full block px-4 py-2 text-sm text-primary-50 hover:bg-primary-800 transition-all duration-200 rounded-md;
-                        }
-                    }
-
-                    &:hover {
-                        .items {
-                            @apply block;
-                            animation: dropdown 200ms ease-in-out forwards;
-                        }
-                    }
-                }
-            }
-        }
+      img:last-child {
+        @apply w-auto h-[2.5rem] mr-2 block md:hidden;
+      }
     }
+
+    .actions {
+      @apply flex items-center;
+
+      & > a {
+        @apply px-4 py-2 rounded-md text-sm font-normal text-primary-50 hover:bg-primary-800;
+        @apply flex items-center;
+
+        &.dropdown {
+          @apply relative;
+
+          svg.icon {
+            @apply w-6 h-6 mr-2;
+          }
+
+          .shortname {
+            @apply block md:hidden;
+          }
+
+          .longname {
+            @apply hidden md:block;
+          }
+
+          .items {
+            @apply absolute top-full right-0 w-48 bg-primary-900 rounded-md shadow-lg py-1 z-10;
+            @apply hidden;
+
+            & > * {
+              @apply text-left w-full block px-4 py-2 text-sm text-primary-50 hover:bg-primary-800 transition-all duration-200 rounded-md;
+            }
+          }
+
+          &:hover {
+            .items {
+              @apply block;
+              animation: dropdown 200ms ease-in-out forwards;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 @keyframes dropdown {
-    0% {
-        opacity: 0;
-        transform: translateY(-50%) translateX(50%) scale(0);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) translateX(0) scale(1);
-    }
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) translateX(50%) scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) translateX(0) scale(1);
+  }
 }
 </style>

@@ -27,6 +27,7 @@ import {
     BiHourglassBottom,
     BiHourglassSplit,
     HiSolidUserCircle,
+    FaSpinner,
     // BiHourglassTop,
     // BiHourglass,
 } from "oh-vue-icons/icons";
@@ -53,6 +54,7 @@ addIcons(
     BiHourglassBottom,
     BiHourglassSplit,
     HiSolidUserCircle,
+    FaSpinner,
     // BiHourglassTop,
     // BiHourglass,
 );

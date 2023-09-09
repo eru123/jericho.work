@@ -3,11 +3,10 @@ import { computed } from "vue";
 import LogoWD from "@/assets/logo-w-dark.svg";
 import LogoD from "@/assets/logo-dark.svg";
 import { usePersistentData } from "@/composables/usePersistentData";
-import { logout } from "@/composables/useApi";
+import { logout, redirect } from "@/composables/useApi";
 import {
   createInfo,
   createConfirm,
-  createLoading,
 } from "@/composables/useDialog";
 
 const user = usePersistentData("user", null);
@@ -15,24 +14,19 @@ const authed = computed(() => user.value?.token);
 
 const confirmLogout = () => {
   createConfirm("Logout", "Are you sure you want to logout?", (c1) => {
-    const loading = createLoading("Logging out...");
+    c1();
     logout()
       .then(() => {
-        createInfo("Logged out", "You have been logged out.", (c2) => {
-          c1();
+        createInfo("Logout", "You have been logged out.", (c2) => {
           user.value = null;
-          window.location.href = "/login";
+          redirect("/login");
           c2();
         });
       })
       .catch((err) => {
         createInfo("Error", err.message, (e1) => {
-          c1();
           e1();
         });
-      })
-      .finally(() => {
-        loading.close();
       });
   });
 };

@@ -1,10 +1,10 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import md from 'unplugin-vue-markdown/vite'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import md from "unplugin-vue-markdown/vite";
 // import { code, meta, link } from "md-powerpack";
-import MarkdownItAnchor from 'markdown-it-anchor'
-import MarkdownItPrism from 'markdown-it-prism'
-import { fileURLToPath, URL } from 'node:url'
+import MarkdownItAnchor from "markdown-it-anchor";
+import MarkdownItPrism from "markdown-it-prism";
+import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
   plugins: [
@@ -19,33 +19,33 @@ export default defineConfig({
         typographer: true,
       },
       markdownItSetup(md) {
-        md.use(MarkdownItAnchor)
-        md.use(MarkdownItPrism)
+        md.use(MarkdownItAnchor);
+        md.use(MarkdownItPrism);
       },
-      wrapperClasses: 'markdown-body'
+      wrapperClasses: "markdown-body",
     }),
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
-  publicDir: 'public',
-  base: '',
+  publicDir: "public",
+  base: "",
   build: {
     manifest: true,
-    outDir: 'dist',
+    outDir: "dist",
     emptyOutDir: true,
-    assetsDir: '__',
+    assetsDir: "__",
     rollupOptions: {
       input: {
-        main: 'src/main.js'
-      }
-    }
+        main: "src/main.js",
+      },
+    },
   },
   server: {
     port: 3000,
     strictPort: true,
-    host: true
-  }
-})
+    host: true,
+  },
+});

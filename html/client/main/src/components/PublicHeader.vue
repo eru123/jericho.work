@@ -4,10 +4,7 @@ import LogoWD from "@/assets/logo-w-dark.svg";
 import LogoD from "@/assets/logo-dark.svg";
 import { usePersistentData } from "@/composables/usePersistentData";
 import { logout, redirect } from "@/composables/useApi";
-import {
-  createInfo,
-  createConfirm,
-} from "@/composables/useDialog";
+import { createInfo, createConfirm } from "@/composables/useDialog";
 
 const user = usePersistentData("user", null);
 const authed = computed(() => user.value?.token);
@@ -24,7 +21,9 @@ const confirmLogout = () => {
         });
       })
       .catch((err) => {
+        user.value = null;
         createInfo("Error", err.message, (e1) => {
+          redirect("/login");
           e1();
         });
       });

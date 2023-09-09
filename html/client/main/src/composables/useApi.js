@@ -4,6 +4,8 @@ import { createError } from "./useDialog";
 export const $server = useServerData();
 export const $user = usePersistentData("user", null);
 
+export const redirect = (to) => window?.__skiddph__redirect(to);
+
 export const post = (url, data) => {
   const url_obj = new URL(url, BASE_URL);
   const headers = {

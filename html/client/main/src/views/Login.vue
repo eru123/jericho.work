@@ -4,7 +4,6 @@ import PublicPage from "@/components/PublicPage.vue";
 import {
   createInfo,
   createError,
-  createLoading,
 } from "@/composables/useDialog";
 import { login } from "@/composables/useApi";
 
@@ -13,6 +12,7 @@ const pass = ref("");
 
 const enforceRequired = ref(false);
 const form = ref(null);
+const loggingIn = ref(false);
 
 const submit = () => {
   const requiredFields = [user, pass];
@@ -33,7 +33,7 @@ const submit = () => {
     password: pass.value,
   };
 
-  const loading = createLoading("Please wait...");
+  loggingIn.value = true;
   return login(data)
     .then((res) => {
       if (res && res?.success) {
@@ -47,7 +47,7 @@ const submit = () => {
       return createError("Error", err?.message || "An error has occurred.");
     })
     .finally(() => {
-      loading.close();
+      loggingIn.value = false;
     });
 };
 
@@ -83,7 +83,16 @@ const submit = () => {
           <v-link target="_blank" to="/privacy-policy">Privacy Policy</v-link>.
         </div>
         <div class="actions">
-          <button type="submit">Login</button>
+          <button type="submit">
+            <v-icon
+              name="fa-spinner"
+              class="icon"
+              animation="spin"
+              speed="2"
+              v-if="loggingIn"
+            ></v-icon>
+            <span v-if="!loggingIn">Login</span>
+          </button>
         </div>
       </form>
     </div>

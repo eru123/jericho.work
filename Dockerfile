@@ -28,22 +28,12 @@ RUN apk update \
     php81-xml php81-xmlreader php81-xmlwriter \
     php81-xsl php81-zip php81-zlib php81-pecl-memcached \
     busybox-extras \
-    && rm -rf /var/cache/apk/* \
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && npm i -g pnpm \
-    && mkdir -p /app/client/admin \
-    && mkdir -p /app/client/cdn \
-    && mkdir -p /app/client/main
+    && rm -rf /var/cache/apk/*
 
-COPY html/client/admin/package.json html/client/admin/pnpm-lock.yaml /app/client/admin/
-COPY html/client/cdn/package.json html/client/cdn/pnpm-lock.yaml /app/client/cdn/
-COPY html/client/main/package.json html/client/main/pnpm-lock.yaml /app/client/main/
-COPY html/composer.json html/composer.lock /app/
-
-RUN cd /app/client/admin && pnpm install --frozen-lockfile --prefer-frozen-lockfile \
-    && cd /app/client/cdn && pnpm install --frozen-lockfile --prefer-frozen-lockfile \
-    && cd /app/client/main && pnpm install --frozen-lockfile --prefer-frozen-lockfile \
-    && cd /app && composer install -o
+COPY html/composer.json html/composer.lock ./
+RUN composer install -o 
 
 COPY system/ /
 COPY html .
@@ -52,9 +42,16 @@ COPY script /
 COPY migrate /
 
 RUN chmod +x /usr/bin/skiddph
+RUN pnpm install --prefix client/cdn \
+    && pnpm install --prefix client/admin \
+    && pnpm install --prefix client/main \
+    && cd /app/client/admin && pnpm build \
+    && cd /app/client/main && pnpm build \
+    && cd /app/client/cdn && pnpm build
 
-# RUN find /app/client -mindepth 2 -maxdepth 2 -not -name 'dist'  -exec rm -rf {} \;
-# RUN find /app/client -mindepth 1 -maxdepth 1 -not -name 'admin' -not -name 'cdn' -not -name 'main' -exec rm -rf {} \;
+# Production only - Delete FEs source code
+RUN find /app/client -mindepth 2 -maxdepth 2 -not -name 'dist'  -exec rm -rf {} \;
+RUN find /app/client -mindepth 1 -maxdepth 1 -not -name 'admin' -not -name 'cdn' -not -name 'main' -exec rm -rf {} \;
 
 EXPOSE 80
 ENTRYPOINT ["/usr/bin/skiddph"]

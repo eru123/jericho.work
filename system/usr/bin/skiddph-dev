@@ -32,7 +32,7 @@ cd /app && composer install -o
 
 # Main Client watch changes
 cd /app/client/main
-pnpm watch &
+pnpm dev &
 
 # Start apache2
 /usr/sbin/httpd -D FOREGROUND

@@ -21,6 +21,7 @@ class Auth
             $mc = MC::instance();
             $data = static::jwt()->decode($token);
             $exp = @$data['exp'] ?? null;
+            $exp = $exp ? date('Y-m-d H:i:s', strtotime($exp)) : null;
             $uid = @$data['id'] ?? 0;
             $data = [
                 'token' => $token,
@@ -30,7 +31,7 @@ class Auth
             ];
             $stmt = Tokens::insert($data);
             if ($stmt->rowCount() > 0) {
-                $mc->set(Mailer::CACHE_PREFIX . $token, $exp, strtotime($exp) - time());
+                $mc->set(static::REVOKED_CACHE_PREFIX . $token, $exp, strtotime($exp) - time());
                 return true;
             }
 
@@ -45,7 +46,7 @@ class Auth
     public function is_revoked($token): bool
     {
         $mc = MC::instance();
-        $exp = $mc->get(Mailer::CACHE_PREFIX . $token);
+        $exp = $mc->get(static::REVOKED_CACHE_PREFIX . $token);
         if ($exp) {
             return true;
         }
@@ -58,7 +59,7 @@ class Auth
         $mc = MC::instance();
         $stmt = Tokens::get_all_by_type('revoked');
         while ($row = $stmt->fetch()) {
-            $mc->set(Mailer::CACHE_PREFIX . $row['token'], $row['expired_at'], strtotime($row['expired_at']) - time());
+            $mc->set(static::REVOKED_CACHE_PREFIX . $row['token'], $row['expired_at'], strtotime($row['expired_at']) - time());
         }
     }
 

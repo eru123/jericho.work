@@ -3,19 +3,14 @@ on:
   push:
     branches: [main]
 jobs:
-  setup-build-publish:
+  deploy:
+    environment: 
+      name: Development
+      url: https://skiddph-dev.skiddph.com
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-      # - name: Install SSH key
-      #   uses: shimataro/ssh-key-action@v2
-      #   with:
-      #     known_hosts: ${{ secrets.KNOWN_HOSTS }}
-      #     key: ${{ secrets.SSH_KEY }}
-      # - name: rsync over SSH
-      #   run: rsync -r ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_PATH }}
-      # - name: run command on server
-      #   run: ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} ${{ secrets.SSH_CMD }}
-      - name: run command on server
+      - name: Update Server
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}

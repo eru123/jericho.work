@@ -1,11 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import PublicPage from "@/components/PublicPage.vue";
-import {
-  createInfo,
-  createError,
-} from "@/composables/useDialog";
-import { login } from "@/composables/useApi";
+import { createInfo, createError } from "@/composables/useDialog";
+import { login, redirect } from "@/composables/useApi";
 
 const user = ref("");
 const pass = ref("");
@@ -38,7 +35,7 @@ const submit = () => {
     .then((res) => {
       if (res && res?.success) {
         return createInfo("Success", res.success, (c2) => {
-          window.location.href = "/";
+          redirect("/");
           c2();
         });
       }
@@ -50,7 +47,6 @@ const submit = () => {
       loggingIn.value = false;
     });
 };
-
 </script>
 <template>
   <PublicPage>

@@ -65,6 +65,25 @@ export const register = (data) => {
     });
 };
 
+export const hello = (data = {}) => {
+  return post("/api/v1/auth/hello", data)
+    .then((res) => {
+
+      if (res?.data) {
+        $user.value = Object.assign({}, $user.value, res.data);
+      }
+
+      if (res?.token) {
+        $user.value.token = res.token;
+      }
+
+      return res;
+    })
+}
+
+export const refresh_data = () => hello({ data: true });
+export const refresh_token = () => hello({ token: true });
+
 export const login = (data) => {
   return post("/api/v1/auth/login", data)
     .then((res) => {
@@ -98,7 +117,7 @@ export const add_mail = (email) => {
       $data.value.add_mail = Object.assign({}, {
         verification_id: res.verification_id,
       })
-      
+
       return res;
     })
 };

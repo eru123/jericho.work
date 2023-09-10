@@ -147,6 +147,7 @@ const dialogs = useDialogs();
         @apply fixed top-0 left-0 right-0 bottom-0 z-auto;
         @apply flex items-center justify-center;
         @apply bg-black bg-opacity-50;
+        @apply z-[99];
 
         .dialog {
             @apply w-fit min-w-[320px] max-w-screen-sm mx-auto;

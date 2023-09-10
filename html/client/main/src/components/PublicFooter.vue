@@ -1,6 +1,5 @@
 <script setup>
 import LogoWD from "@/assets/logo-w-dark.svg";
-import useServerData from "@/composables/useServerData";
 
 const year = new Date().getFullYear();
 const items = [

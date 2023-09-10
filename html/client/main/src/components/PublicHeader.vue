@@ -13,18 +13,8 @@ const confirmLogout = () => {
   createConfirm("Logout", "Are you sure you want to logout?", (c1) => {
     c1();
     logout()
-      .then(() => {
-        createInfo("Logout", "You have been logged out.", (c2) => {
-          redirect("/login");
-          c2();
-        });
-      })
-      .catch((err) => {
-        createInfo("Error", err.message, (e1) => {
-          redirect("/login");
-          e1();
-        });
-      });
+      .then(() => redirect("/"))
+      .catch(() => redirect("/"));
   });
 };
 </script>

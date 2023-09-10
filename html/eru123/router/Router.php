@@ -317,6 +317,9 @@ class Router
 
         $postcallback = function (Context $context) {
             if ($context->file_path) {
+                header('Cache-Control: public, max-age=31536000');
+                header('Expires: ' . gmdate('D, d M Y H:i:s', time() + 31536000) . ' GMT');
+                header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($context->file_path)) . ' GMT');
                 return (new File($context->file_path))->stream();
             }
         };

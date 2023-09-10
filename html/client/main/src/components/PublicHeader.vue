@@ -15,13 +15,11 @@ const confirmLogout = () => {
     logout()
       .then(() => {
         createInfo("Logout", "You have been logged out.", (c2) => {
-          user.value = null;
           redirect("/login");
           c2();
         });
       })
       .catch((err) => {
-        user.value = null;
         createInfo("Error", err.message, (e1) => {
           redirect("/login");
           e1();

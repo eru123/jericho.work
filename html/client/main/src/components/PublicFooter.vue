@@ -2,7 +2,6 @@
 import LogoWD from "@/assets/logo-w-dark.svg";
 import useServerData from "@/composables/useServerData";
 
-const server = useServerData();
 const year = new Date().getFullYear();
 const items = [
   {
@@ -12,6 +11,7 @@ const items = [
         name: "Email us",
         url: "mailto:hello@skiddph.com",
         icon: "bi-envelope-fill",
+        _blank: true,
       },
       {
         name: "Privacy Policy",
@@ -27,11 +27,13 @@ const items = [
         name: "Google Reviews",
         url: "https://g.page/r/CVx7yccU-v3cEAI/review",
         icon: "bi-google",
+        _blank: true,
       },
       {
         name: "Facebook Reviews",
         url: "https://facebook.com/skiddph/reviews",
         icon: "bi-facebook",
+        _blank: true,
       },
     ],
   },
@@ -42,16 +44,19 @@ const items = [
         name: "Facebook",
         url: "https://facebook.com/skiddph",
         icon: "bi-facebook",
+        _blank: true,
       },
       {
         name: "LinkedIn",
         url: "https://www.linkedin.com/company/skiddph",
         icon: "bi-linkedin",
+        _blank: true,
       },
       {
         name: "Discord",
         url: "https://discord.gg/ugSanJu5BJ",
         icon: "bi-discord",
+        _blank: true,
       },
     ],
   },

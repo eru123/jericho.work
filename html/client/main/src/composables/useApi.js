@@ -104,7 +104,8 @@ export const add_mail = (email) => {
 };
 
 export const logout = () => {
-  return post("/api/v1/auth/logout").then((res) => {
+  return post("/api/v1/auth/logout")
+  .then((res) => {
     $user.value = null;
     
     if (res?.error) {
@@ -112,6 +113,10 @@ export const logout = () => {
     }
     
     return res;
+  })
+  .catch((err) => {
+    $user.value = null;
+    throw new Error(err?.message);
   });
 };
 

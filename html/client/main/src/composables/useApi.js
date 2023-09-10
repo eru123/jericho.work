@@ -105,10 +105,12 @@ export const add_mail = (email) => {
 
 export const logout = () => {
   return post("/api/v1/auth/logout").then((res) => {
+    $user.value = null;
+    
     if (res?.error) {
       throw new Error(res.error);
     }
-
+    
     return res;
   });
 };

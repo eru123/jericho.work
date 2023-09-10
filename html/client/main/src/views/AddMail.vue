@@ -4,7 +4,6 @@ import PublicPage from "@/components/PublicPage.vue";
 import {
   createInfo,
   createError,
-  createLoading,
 } from "@/composables/useDialog";
 import { add_mail } from "@/composables/useApi";
 

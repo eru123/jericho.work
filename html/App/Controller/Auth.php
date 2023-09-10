@@ -69,7 +69,7 @@ class Auth
             $authorization = @getallheaders()['Authorization'] ?? null;
             preg_match('/^(Bearer\s+)?(.+)$/', (string) $authorization, $matches);
             $token = $matches[2] ?? null;
-            
+
             if (!$token) {
                 throw new Exception('Missing Authorization header');
             }
@@ -90,13 +90,25 @@ class Auth
 
     public function guard(Context $c)
     {
+        $msg = "Not authorized";
+
         if (!$c->jwt) {
             http_response_code(401);
 
-            $msg = "Not authorized";
-
             if (env('APP_ENV') === 'development') {
                 $msg .= ': ' . ($c->jwt_error ?? 'Missing Authorization header');
+            }
+
+            return [
+                'error' => $msg,
+            ];
+        }
+
+        if (static::is_revoked($c->jwt_token)) {
+            http_response_code(401);
+
+            if (env('APP_ENV') === 'development') {
+                $msg .= ': Token is revoked';
             }
 
             return [
@@ -279,6 +291,47 @@ class Auth
         return [
             'error' => 'Failed to logout',
         ];
+    }
+
+    public function hello(Context $c)
+    {
+        $rdata = $c->json();
+        $user_id = $c->jwt['id'];
+
+        $renew_token = !!$rdata['token'];
+        $renew_data = !!$rdata['data'];
+
+        $res = [];
+
+        $user = Users::find($user_id);
+        if (!$user) {
+            http_response_code(400);
+            return [
+                'error' => 'Failed to get your account data',
+            ];
+        }
+
+        if ($renew_data) {
+            $res['data'] = $user;
+        }
+
+        if ($renew_token) {
+            $token = static::create_token($user, '1hr');
+            $res['token'] = $token;
+            if (!$this->revoke_token($c->jwt_token)) {
+                http_response_code(400);
+                return [
+                    'error' => 'Failed to renew your token',
+                ];
+            }
+            if (!$renew_data) {
+                $res['data'] = $user;
+            }
+        }
+
+        return [
+            'success' => "Hi there! here's your updated data",
+        ] + $res;
     }
 
     public function add_email(Context $c)

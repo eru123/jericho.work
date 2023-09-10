@@ -5,10 +5,9 @@ import PublicHeader from "@/components/PublicHeader.vue";
 <template>
     <PublicHeader />
     <div class="landing-1">
-        <h3>Your dream and solution,<span>let's make it!</span></h3>
+        <h3>Your dream and solution<span>let's make it!</span></h3>
         <p>
-            We work closely with you to understand your unique needs and
-            requirements, and then develop customized solutions that turn your
+            We work closely with you to understand your unique needs and develop customized solutions that turn your
             dreams into reality. Our commitment to collaboration and partnership
             ensures that we work together with you every step of the way to make
             your vision a reality.

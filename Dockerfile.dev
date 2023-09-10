@@ -33,15 +33,8 @@ RUN apk update \
 
 COPY system/ /
 
-RUN chmod +x /app/script \
-    && chmod +x /app/check \
-    && chmod +x /app/make-migration \
-    && chmod +x /app/migrate \
-    && ln -s /app/script /usr/bin/script \
-    && ln -s /app/check /usr/bin/check \
-    && ln -s /app/make-migration /usr/bin/make-migration \
-    && ln -s /app/migrate /usr/bin/migrate
-    
+RUN 
+
 RUN chmod +x /usr/bin/skiddph-dev
 
 EXPOSE 80 3000

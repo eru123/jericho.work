@@ -1,5 +1,15 @@
 #!/bin/sh
 
+# Creating executable php files
+cp /app/script /usr/bin/script
+cp /app/check /usr/bin/check
+cp /app/make-migration /usr/bin/make-migration
+cp /app/migrate /usr/bin/migrate
+chmod +x /usr/bin/script
+chmod +x /usr/bin/check
+chmod +x /usr/bin/make-migration
+chmod +x /usr/bin/migrate
+
 # CDN Client
 cd /app/client/cdn
 pnpm install && pnpm build

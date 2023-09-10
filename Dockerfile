@@ -38,14 +38,14 @@ RUN composer install -o
 COPY system/ /
 COPY html .
 
-RUN chmod +x /app/script \
-    && chmod +x /app/check \
-    && chmod +x /app/make-migration \
-    && chmod +x /app/migrate \
-    && ln -s /app/script /usr/bin/script \
-    && ln -s /app/check /usr/bin/check \
-    && ln -s /app/make-migration /usr/bin/make-migration \
-    && ln -s /app/migrate /usr/bin/migrate
+RUN cp /app/script /usr/bin/script \
+    && cp /app/check /usr/bin/check \
+    && cp /app/make-migration /usr/bin/make-migration \
+    && cp /app/migrate /usr/bin/migrate \
+    && chmod +x /usr/bin/script \
+    && chmod +x /usr/bin/check \
+    && chmod +x /usr/bin/make-migration \
+    && chmod +x /usr/bin/migrate
 
 RUN chmod +x /usr/bin/skiddph
 

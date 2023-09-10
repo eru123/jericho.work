@@ -15,7 +15,6 @@ const isExternalLink = computed(() => typeof props.to === "string" && /^(https?|
 const attrs = useAttrs();
 
 const target = computed(() => {
-    console.log(props.to, isExternalLink.value, attrs?.target);
     if (attrs?.target) {
         return attrs.target;
     }

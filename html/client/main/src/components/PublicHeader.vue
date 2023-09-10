@@ -33,13 +33,13 @@ const confirmLogout = () => {
 <template>
   <header>
     <nav>
-      <router-link to="/" class="brand">
+      <v-link to="/" class="brand">
         <img :src="LogoWD" alt="Logo" />
         <img :src="LogoD" alt="Logo" />
-      </router-link>
+      </v-link>
       <div class="actions">
-        <router-link v-if="!authed" to="/login"> Login </router-link>
-        <router-link v-if="!authed" to="/register"> Register </router-link>
+        <v-link v-if="!authed" to="/login"> Login </v-link>
+        <v-link v-if="!authed" to="/register"> Register </v-link>
         <a class="dropdown" v-if="authed">
           <v-icon name="hi-solid-user-circle" class="icon"></v-icon>
           <span class="shortname">
@@ -49,7 +49,7 @@ const confirmLogout = () => {
             {{ user?.name ?? user?.fname ?? user?.user }}
           </span>
           <div class="items">
-            <router-link to="/profile">Profile</router-link>
+            <v-link to="/profile">Profile</v-link>
             <button @click="confirmLogout">Logout</button>
           </div>
         </a>

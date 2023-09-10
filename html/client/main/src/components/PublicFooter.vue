@@ -5,7 +5,7 @@ import useServerData from "@/composables/useServerData";
 const year = new Date().getFullYear();
 const items = [
   {
-    title: "About Us",
+    title: "Legal",
     links: [
       {
         name: "Email us",
@@ -19,21 +19,9 @@ const items = [
         icon: "md-policy",
       },
       {
-        name: "Terms and Conditions",
+        name: "T&C",
         url: "/terms-and-conditions",
         icon: "md-handshake",
-      },
-      {
-        name: "Google Reviews",
-        url: "https://g.page/r/CVx7yccU-v3cEAI/review",
-        icon: "bi-google",
-        _blank: true,
-      },
-      {
-        name: "Facebook Reviews",
-        url: "https://facebook.com/skiddph/reviews",
-        icon: "bi-facebook",
-        _blank: true,
       },
     ],
   },
@@ -61,7 +49,7 @@ const items = [
     ],
   },
   {
-    title: "Free Services",
+    title: "Services",
     links: [
       {
         name: "OpenCDN",
@@ -75,9 +63,26 @@ const items = [
         icon: "bi-envelope-fill",
       },
       {
-        name: "Dev MySQL",
+        name: "imbakDB",
         url: "/feature-not-available",
         icon: "fa-database",
+      },
+    ],
+  },
+  {
+    title: "Reviews",
+    links: [
+      {
+        name: "Google",
+        url: "https://g.page/r/CVx7yccU-v3cEAI/review",
+        icon: "bi-google",
+        _blank: true,
+      },
+      {
+        name: "Facebook",
+        url: "https://facebook.com/skiddph/reviews",
+        icon: "bi-facebook",
+        _blank: true,
       },
     ],
   },
@@ -126,7 +131,7 @@ footer {
   }
 
   & > div:last-child {
-    @apply grid grid-cols-2 md:grid-cols-3 gap-4 w-full max-w-screen-md mx-auto px-4 py-2;
+    @apply grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-screen-md mx-auto px-4 py-2;
 
     div {
       @apply flex flex-col justify-start items-start;

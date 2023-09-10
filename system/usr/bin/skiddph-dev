@@ -15,8 +15,8 @@ cd /app/client/cdn
 pnpm install && pnpm build
 
 # Admin Client
-cd /app/client/admin
-pnpm install && pnpm build
+# cd /app/client/admin
+# pnpm install && pnpm build
 
 # Main Client
 cd /app/client/main

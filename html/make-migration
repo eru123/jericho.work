@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 if (file_exists(__DIR__ . '/html/autoload.php')) {
@@ -6,19 +7,13 @@ if (file_exists(__DIR__ . '/html/autoload.php')) {
     require_once __DIR__ . '/autoload.php';
 } else if (file_exists('/app/autoload.php')) {
     require_once '/app/autoload.php';
+} else {
+    die('Autoload not found');
 }
 
 if (!isset($argv[1]) || empty($argv[1])) {
-    echo ('Script not found');
+    echo ('No migration name given');
     exit(1);
 }
 
-$script = $argv[1];
-$f = __SCRIPTS__ . '/' . $argv[1] . '.php';
-if (!file_exists($f)) {
-    echo ('Script not found');
-    exit(1);
-}
-
-$script_args = array_slice($argv, 2);
-echo cmd([$script, ...$script_args], false);
+echo cmd(['migration_make', $argv[1]]);

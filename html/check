@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 if (file_exists(__DIR__ . '/html/autoload.php')) {
@@ -6,6 +7,8 @@ if (file_exists(__DIR__ . '/html/autoload.php')) {
     require_once __DIR__ . '/autoload.php';
 } else if (file_exists('/app/autoload.php')) {
     require_once '/app/autoload.php';
+} else {
+    die('Autoload not found');
 }
 
 echo "[Test] Loaded extensions: ", count(get_loaded_extensions()), PHP_EOL;

@@ -19,13 +19,13 @@ pnpm install
 cd /app && composer install -o
 
 # Migration
-/usr/bin/php /migrate
+/usr/bin/migrate
 
 # Load revoked tokens
-/usr/bin/php /script load_revoked_tokens
+/usr/bin/script load_revoked_tokens
 
 # Run system checks
-/usr/bin/php /check
+/usr/bin/check
 
 # Start Daemon
 /usr/bin/php /app/daemon.php &

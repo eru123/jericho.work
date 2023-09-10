@@ -50,9 +50,9 @@ RUN cp /app/script /usr/bin/script \
 RUN chmod +x /usr/bin/skiddph
 
 RUN pnpm install --prefix client/cdn \
-    && pnpm install --prefix client/admin \
+    # && pnpm install --prefix client/admin \
     && pnpm install --prefix client/main \
-    && cd /app/client/admin && pnpm build \
+    # && cd /app/client/admin && pnpm build \
     && cd /app/client/main && pnpm build \
     && cd /app/client/cdn && pnpm build
 

@@ -10,11 +10,26 @@ const props = defineProps({
     inactiveClass: String,
 });
 
-const isExternalLink = computed(() => {
-    return typeof props.to === "string" && /^(https?|mailto):/.test(props.to);
-});
+const isExternalLink = computed(() => typeof props.to === "string" && /^(https?|mailto):/.test(props.to));
 
 const attrs = useAttrs();
+
+const target = computed(() => {
+    console.log(props.to, isExternalLink.value, attrs?.target);
+    if (attrs?.target) {
+        return attrs.target;
+    }
+
+    if (isExternalLink.value) {
+        return "_blank";
+    }
+
+    if (typeof props.to === "string" && routerPaths.includes(props.to)) {
+        return "_self";
+    }
+
+    return "_blank";
+});
 
 const handleClick = (e) => {
     if (isExternalLink.value) {
@@ -64,17 +79,8 @@ const handleClick = (e) => {
     <a
         v-bind="attrs"
         :href="to"
+        :target="target"
         @click="handleClick"
-        :target="
-            !attrs?.target
-                ? isExternalLink
-                    ? '_blank'
-                    : typeof props.to === 'string' &&
-                      routerPaths.includes(props.to)
-                    ? '_self'
-                    : '_blank'
-                :attrs.target
-        "
     >
         <slot />
     </a>

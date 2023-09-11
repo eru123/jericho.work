@@ -37,15 +37,22 @@ RUN composer install -o
 
 COPY system/ /
 COPY html .
-COPY check /
-COPY script /
-COPY migrate /
+
+RUN cp /app/script /usr/bin/script \
+    && cp /app/check /usr/bin/check \
+    && cp /app/make-migration /usr/bin/make-migration \
+    && cp /app/migrate /usr/bin/migrate \
+    && chmod +x /usr/bin/script \
+    && chmod +x /usr/bin/check \
+    && chmod +x /usr/bin/make-migration \
+    && chmod +x /usr/bin/migrate
 
 RUN chmod +x /usr/bin/skiddph
+
 RUN pnpm install --prefix client/cdn \
-    && pnpm install --prefix client/admin \
+    # && pnpm install --prefix client/admin \
     && pnpm install --prefix client/main \
-    && cd /app/client/admin && pnpm build \
+    # && cd /app/client/admin && pnpm build \
     && cd /app/client/main && pnpm build \
     && cd /app/client/cdn && pnpm build
 

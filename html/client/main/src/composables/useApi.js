@@ -3,6 +3,7 @@ import usePersistentData from "./usePersistentData";
 import { createError } from "./useDialog";
 export const $server = useServerData();
 export const $user = usePersistentData("user", null);
+export const $data = usePersistentData("data", null);
 
 export const redirect = (to) => window?.__skiddph__redirect(to);
 
@@ -64,6 +65,25 @@ export const register = (data) => {
     });
 };
 
+export const hello = (data = {}) => {
+  return post("/api/v1/auth/hello", data)
+    .then((res) => {
+
+      if (res?.data) {
+        $user.value = Object.assign({}, $user.value, res.data);
+      }
+
+      if (res?.token) {
+        $user.value.token = res.token;
+      }
+
+      return res;
+    })
+}
+
+export const refresh_data = () => hello({ data: true });
+export const refresh_token = () => hello({ token: true });
+
 export const login = (data) => {
   return post("/api/v1/auth/login", data)
     .then((res) => {
@@ -90,27 +110,33 @@ export const add_mail = (email) => {
         throw new Error(res.error);
       }
 
-      if (res?.data) {
-        $user.value = res.data;
-        return res;
+      if (!$data.value) {
+        $data.value = {};
       }
 
-      throw new Error("Invalid server response");
+      $data.value.add_mail = Object.assign({}, {
+        verification_id: res.verification_id,
+      })
+
+      return res;
     })
-    .catch((err) => {
-      createError("Add Mail Error", err?.message);
-      return null;
-    });
 };
 
 export const logout = () => {
-  return post("/api/v1/auth/logout").then((res) => {
-    if (res?.error) {
-      throw new Error(res.error);
-    }
+  return post("/api/v1/auth/logout")
+    .then((res) => {
+      $user.value = null;
 
-    return res;
-  });
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      return res;
+    })
+    .catch((err) => {
+      $user.value = null;
+      throw new Error(err?.message);
+    });
 };
 
 export default {

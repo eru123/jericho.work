@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import PublicPage from "@/components/PublicPage.vue";
-import { createInfo, createError } from "@/composables/useDialog";
+import { createError } from "@/composables/useDialog";
 import { login, redirect } from "@/composables/useApi";
 
 const user = ref("");
@@ -34,10 +34,7 @@ const submit = () => {
   return login(data)
     .then((res) => {
       if (res && res?.success) {
-        return createInfo("Success", res.success, (c2) => {
-          redirect("/");
-          c2();
-        });
+        redirect("/");
       }
     })
     .catch((err) => {

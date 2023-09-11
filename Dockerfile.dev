@@ -33,6 +33,8 @@ RUN apk update \
 
 COPY system/ /
 
+RUN 
+
 RUN chmod +x /usr/bin/skiddph-dev
 
 EXPOSE 80 3000

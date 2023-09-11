@@ -1,21 +1,27 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import PublicPage from "@/components/PublicPage.vue";
 import {
   createInfo,
   createError,
-  createLoading,
 } from "@/composables/useDialog";
 import { add_mail } from "@/composables/useApi";
 
 const email = ref("");
+const last_tried_email = ref("");
+const verification_id = ref(null);
+const last_verification_id = ref(null);
+const verification_code = ref(null);
+const verifying = ref(false);
 
 const enforceRequired = ref(false);
 const form = ref(null);
 
 const submit = () => {
+  console.log(email.value, verification_id.value, verification_code.value);
+  enforceRequired.value = true;
+
   if (!email.value) {
-    enforceRequired.value = true;
     return createError("Error", "Please enter your email address.");
   }
 
@@ -23,24 +29,48 @@ const submit = () => {
     return createError("Error", "Please enter a valid email address.");
   }
 
-  return null;
-  //   const loading = createLoading("Please wait...");
-  //   return login(data)
-  //     .then((res) => {
-  //       if (res && res?.success) {
-  //         return createInfo("Success", res.success, (c2) => {
-  //           window.location.href = "/";
-  //           c2();
-  //         });
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       return createError("Error", err?.message || "An error has occurred.");
-  //     })
-  //     .finally(() => {
-  //       loading.close();
-  //     });
+  if (!verification_id.value) {
+    verifying.value = true;
+    add_mail(email.value)
+      .then((res) => {
+        verifying.value = false;
+        if (res && res?.success) {
+          enforceRequired.value = false;
+          verification_id.value = res?.verification_id;
+          last_verification_id.value = res?.verification_id;
+          last_tried_email.value = email.value;
+          createInfo("Success", res?.success);
+        }
+      })
+      .catch((err) => {
+        verifying.value = false;
+        return createError("Error", err?.message || "An error has occurred.");
+      });
+  }
+
+  if (verification_id.value) {
+    if (!verification_code.value) {
+      return createError("Error", "Please enter the verification code.");
+    }
+
+    verifying.value = true;
+    setTimeout(() => {
+      verifying.value = false;
+      createInfo("Success", "Email address has been verified.");
+    }, 1000);
+  }
 };
+
+watch(
+  email,
+  (n) => {
+    console.log(n, last_tried_email.value, n === last_tried_email.value);
+    verification_id.value =
+      n === last_tried_email.value ? last_verification_id.value : null;
+  },
+  { immediate: true }
+);
+
 </script>
 <template>
   <PublicPage>
@@ -54,11 +84,34 @@ const submit = () => {
             id="email"
             v-model="email"
             :required="enforceRequired"
+          />
+        </div>
+        <div class="form-group" v-if="verification_id">
+          <label for="code">Verification Code</label>
+          <input
+            type="text"
+            id="code"
+            v-model="verification_code"
+            :required="enforceRequired"
             autocomplete="off"
+            pattern="[0-9]{6}"
+            maxlength="6"
+            title="Please enter a valid verification code."
           />
         </div>
         <div class="actions">
-          <button type="submit">Add</button>
+          <button type="submit">
+            <v-icon
+              name="fa-spinner"
+              class="icon"
+              animation="spin"
+              speed="2"
+              v-if="verifying"
+            ></v-icon>
+            <span v-if="!verifying">
+              {{ verification_id ? "Verify" : "Send OTP" }}
+            </span>
+          </button>
         </div>
       </form>
     </div>
@@ -104,8 +157,6 @@ const submit = () => {
   }
 
   .actions {
-    @apply mt-8;
-
     button {
       @apply w-full px-4 py-2 rounded-md bg-primary-700 text-white font-semibold hover:bg-primary-800 transition-all duration-200;
     }

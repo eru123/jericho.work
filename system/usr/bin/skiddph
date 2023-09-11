@@ -7,13 +7,13 @@ printenv > /app/.env
 /usr/bin/memcached -u root -p 11211 -m 64 -c 1024 -P /var/run/memcached/memcached.pid -d
 
 # Migration
-/usr/bin/php /migrate
+/usr/bin/migrate
 
 # Load revoked tokens
-/usr/bin/php /script load_revoked_tokens
+/usr/bin/script load_revoked_tokens
 
 # Run system checks
-/usr/bin/php /check
+/usr/bin/check
 
 # Start Daemon
 /usr/bin/php /app/daemon.php &

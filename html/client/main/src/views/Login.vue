@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import PublicPage from "@/components/PublicPage.vue";
 import { createError } from "@/composables/useDialog";
-import { login, redirect } from "@/composables/useApi";
+import { login, pop_redir } from "@/composables/useApi";
 
 const user = ref("");
 const pass = ref("");
@@ -34,7 +34,7 @@ const submit = () => {
   return login(data)
     .then((res) => {
       if (res && res?.success) {
-        redirect("/");
+        pop_redir("/");
       }
     })
     .catch((err) => {

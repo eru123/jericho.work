@@ -12,6 +12,7 @@ import Register from "@/views/Register.vue";
 import Login from "@/views/Login.vue";
 
 import usePersistentData from "@/composables/usePersistentData";
+import { add_redir } from "@/composables/useApi";
 const userData = usePersistentData("user", null);
 
 const routes = [
@@ -96,6 +97,15 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+router.beforeEach((to) => {
+  if (to?.query?.redir) {
+    add_redir(to.query.redir);
+    const query = Object.assign({}, to.query);
+    delete query.redir;
+    return { path: to.path, query };
+  }
+})
 
 export const paths = routes
   .reduce(

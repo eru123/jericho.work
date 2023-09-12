@@ -41,6 +41,8 @@ export const post = (url, data) => {
 
   if ($user.value?.token) {
     headers.headers["Authorization"] = `Bearer ${$user.value.token}`;
+    headers.headers["X-Last-Data-Update"] = $user.value?.last_data_update || Date.now();
+    headers.headers["X-Last-Token-Update"] = $user.value?.last_token_update || Date.now();
   }
 
   return fetch(url_obj, headers).then((res) => res.json());
@@ -58,6 +60,8 @@ export const get = (url, data) => {
 
   if ($user.value?.token) {
     headers.headers["Authorization"] = `Bearer ${$user.value.token}`;
+    headers.headers["X-Last-Data-Update"] = $user.value?.last_data_update || Date.now();
+    headers.headers["X-Last-Token-Update"] = $user.value?.last_token_update || Date.now();
   }
 
   return fetch(url_obj, headers).then((res) => res.json());
@@ -67,6 +71,7 @@ export const loginWithData = (token, data) => {
   const is_token_refreshed = $user.value?.token === token;
   $user.value = data;
   $user.value.token = token;
+  $user.value.last_data_update = Date.now();
   if (is_token_refreshed) {
     $user.value.last_token_update = Date.now();
   }

@@ -1,11 +1,8 @@
 <script setup>
 import { ref, watch } from "vue";
 import PublicPage from "@/components/PublicPage.vue";
-import {
-  createInfo,
-  createError,
-} from "@/composables/useDialog";
-import { add_mail } from "@/composables/useApi";
+import { createError } from "@/composables/useDialog";
+import { add_mail, verify_mail, pop_redir } from "@/composables/useApi";
 
 const email = ref("");
 const last_tried_email = ref("");
@@ -39,7 +36,6 @@ const submit = () => {
           verification_id.value = res?.verification_id;
           last_verification_id.value = res?.verification_id;
           last_tried_email.value = email.value;
-          createInfo("Success", res?.success);
         }
       })
       .catch((err) => {
@@ -54,10 +50,23 @@ const submit = () => {
     }
 
     verifying.value = true;
-    setTimeout(() => {
-      verifying.value = false;
-      createInfo("Success", "Email address has been verified.");
-    }, 1000);
+    verify_mail(verification_id.value, verification_code.value)
+      .then((res) => {
+        verifying.value = false;
+        if (res && res?.success) {
+          enforceRequired.value = false;
+          verification_id.value = null;
+          last_verification_id.value = null;
+          last_tried_email.value = null;
+          pop_redir("/");
+        }
+
+        throw new Error(res?.error || "An error has occurred.");
+      })
+      .catch((err) => {
+        verifying.value = false;
+        return createError("Error", err?.message || "An error has occurred.");
+      });
   }
 };
 
@@ -70,7 +79,6 @@ watch(
   },
   { immediate: true }
 );
-
 </script>
 <template>
   <PublicPage>

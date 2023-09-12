@@ -1,5 +1,4 @@
 <script setup>
-import { watchEffect } from "vue";
 import useServerData from "@/composables/useServerData";
 import { auth_init } from "@/composables/useApi";
 import ServerError from "@/views/ServerError.vue";
@@ -14,16 +13,14 @@ window.__skiddph__redirect = (path) => {
   router.push(path);
 };
 
-auth_init("/");
-
-watchEffect(() => {
-  if ($server?.debug) {
-    console.log("Server Data", $server);
-    if ($server?.error) {
-      console.log("Server error: ", $server?.error);
-    }
+if ($server?.debug) {
+  console.log("Server Data", $server);
+  if ($server?.error) {
+    console.log("Server Error: ", $server?.error);
   }
-});
+}
+
+auth_init("/");
 </script>
 <template>
   <ServerError v-if="$server?.error" />

@@ -22,6 +22,14 @@ class Verification
         return substr(str_shuffle(str_repeat('0123456789', $len)), 0, $len);
     }
 
+    public static function do_verify_mail_action(array $data): bool
+    {
+        return match ($data['action']) {
+            'add_email' => static::action_add_mail($data),
+            default => false,
+        };
+    }
+
     public static function verify_from_link(string $token): array
     {
         try {
@@ -34,11 +42,7 @@ class Verification
                 ];
             }
 
-            $action = false;
-            switch ($data['action']) {
-                case 'add_email':
-                    $action = static::action_add_mail($data);
-            }
+            $action = static::do_verify_mail_action($data);
 
             if (!$action) {
                 return [
@@ -124,7 +128,7 @@ class Verification
         $template = '
             <p>Hi there, ${ name }!</p>
             <p>Please enter the following code within 2 hours to verify your email address:</p>
-            <p><b>${ code }</b></p>
+            <p><b style="background-color: #eee; padding: 5px 10px; border-radius: 5px;">${ code }</b></p>
             <p>or click the link below:<br><a href="${ link }">${ link }</a></p>
             <p>Best regards,<br>SKIDD PH</p>
             <br>
@@ -148,6 +152,50 @@ class Verification
         return [
             'success' => 'Success. Please check your email for the verification code.',
             'verification_id' => $data['id'],
+        ];
+    }
+
+    public static function verify_mail(Context $c)
+    {
+        $rdata = $c->json();
+        $user_id = intval($c->jwt['id']);
+
+        if (!isset($rdata['verification_id'])) {
+            throw new Exception('Missing verification id', 400);
+        }
+
+        if (!isset($rdata['code'])) {
+            throw new Exception('Missing verification code', 400);
+        }
+
+        $verification_id = intval($rdata['verification_id']);
+        $code = $rdata['code'];
+
+        if (!$user_id) {
+            throw new Exception('Invalid user', 400);
+        }
+
+        $verification = Verifications::find(Raw::build('`id` = ? AND `status` = 0', [$verification_id]));
+        if (!$verification) {
+            throw new Exception('Verification not found', 404);
+        }
+
+        if ($verification['user_id'] !== $user_id) {
+            throw new Exception('Invalid user', 400);
+        }
+
+        if (strval($verification['code']) !== strval($code)) {
+            throw new Exception('Invalid verification code', 400);
+        }
+
+        $action = static::do_verify_mail_action($verification);
+
+        if (!$action) {
+            throw new Exception('Mail verified but failed to execute action.', 500);
+        }
+
+        return [
+            'success' => 'Email verified successfully.',
         ];
     }
 
@@ -196,8 +244,9 @@ class Verification
             Users::update($user['id'], $new_user);
             Verifications::update($data['id'], [
                 'status' => 1,
-                'hash' => Raw::build('NULL'),
-                'code' => Raw::build('NULL'),
+                // Do I really need to remove these? or just leave them as is after verification?
+                // 'hash' => Raw::build('NULL'),
+                // 'code' => Raw::build('NULL'),
             ]);
 
             $db->pdo()->commit();

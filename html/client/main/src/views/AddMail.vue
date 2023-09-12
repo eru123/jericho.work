@@ -15,7 +15,6 @@ const enforceRequired = ref(false);
 const form = ref(null);
 
 const submit = () => {
-  console.log(email.value, verification_id.value, verification_code.value);
   enforceRequired.value = true;
 
   if (!email.value) {
@@ -73,7 +72,6 @@ const submit = () => {
 watch(
   email,
   (n) => {
-    console.log(n, last_tried_email.value, n === last_tried_email.value);
     verification_id.value =
       n === last_tried_email.value ? last_verification_id.value : null;
   },

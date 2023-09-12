@@ -58,7 +58,7 @@ const submit = () => {
           verification_id.value = null;
           last_verification_id.value = null;
           last_tried_email.value = null;
-          pop_redir("/");
+          return pop_redir("/");
         }
 
         throw new Error(res?.error || "An error has occurred.");

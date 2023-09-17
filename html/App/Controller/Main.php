@@ -31,7 +31,7 @@ class Main extends Controller
             'BASE_URL' => env('BASE_URL'),
             'CDN_URL' => env('CDN_URL', env('BASE_URL')),
             'REQUEST_URI' => $this->safe_request_uri(),
-            'WS_HOST' => env('WS_HOST', env('BASE_URL') . '/ws'),
+            'WS_HOST' => env('WS_HOST', false),
         ]);
 
         if (env('APP_ENV') === 'development') {

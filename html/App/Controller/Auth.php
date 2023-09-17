@@ -296,8 +296,8 @@ class Auth
         $rdata = $c->json();
         $user_id = $c->jwt['id'];
 
-        $renew_token = !!$rdata['token'];
-        $renew_data = !!$rdata['data'];
+        $renew_token = !!@$rdata['token'];
+        $renew_data = !!@$rdata['data'];
 
         $res = [];
 

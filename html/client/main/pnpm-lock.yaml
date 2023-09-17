@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@skiddph/lib':
+    specifier: file:..\lib
+    version: file:../lib(vue@3.3.4)
   oh-vue-icons:
     specifier: 1.0.0-rc3
     version: 1.0.0-rc3(vue@3.3.4)
@@ -2590,3 +2593,13 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  file:../lib(vue@3.3.4):
+    resolution: {directory: ../lib, type: directory}
+    id: file:../lib
+    name: '@skiddph/lib'
+    peerDependencies:
+      vue: ^3.0.0
+    dependencies:
+      vue: 3.3.4
+    dev: false

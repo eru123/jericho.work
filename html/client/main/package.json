@@ -9,6 +9,7 @@
     "build": "vite build"
   },
   "dependencies": {
+    "@skiddph/lib": "file:..\\lib",
     "oh-vue-icons": "1.0.0-rc3",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"

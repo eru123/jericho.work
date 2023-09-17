@@ -3,17 +3,16 @@
 namespace App\Controller;
 
 use Socket;
+use Exception;
+use eru123\helper\Date;
 
 class WebSocket
 {
     private $socket;
     private $clients = [];
-    private $changed;
     private $users = [];
     private $address;
     private $port;
-    private $write;
-    private $except;
 
     public function __construct(string $address, int $port)
     {
@@ -121,22 +120,75 @@ class WebSocket
         socket_write($client_conn, $upgrade, strlen($upgrade));
     }
 
+    function process_sock_auth(Socket &$sock, array $data)
+    {
+        if (!isset($data['token'])) {
+            return;
+        }
+
+        try {
+            Date::setTime();
+            $token = $data['token'];
+            $user = Auth::jwt()->decode($token);
+            if (!isset($user['id'])) {
+                return;
+            }
+
+            $user_id = $user['id'];
+            $this->users[spl_object_hash($sock)] = [
+                'user_id' => $user_id,
+                'expires_at' => isset($user['exp']) ? $user['exp'] : strtotime('+1 hour'),
+                'token' => $token,
+                'subscriptions' => [
+                    'user',
+                    'user-' . $user_id
+                ],
+            ];
+
+            socket_getpeername($sock, $ip);
+            $this->broadcast("auth", ['user-' . $user_id], ['success' => true, "ip" => $ip]);
+        } catch (Exception $e) {
+            $this->broadcast("message", ["user"], ['success' => false, "message" => $e->getMessage()]);
+        }
+    }
+
+    function process_sock_recv(Socket &$sock, array $data)
+    {
+        if (!isset($data['action'])) {
+            return;
+        }
+
+        $action = $data['action'];
+        match ($action) {
+            'auth' => $this->process_sock_auth($sock, $data),
+            default => null
+        };
+    }
+
+    function broadcast(string $event, array $channels = [], array $data = [])
+    {
+        $data['event'] = $event;
+        foreach ($this->users as $sock_hash => $user) {
+            if (count($channels) && array_intersect($channels, $user['subscriptions'])) {
+                $this->send_sock_message($this->clients[$sock_hash], $data);
+            }
+        }
+    }
+
     public function run()
     {
         $this->socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         socket_set_option($this->socket, SOL_SOCKET, SO_REUSEADDR, 1);
         socket_bind($this->socket, $this->address, $this->port);
         socket_listen($this->socket);
-        $this->clients = [$this->socket];
+        $this->clients = [spl_object_hash($this->socket) => $this->socket];
         $this->users = [];
 
-        echo "Server started\n";
-        echo "Listening on: $this->address:$this->port\n";
-        // $this->write = NULL;
-        // $this->except = NULL;
+        echo "Websocket server started", PHP_EOL;
+        echo "Listening on: $this->address:$this->port", PHP_EOL;
+
         while (true) {
             $read = $this->clients;
-
             $num_changed_sockets = socket_select($read, $write, $except, 0);
 
             if ($num_changed_sockets === false) {
@@ -145,38 +197,44 @@ class WebSocket
             }
 
             if (in_array($this->socket, $read)) {
-                $this->clients[] = $client = socket_accept($this->socket);
+                $client = socket_accept($this->socket);
+                $sock_hash = spl_object_hash($client);
+                $this->clients[$sock_hash] = $client;
 
                 $header = socket_read($client, 1024);
                 $this->perform_handshaking($header, $client, $this->address, $this->port);
                 socket_getpeername($client, $ip, $port);
 
                 $this->send_sock_message($client, ['event' => 'connect', 'message' => $ip . ' connected']);
-                echo "connected: $ip\n";
-
+                echo "connected: $ip", PHP_EOL;
                 unset($read[array_search($this->socket, $read)]);
             }
 
-            foreach ($read as $sock) {
+            foreach ($this->users as $sock_hash => $user) {
+                if (isset($user['expires_at']) && intval($user['expires_at']) < time()) {
+                    unset($this->users[$sock_hash]);
+                    unset($this->clients[$sock_hash]);
+                    unset($read[$sock_hash]);
+                    echo "disconnected: $sock_hash", PHP_EOL;
+                }
+            }
+
+            foreach ($read as $sock_hash => $sock) {
                 $bytes = @socket_recv($sock, $buf, 1024, 0);
                 $recv = $this->unmask($buf);
                 $data = json_decode($recv, true);
-                
+
                 if ($bytes == 0 || empty($recv) || $data === null) {
                     socket_getpeername($sock, $ip);
-                    $index = array_search($sock, $this->clients);
-                    unset($this->clients[$index]);
-                    echo "disconnected: $ip $index\n";
-                    $this->send_message(['event' => 'disconnect', 'message' => $ip . ' disconnected']);
-                } else {
-                    echo "recv$ ", $recv . "\n";
-                    $this->send_message($data ?? []);
+                    if ($sock_hash) {
+                        unset($this->clients[$sock_hash]);
+                        unset($this->users[$sock_hash]);
+                        echo "disconnected: $ip $sock_hash", PHP_EOL;
+                    }
+                } else if ($data) {
+                    $this->process_sock_recv($sock, $data);
                 }
-
-                echo "keys: " . implode(', ', array_keys($this->clients)) . "\n";
             }
-
         }
-        $this->run();
     }
 }

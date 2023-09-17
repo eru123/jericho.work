@@ -11,8 +11,13 @@ $v1->bootstrap([
     'App\Controller\Auth@bootstrap'
 ]);
 
+// Net Tools
 $v1->get('/net/ip', fn () => NetTools::get_client_ip() ?: 'unknown');
 $v1->get('/net/whoami', fn () => NetTools::whoami() ?: ['error' => 'Unknown error occured']);
+
+
+// Analytics
+$v1->post('/report', 'App\Controller\Analytics@report');
 
 // Auth
 

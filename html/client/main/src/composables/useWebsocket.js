@@ -9,10 +9,11 @@ var ws;
 var callbacks = [];
 
 export const send = (data) => {
-    ws.send(JSON.stringify(data));
+    ws?.send(JSON.stringify(data));
 };
 
 export const useWebsocket = () => {
+    if (!$server?.WS_HOST) return null;
     if (ws) return ws;
 
     const token = $user?.value?.token || "secretJWTToken";
@@ -82,11 +83,11 @@ export const useWebsocket = () => {
 export default useWebsocket;
 export const useWS = useWebsocket;
 export const close = () => {
-    if (ws) ws.close();
+    if (ws) ws?.close();
     ws = null;
 }
 export const restart = () => {
-    if (ws) ws.close();
+    if (ws) ws?.close();
     ws = null;
     return useWebsocket();
 }

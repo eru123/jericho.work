@@ -16,6 +16,8 @@ class DB
         'mail_templates',
         'users',
         'verifications',
+        'tokens',
+        'reports'
     ];
 
     static $instance = null;

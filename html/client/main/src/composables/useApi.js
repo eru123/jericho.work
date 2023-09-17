@@ -1,10 +1,12 @@
 import useServerData, { BASE_URL } from "./useServerData";
 import usePersistentData from "./usePersistentData";
 import { createError } from "./useDialog";
+
 export const $server = useServerData();
 export const $user = usePersistentData("user", null);
 export const $data = usePersistentData("data", null);
 export const $redir = usePersistentData("redir", null);
+export const $reports = usePersistentData("reports", null);
 
 export const redirect = (to) => window?.__skiddph__redirect(to);
 
@@ -204,6 +206,26 @@ export const logout = () => {
     .catch((err) => {
       $user.value = null;
       throw new Error(err?.message);
+    });
+};
+
+export const report = (type, data) => {
+  data = JSON.parse(JSON.stringify(data));
+  return post("/api/v1/report", { type, data })
+    .then((res) => {
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      return res;
+    })
+    .catch((err) => {
+      if (!$reports.value) {
+        $reports.value = [];
+      }
+
+      $reports.value.push({ type, data });
+      console.error(err);
     });
 };
 

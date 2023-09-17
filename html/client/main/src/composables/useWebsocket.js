@@ -15,8 +15,8 @@ export const send = (data) => {
 export const useWebsocket = () => {
     if (!$server?.WS_HOST) return null;
     if (ws) return ws;
-
-    const token = $user?.value?.token || "secretJWTToken";
+    const token = $user?.value?.token;
+    if (!token) return null;
     ws = new WebSocket($server?.WS_HOST);
 
     ws.onopen = () => {

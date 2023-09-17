@@ -39,8 +39,6 @@ class Auth
         } catch (Throwable) {
             return false;
         }
-
-        return false;
     }
 
     public function is_revoked($token): bool

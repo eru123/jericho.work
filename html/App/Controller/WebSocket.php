@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Socket;
+
 class WebSocket
 {
     private $socket;
@@ -19,16 +21,38 @@ class WebSocket
         $this->port = $port;
     }
 
-    function send_message($msg)
+    function send_message(string|array|object|int $msg)
     {
-        foreach ($this->clients as $changed_socket) {
-            @socket_write($changed_socket, $msg, strlen($msg));
+        if (is_array($msg) || is_object($msg)) {
+            $msg = json_encode($msg);
+        } else if (is_int($msg)) {
+            $msg = (string) $msg;
         }
+
+        $msg = $this->mask($msg);
+        $len = strlen($msg);
+        $read = $this->clients;
+        array_walk($read, function ($sock) use ($msg, $len) {
+            @socket_write($sock, $msg, $len);
+        });
         return true;
+    }
+
+    function send_sock_message(Socket &$sock, string|array|object|int $msg)
+    {
+        if (is_array($msg) || is_object($msg)) {
+            $msg = json_encode($msg);
+        } else if (is_int($msg)) {
+            $msg = (string) $msg;
+        }
+
+        $msg = $this->mask($msg);
+        return @socket_write($sock, $msg, strlen($msg));
     }
 
     function unmask($text)
     {
+        if (empty($text)) return "";
         $length = ord($text[1]) & 127;
 
         if ($length == 126) {
@@ -93,7 +117,7 @@ class WebSocket
         } else {
             $upgrade .= "\r\n";
         }
-        
+
         socket_write($client_conn, $upgrade, strlen($upgrade));
     }
 
@@ -108,51 +132,51 @@ class WebSocket
 
         echo "Server started\n";
         echo "Listening on: $this->address:$this->port\n";
-
+        // $this->write = NULL;
+        // $this->except = NULL;
         while (true) {
-            $this->changed = $this->clients;
-            $this->write = NULL;
-            $this->except = NULL;
-            socket_select($this->changed, $this->write, $this->except, NULL);
+            $read = $this->clients;
 
-            foreach ($this->changed as $changed_socket) {
-                if ($changed_socket == $this->socket) {
-                    $client = socket_accept($this->socket);
-                    $this->clients[] = $client;
+            $num_changed_sockets = socket_select($read, $write, $except, 0);
 
-                    $header = socket_read($client, 1024);
-                    $this->perform_handshaking($header, $client, $this->address, $this->port);
-                    echo "Client connected: " . json_encode($header) . "\n";
-                    socket_getpeername($client, $ip);
-
-                    $users[] = $client;
-
-                    $response = $this->mask(json_encode(['type' => 'system', 'message' => $ip . ' connected']));
-                    $this->send_message($response);
-                } else {
-                    $bytes = @socket_recv($changed_socket, $buf, 1024, 0);
-                    if ($bytes == 0) {
-                        socket_getpeername($changed_socket, $ip);
-                        unset($users[$ip]);
-
-                        $index = array_search($changed_socket, $this->clients);
-                        unset($this->clients[$index]);
-
-                        $response = $this->mask(json_encode(['type' => 'system', 'message' => $ip . ' disconnected']));
-                        $this->send_message($response);
-                    } else {
-                        $received_text = $this->unmask($buf);
-                        echo "rec> ", $received_text . "\n";
-                        $tst_msg = json_decode($received_text);
-                        $user_name = @$tst_msg?->name;
-                        $user_message = @$tst_msg?->message;
-                        $user_color = @$tst_msg?->color;
-
-                        $response_text = $this->mask(json_encode(['type' => 'usermsg', 'name' => $user_name, 'message' => $user_message, 'color' => $user_color]));
-                        $this->send_message($response_text);
-                    }
-                }
+            if ($num_changed_sockets === false) {
+                echo "socket_select() failed, reason: " . socket_strerror(socket_last_error()) . "\n";
+                break;
             }
+
+            if (in_array($this->socket, $read)) {
+                $this->clients[] = $client = socket_accept($this->socket);
+
+                $header = socket_read($client, 1024);
+                $this->perform_handshaking($header, $client, $this->address, $this->port);
+                socket_getpeername($client, $ip, $port);
+
+                $this->send_sock_message($client, ['event' => 'connect', 'message' => $ip . ' connected']);
+                echo "connected: $ip\n";
+
+                unset($read[array_search($this->socket, $read)]);
+            }
+
+            foreach ($read as $sock) {
+                $bytes = @socket_recv($sock, $buf, 1024, 0);
+                $recv = $this->unmask($buf);
+                $data = json_decode($recv, true);
+                
+                if ($bytes == 0 || empty($recv) || $data === null) {
+                    socket_getpeername($sock, $ip);
+                    $index = array_search($sock, $this->clients);
+                    unset($this->clients[$index]);
+                    echo "disconnected: $ip $index\n";
+                    $this->send_message(['event' => 'disconnect', 'message' => $ip . ' disconnected']);
+                } else {
+                    echo "recv$ ", $recv . "\n";
+                    $this->send_message($data ?? []);
+                }
+
+                echo "keys: " . implode(', ', array_keys($this->clients)) . "\n";
+            }
+
         }
+        $this->run();
     }
 }

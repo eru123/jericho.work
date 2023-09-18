@@ -11,19 +11,18 @@ onWs("message", (data) => {
   console.log("Server sent a message", data);
 });
 
+
 onWs("close", (data) => {
   console.log("Websocket closed", data);
   window.__skiddph__retry = true;
-  var timeout = 1000;
-  var retry = setInterval(() => {
+  var retry = setInterval(async () => {
     console.log("Retrying websocket connection");
     if (window?.__skiddph__retry) {
       clearInterval(retry);
       delete window.__skiddph__retry;
-      timeout *= 2;
       restartWs();
     }
-  }, 1000);
+  }, 5000);
 });
 
 export const $server = useServerData();

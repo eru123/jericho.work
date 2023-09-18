@@ -80,8 +80,6 @@ class R2
         } catch (S3Exception $e) {
             throw new Exception($e->getMessage(), 500);
         }
-
-        return null;
     }
 
     public function delete(array $data = [])
@@ -106,8 +104,6 @@ class R2
         } catch (S3Exception $e) {
             throw new Exception($e->getMessage(), 500);
         }
-
-        return null;
     }
 
     public function get(array $data = [])
@@ -132,8 +128,6 @@ class R2
         } catch (S3Exception $e) {
             throw new Exception($e->getMessage(), 500);
         }
-
-        return null;
     }
 
     public function list(array $data = [])
@@ -154,8 +148,6 @@ class R2
         } catch (S3Exception $e) {
             throw new Exception($e->getMessage(), 500);
         }
-
-        return null;
     }
 
     public function upload(callable $action)

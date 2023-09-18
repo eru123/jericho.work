@@ -47,7 +47,9 @@ RUN cp /app/script /usr/bin/script \
     && chmod +x /usr/bin/make-migration \
     && chmod +x /usr/bin/migrate
 
-RUN chmod +x /usr/bin/skiddph
+RUN chmod +x /usr/bin/skiddph \
+    && chmod +x /usr/bin/skiddph-daemon \
+    && chmod +x /usr/bin/skiddph-ws
 
 RUN pnpm install --prefix client/cdn \
     # && pnpm install --prefix client/admin \
@@ -60,5 +62,6 @@ RUN pnpm install --prefix client/cdn \
 RUN find /app/client -mindepth 2 -maxdepth 2 -not -name 'dist'  -exec rm -rf {} \;
 RUN find /app/client -mindepth 1 -maxdepth 1 -not -name 'admin' -not -name 'cdn' -not -name 'main' -exec rm -rf {} \;
 
-EXPOSE 80
+# Include port 9000 if Websocket is enabled
+EXPOSE 80 
 ENTRYPOINT ["/usr/bin/skiddph"]

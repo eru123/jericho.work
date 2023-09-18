@@ -1,0 +1,8 @@
+{
+  "name": "@skiddph/lib",
+  "main": "src/index.js",
+  "type": "module",
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  }
+}

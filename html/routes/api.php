@@ -37,6 +37,11 @@ $api->response(function ($data) {
                 'query' => $_GET,
                 'body' => (json_decode(file_get_contents('php://input'), true) ?? null) ?: $_POST,
                 'headers' => getallheaders(),
+                'server' => $_SERVER,
+                'cookies' => $_COOKIE,
+                'session' => $_SESSION ?? null,
+                'files' => $_FILES ?? null,
+                'env' => $_ENV ?? null,
             ];
         } else {
             unset($data['debug']);

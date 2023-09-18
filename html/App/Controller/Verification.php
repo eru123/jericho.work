@@ -61,11 +61,6 @@ class Verification
                 'error' => $th->getMessage(),
             ];
         }
-
-        return [
-            'title' => 'Verification Failed',
-            'error' => 'The verification link is invalid',
-        ];
     }
 
     public static function add_mail(Context $c)
@@ -255,7 +250,5 @@ class Verification
             $db->pdo()->rollBack();
             throw $th;
         }
-
-        return false;
     }
 }

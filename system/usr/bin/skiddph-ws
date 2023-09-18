@@ -1,0 +1,7 @@
+#!/bin/sh
+
+while true; do
+    /usr/bin/php /app/ws
+    echo "Websocket server exited with code $?.  Respawning in 5 seconds..."
+    sleep 5
+done

@@ -1,11 +1,12 @@
 {
     "git.enableCommitSigning": true,
     "git.autofetch": true,
-    "files.exclude": {
-        "*.jericho.work": true,
-        "*.com": true
-    },
     "vue.codeActions.enabled": false,
     "css.lint.unknownAtRules": "ignore",
-    "scss.lint.unknownAtRules": "ignore"
+    "scss.lint.unknownAtRules": "ignore",
+    "php.problems.exclude": {
+        "/": [
+            "0420"
+        ]
+    }
 }

@@ -39,8 +39,6 @@ class Auth
         } catch (Throwable) {
             return false;
         }
-
-        return false;
     }
 
     public function is_revoked($token): bool
@@ -298,8 +296,8 @@ class Auth
         $rdata = $c->json();
         $user_id = $c->jwt['id'];
 
-        $renew_token = !!$rdata['token'];
-        $renew_data = !!$rdata['data'];
+        $renew_token = !!@$rdata['token'];
+        $renew_data = !!@$rdata['data'];
 
         $res = [];
 

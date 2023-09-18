@@ -33,9 +33,10 @@ RUN apk update \
 
 COPY system/ /
 
-RUN 
+RUN chmod +x /usr/bin/skiddph-dev  \
+    && chmod +x /usr/bin/skiddph-daemon \
+    && chmod +x /usr/bin/skiddph-ws
 
-RUN chmod +x /usr/bin/skiddph-dev
-
+# Include port 9000 if Websocket is enabled
 EXPOSE 80 3000
 ENTRYPOINT ["/usr/bin/skiddph-dev"]

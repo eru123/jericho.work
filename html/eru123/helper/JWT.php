@@ -72,7 +72,7 @@ class JWT
         return implode('.', $segments);
     }
 
-    public function decode(string $jwt, string $key = null, string $alg = null)
+    public function decode(string $jwt, string $key = null, string $alg = null): array
     {
         $key = $key ?? $this->key;
         $alg = $alg ?? $this->alg;

@@ -11,8 +11,8 @@ if (file_exists(__DIR__ . '/html/autoload.php')) {
     die('Autoload not found');
 }
 
-$address = '127.0.0.1';
-$port = 8081;
+$address = env('WS_HOST_ADDR');
+$port = env('WS_HOST_PORT');
 
 $socket = new App\Controller\WebSocket($address, $port);
 $socket->run();

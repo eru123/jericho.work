@@ -37,8 +37,9 @@ cd /app && composer install -o
 # Run system checks
 /usr/bin/check
 
-# Start Daemon
-/usr/bin/php /app/daemon.php &
+# Start binaries
+/usr/bin/skiddph-daemon &
+# /usr/bin/skiddph-ws & # Disabled for now
 
 # Main Client watch changes
 cd /app/client/main

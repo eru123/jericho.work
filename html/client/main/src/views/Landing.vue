@@ -1,6 +1,6 @@
 <template>
     <v-public-header />
-    <div class="landing-1">
+    <div class="landing-1" v-once>
         <h3>Your dream and solution<span>let's make it!</span></h3>
         <p>
             We work closely with you to understand your unique needs and develop customized solutions that turn your

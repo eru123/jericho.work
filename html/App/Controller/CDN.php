@@ -245,7 +245,7 @@ class CDN extends Controller
         header('Content-Length: ' . $meta['ContentLength']);
         header('Content-Disposition: inline; filename="' . $name . '"');
         // echo $r2s['Body'];
-        $out = fopen('php://output', 'w');
+        $out = fopen('php://output', 'wb');
         $r2->s3()->getObject([
             'Bucket' => $r2->bucket(),
             'Key' => $key,

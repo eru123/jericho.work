@@ -1,14 +1,11 @@
-<script setup>
-import PublicPage from "@/components/PublicPage.vue";
-</script>
 <template>
-    <PublicPage>
+    <v-public-page>
         <div class="container">
             <v-icon class="icon" name="md-appsoutage-twotone" />
             <h1>Feature Not Available</h1>
             <p>The page you are trying to access is currently not available.</p>
         </div>
-    </PublicPage>
+    </v-public-page>
 </template>
 <style scoped lang="scss">
 .container {

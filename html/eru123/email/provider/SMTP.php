@@ -33,6 +33,8 @@ class SMTP implements OutboundInterface
             'password' => '',
             'secure' => false,
             'debug' => false,
+            'debug_color' => false,
+            'debug_sapi' => PHP_SAPI,
             'ssl' => false,
             'time' => time(),
             'eol' => "\r\n",
@@ -57,13 +59,14 @@ class SMTP implements OutboundInterface
     }
 
     private function debug($message): void
-    {
+    {   
         if (!$this->config['debug']) {
             return;
         }
 
-        if (in_array(PHP_SAPI, ['cli', 'phpdbg'])) {
-            $use_color = substr($message, 0, 3) == '<< ' || substr($message, 0, 3) == '>> ';
+        if (in_array($this->config['debug_sapi'], ['cli', 'phpdbg'])) {
+            $is_rxs = substr($message, 0, 3) == '<< ' XOR substr($message, 0, 3) == '>> ';
+            $use_color = $this->config['debug_color'] && $is_rxs;
             $recv_color = "\033[36m";
             $send_color = "\033[32m";
 

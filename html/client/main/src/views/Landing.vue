@@ -1,10 +1,6 @@
-<script setup>
-import PublicFooter from "@/components/PublicFooter.vue";
-import PublicHeader from "@/components/PublicHeader.vue";
-</script>
 <template>
-    <PublicHeader />
-    <div class="landing-1">
+    <v-public-header />
+    <div class="landing-1" v-once>
         <h3>Your dream and solution<span>let's make it!</span></h3>
         <p>
             We work closely with you to understand your unique needs and develop customized solutions that turn your
@@ -15,7 +11,7 @@ import PublicHeader from "@/components/PublicHeader.vue";
 
         <a href="#info">Learn More</a>
     </div>
-    <PublicFooter />
+    <v-public-footer />
 </template>
 <style scoped lang="scss">
 .landing-1 {

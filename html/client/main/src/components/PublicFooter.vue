@@ -88,7 +88,7 @@ const items = [
 ];
 </script>
 <template>
-  <footer>
+  <footer v-once>
     <div>
       <img :src="LogoWD" alt="Logo" />
       <h4>Copyright &copy; {{ year }} SKIDD PH</h4>

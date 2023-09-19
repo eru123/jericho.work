@@ -10,6 +10,7 @@ import NotFound from "@/views/NotFound.vue";
 import FeatureNotAvailable from "@/views/FeatureNotAvailable.vue";
 import Register from "@/views/Register.vue";
 import Login from "@/views/Login.vue";
+import ToolsSmtpTester from "@/views/Tools/SmtpTester.vue";
 
 import usePersistentData from "@/composables/usePersistentData";
 import { add_redir } from "@/composables/useApi";
@@ -81,6 +82,17 @@ const routes = [
       }
       return next();
     },
+  },
+  {
+    path: "/tools",
+    name: "Tools",
+    children: [
+      {
+        path: "smtp-tester",
+        name: "ToolsSmtpTester",
+        component: ToolsSmtpTester,
+      }
+    ]
   },
   {
     path: "/feature-not-available",

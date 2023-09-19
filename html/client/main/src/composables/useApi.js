@@ -118,6 +118,7 @@ export const register = (data) => {
     })
     .catch((err) => {
       createError("Registration Error", err?.message);
+      throw err;
     });
 };
 
@@ -187,6 +188,7 @@ export const login = (data) => {
     })
     .catch((err) => {
       createError("Login Error", err?.message);
+      throw err;
     });
 };
 
@@ -236,7 +238,7 @@ export const logout = () => {
     })
     .catch((err) => {
       $user.value = null;
-      throw new Error(err?.message);
+      throw err;
     })
 };
 
@@ -259,5 +261,18 @@ export const report = (type, data) => {
       console.error(err);
     });
 };
+
+
+export const smtp_tester = (data) => {
+  return post("/api/v1/mail/tools/smtp", data)
+    .then((res) => {
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      return res;
+    })
+}
+
 
 export default post;

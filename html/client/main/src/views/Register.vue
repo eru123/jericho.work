@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, watch } from "vue";
-import PublicPage from "@/components/PublicPage.vue";
 import {
   createInfo,
   createError,
@@ -103,7 +102,7 @@ watch([fname, mname, lname], () => {
 });
 </script>
 <template>
-  <PublicPage>
+  <v-public-page>
     <div class="register-container">
       <form class="register" ref="form" @submit.prevent="submit">
         <h1>Register</h1>
@@ -204,7 +203,7 @@ watch([fname, mname, lname], () => {
         </div>
       </form>
     </div>
-  </PublicPage>
+  </v-public-page>
 </template>
 <style scoped lang="scss">
 .register-container {

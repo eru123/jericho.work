@@ -1,12 +1,11 @@
 <script setup>
 import useServerData from "@/composables/useServerData";
-import PublicPage from "@/components/PublicPage.vue";
 
 const $server = useServerData();
 </script>
 <template>
-    <PublicPage>
-        <div class="container">
+    <v-public-page>
+        <div class="container" v-once>
             <v-icon
                 name="bi-x-circle"
                 v-if="$server?.error"
@@ -22,7 +21,7 @@ const $server = useServerData();
                 {{ $server?.success || $server?.error }}
             </p>
         </div>
-    </PublicPage>
+    </v-public-page>
 </template>
 <style scoped lang="scss">
 .container {

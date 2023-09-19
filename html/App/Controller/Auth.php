@@ -64,6 +64,13 @@ class Auth
     public function bootstrap(Context $c)
     {
         try {
+            if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+                http_response_code(200);
+                return [
+                    'success' => 'Preflight request',
+                ];
+            }
+
             $authorization = @getallheaders()['Authorization'] ?? null;
             preg_match('/^(Bearer\s+)?(.+)$/', (string) $authorization, $matches);
             $token = $matches[2] ?? null;

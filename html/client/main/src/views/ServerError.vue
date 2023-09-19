@@ -1,18 +1,17 @@
 <script setup>
 import useServerData from "@/composables/useServerData";
-import PublicPage from "@/components/PublicPage.vue";
 const $server = useServerData();
 
 </script>
 <template>
-    <PublicPage>
-        <div class="container">
+    <v-public-page>
+        <div class="container" v-once>
             <v-icon class="icon" name="io-logo-apple-ar" />
             <h1>{{ $server?.error?.title || 'SERVER ERROR'}}</h1>
             <p>{{ $server?.error?.message }}</p>
             <button @click="delete $server.error">OK</button>
         </div>
-    </PublicPage>
+    </v-public-page>
 </template>
 <style scoped lang="scss">
 .container {

@@ -25,7 +25,7 @@ class Mail extends Controller {
             'username',
             'password',
             'port',
-            'secure', // false|tls|ssl
+            'secure', // none|tls|ssl
             'from_name',
             'from_email',
         ];

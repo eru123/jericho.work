@@ -2,11 +2,6 @@
 
 namespace App\Controller;
 
-use App\Plugin\Upload;
-use App\Plugin\R2;
-use App\Plugin\DB;
-use App\Plugin\Rate;
-use App\Plugin\Mail as Mailer;
 use eru123\router\Context;
 
 class Mail extends Controller {
@@ -20,5 +15,22 @@ class Mail extends Controller {
             'success' => 'Mail sent successfully',
             'code' => 201,
         ];
+    }
+
+    public function public_mail_test(Context $c) {
+        $raw = $c->json();
+        $allowed = [
+            'host',
+            'provider', // custom|gmail
+            'username',
+            'password',
+            'port',
+            'secure', // false|tls|ssl
+            'from_name',
+            'from_email',
+        ];
+        // get all data from $raw that is in $allowed
+        $data = array_intersect_key($raw, array_flip($allowed));
+        return $data;
     }
 }

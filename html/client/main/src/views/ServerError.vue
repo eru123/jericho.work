@@ -5,7 +5,7 @@ const $server = useServerData();
 </script>
 <template>
     <v-public-page>
-        <div class="container">
+        <div class="container" v-once>
             <v-icon class="icon" name="io-logo-apple-ar" />
             <h1>{{ $server?.error?.title || 'SERVER ERROR'}}</h1>
             <p>{{ $server?.error?.message }}</p>

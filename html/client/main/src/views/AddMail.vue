@@ -1,6 +1,5 @@
 <script setup>
 import { ref, watch } from "vue";
-import PublicPage from "@/components/PublicPage.vue";
 import { createError } from "@/composables/useDialog";
 import { add_mail, verify_mail, pop_redir } from "@/composables/useApi";
 
@@ -79,7 +78,7 @@ watch(
 );
 </script>
 <template>
-  <PublicPage>
+  <v-public-page>
     <div class="add-mail-container">
       <h1>Add new email address</h1>
       <form class="add-mail" ref="form" @submit.prevent="submit">
@@ -121,7 +120,7 @@ watch(
         </div>
       </form>
     </div>
-  </PublicPage>
+  </v-public-page>
 </template>
 <style scoped lang="scss">
 .add-mail-container {

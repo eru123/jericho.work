@@ -1,14 +1,11 @@
-<script setup>
-import PublicPage from "@/components/PublicPage.vue";
-</script>
 <template>
-    <PublicPage>
+    <v-public-page>
         <div class="container">
             <v-icon class="icon" name="co-link-broken" />
             <h1>404 Page Not Found</h1>
             <p>The page you are trying to access does not exist.</p>
         </div>
-    </PublicPage>
+    </v-public-page>
 </template>
 <style scoped lang="scss">
 .container {

@@ -1,0 +1,10 @@
+
+RewriteEngine On
+
+# if protocol is http, redirect to https
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Forward all requests to index.php
+RewriteCond %{REQUEST_URI} !^/html/index\.php$
+RewriteRule ^(.*)$ html/index.php [L,QSA]

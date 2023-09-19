@@ -12,7 +12,7 @@ class R2
     private $r2_access_id = null;
     private $r2_api_key = null;
     private $r2_bucket = null;
-    private $s3 = null;
+    private S3Client $s3 = null;
     static $instance = null;
 
     public static function instance()
@@ -128,6 +128,16 @@ class R2
         } catch (S3Exception $e) {
             throw new Exception($e->getMessage(), 500);
         }
+    }
+
+    public function s3()
+    {
+        return $this->s3;
+    }
+
+    public function bucket()
+    {
+        return $this->r2_bucket;
     }
 
     public function list(array $data = [])

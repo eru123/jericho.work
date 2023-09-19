@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import PublicPage from "@/components/PublicPage.vue";
 import { createError } from "@/composables/useDialog";
 import { login, pop_redir } from "@/composables/useApi";
 
@@ -46,7 +45,7 @@ const submit = () => {
 };
 </script>
 <template>
-  <PublicPage>
+  <v-public-page>
     <div class="login-container">
       <form class="login" ref="form" @submit.prevent="submit">
         <h1>Login</h1>
@@ -89,7 +88,7 @@ const submit = () => {
         </div>
       </form>
     </div>
-  </PublicPage>
+  </v-public-page>
 </template>
 <style scoped lang="scss">
 .login-container {

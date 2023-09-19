@@ -1,6 +1,6 @@
 <template>
     <v-public-page>
-        <div class="container">
+        <div class="container" v-once>
             <v-icon class="icon" name="md-appsoutage-twotone" />
             <h1>Feature Not Available</h1>
             <p>The page you are trying to access is currently not available.</p>

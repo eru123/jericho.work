@@ -1,6 +1,6 @@
 <template>
     <v-public-page>
-        <div class="container">
+        <div class="container" v-once>
             <v-icon class="icon" name="co-link-broken" />
             <h1>404 Page Not Found</h1>
             <p>The page you are trying to access does not exist.</p>

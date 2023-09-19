@@ -264,7 +264,7 @@ export const report = (type, data) => {
 
 
 export const smtp_tester = (data) => {
-  return post("/api/v1/mail/tools/smtp-tester", data)
+  return post("/api/v1/mail/tools/smtp", data)
     .then((res) => {
       if (res?.error) {
         throw new Error(res.error);

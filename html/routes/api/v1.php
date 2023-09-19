@@ -40,6 +40,7 @@ $mail->bootstrap([
 ]);
 
 $mail->post('/create', 'App\Controller\Mail@send');
+$mail->post('/tools/smtp', 'App\Controller\Mail@public_mail_test');
 // $mail->post('/view/$id', 'App\Controller\Mail@get');
 // $mail->post('/update/$id', 'App\Controller\Mail@update');
 // $mail->post('/cancel/$id', 'App\Controller\Mail@cancel');

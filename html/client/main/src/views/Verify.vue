@@ -5,7 +5,7 @@ const $server = useServerData();
 </script>
 <template>
     <v-public-page>
-        <div class="container">
+        <div class="container" v-once>
             <v-icon
                 name="bi-x-circle"
                 v-if="$server?.error"

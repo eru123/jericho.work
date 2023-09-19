@@ -230,15 +230,28 @@ class CDN extends Controller
         $key = $rec['r2key'];
 
         $r2 = R2::instance();
-        $r2s = $r2->get([
+        // $r2s = $r2->get([
+        //     'Key' => $key,
+        // ]);
+        $meta = $r2->s3()->headObject([
+            'Bucket' => $r2->bucket(),
             'Key' => $key,
-        ]);
+        ])->toArray();
 
         header('Access-Control-Allow-Origin: *');
-        header('Content-Type: ' . $r2s['ContentType']);
-        header('Content-Length: ' . $r2s['ContentLength']);
+        // header('Content-Type: ' . $r2s['ContentType']);
+        // header('Content-Length: ' . $r2s['ContentLength']);
+        header('Content-Type: ' . $meta['ContentType']);
+        header('Content-Length: ' . $meta['ContentLength']);
         header('Content-Disposition: inline; filename="' . $name . '"');
-        echo $r2s['Body'];
+        // echo $r2s['Body'];
+        $out = fopen('php://output', 'w');
+        $r2->s3()->getObject([
+            'Bucket' => $r2->bucket(),
+            'Key' => $key,
+            'SaveAs' => $out,
+        ]);
+        fclose($out);
         exit;
     }
 
@@ -255,15 +268,28 @@ class CDN extends Controller
         $key = $rec['r2key'];
 
         $r2 = R2::instance();
-        $r2s = $r2->get([
+        // $r2s = $r2->get([
+        //     'Key' => $key,
+        // ]);
+        $meta = $r2->s3()->headObject([
+            'Bucket' => $r2->bucket(),
             'Key' => $key,
-        ]);
+        ])->toArray();
 
         header('Access-Control-Allow-Origin: *');
-        header('Content-Type: ' . $r2s['ContentType']);
-        header('Content-Length: ' . $r2s['ContentLength']);
+        // header('Content-Type: ' . $r2s['ContentType']);
+        // header('Content-Length: ' . $r2s['ContentLength']);
+        header('Content-Type: ' . $meta['ContentType']);
+        header('Content-Length: ' . $meta['ContentLength']);
         header('Content-Disposition: attachment; filename="' . $name . '"');
-        echo $r2s['Body'];
+        // echo $r2s['Body'];
+        $out = fopen('php://output', 'w');
+        $r2->s3()->getObject([
+            'Bucket' => $r2->bucket(),
+            'Key' => $key,
+            'SaveAs' => $out,
+        ]);
+        fclose($out);
         exit;
     }
 }

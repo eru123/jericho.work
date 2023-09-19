@@ -262,4 +262,17 @@ export const report = (type, data) => {
     });
 };
 
+
+export const smtp_tester = (data) => {
+  return post("/api/v1/mail/tools/smtp-tester", data)
+    .then((res) => {
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      return res;
+    })
+}
+
+
 export default post;

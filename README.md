@@ -107,3 +107,21 @@ pnpm install
 gulp install
 gulp build
 ```
+
+### WSL UBuntu 22.04 Setup
+```bash
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get update
+sudo apt install curl wget php php-xml php-zip p7zip-full p7zip-rar php-mysql php-memcached
+sudo curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+
+# nvm
+curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash 
+source ~/.bashrc
+nvm install node 
+nvm use --lts
+npm i -g pnpm
+
+# Get host ip, wsl internal use
+cat /etc/resolv.conf
+```

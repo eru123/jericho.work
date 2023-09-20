@@ -6,7 +6,8 @@
     "scss.lint.unknownAtRules": "ignore",
     "php.problems.exclude": {
         "/": [
-            "0420"
+            "0420",
+            "0417"
         ]
     }
 }

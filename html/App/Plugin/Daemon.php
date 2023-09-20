@@ -224,12 +224,13 @@ class Daemon
                 $is_running = !empty(trim((string) shell_exec(cmdp(['tasklist', '|', 'findstr', $daemon_pid]))));
             }
             if ($is_running) {
-                echo "Daemon is already running with PID: " . $daemon_pid . PHP_EOL;
+                echo "Daemon is already running with PID: " , $daemon_pid , PHP_EOL;
                 exit;
             }
         }
 
         unset($daemon_pid);
+        echo "Daemon started with pid ", $this->pid, PHP_EOL;
         $this->mem_set('daemon_pid', $this->pid);
         $this->stop = false;
         $this->time = time();

@@ -130,7 +130,8 @@ class Daemon
 
     function is_second(int ...$s)
     {
-        if (!$this->is_second_new()) return false;
+        if (!$this->is_second_new())
+            return false;
         $ds = (int) date('s', $this->time);
         return in_array($ds, $s, true);
     }
@@ -142,7 +143,8 @@ class Daemon
 
     function is_minute(int ...$m)
     {
-        if (!$this->is_second(0)) return false;
+        if (!$this->is_second(0))
+            return false;
         $dm = (int) date('i', $this->time);
         return in_array($dm, $m, true);
     }
@@ -154,7 +156,8 @@ class Daemon
 
     function is_hour(int ...$h)
     {
-        if (!$this->is_minute(0)) return false;
+        if (!$this->is_minute(0))
+            return false;
         $dh = (int) date('H', $this->time);
         return in_array($dh, $h, true);
     }
@@ -166,7 +169,8 @@ class Daemon
 
     function is_day(int ...$d)
     {
-        if (!$this->is_hour(0)) return false;
+        if (!$this->is_hour(0))
+            return false;
         $dd = (int) date('d', $this->time);
         return in_array($dd, $d, true);
     }
@@ -178,7 +182,8 @@ class Daemon
 
     function is_month(int ...$m)
     {
-        if (!$this->is_day(0)) return false;
+        if (!$this->is_day(0))
+            return false;
         $dm = (int) date('m', $this->time);
     }
 
@@ -189,7 +194,8 @@ class Daemon
 
     function is_year(int ...$y)
     {
-        if (!$this->is_month(0)) return false;
+        if (!$this->is_month(0))
+            return false;
         $dy = (int) date('Y', $this->time);
         return in_array($dy, $y, true);
     }
@@ -201,13 +207,15 @@ class Daemon
 
     function is_date(string $date = null)
     {
-        if (!$this->is_second_new()) return false;
+        if (!$this->is_second_new())
+            return false;
         return date('Y-m-d H:i:s', $this->time) == $date;
     }
 
     function is_time(int $time = null)
     {
-        if (!$this->is_second_new()) return false;
+        if (!$this->is_second_new())
+            return false;
         return $this->time == $time;
     }
 
@@ -221,10 +229,10 @@ class Daemon
             } else if (PHP_OS_FAMILY === 'Linux') {
                 $is_running = empty(trim(cmd(['kill', '-0', $daemon_pid])));
             } elseif (PHP_OS_FAMILY === 'Windows') {
-                $is_running = !empty(trim((string) shell_exec(cmdp(['tasklist', '|', 'findstr', $daemon_pid]))));
+                $is_running = !empty(trim((string) shell_exec(cmdp(['tasklist', '|', 'findstr', "\s" . $daemon_pid]))));
             }
             if ($is_running) {
-                echo "Daemon is already running with PID: " , $daemon_pid , PHP_EOL;
+                echo "Daemon is already running with PID: ", $daemon_pid, PHP_EOL;
                 exit;
             }
         }

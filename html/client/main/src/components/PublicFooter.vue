@@ -85,6 +85,26 @@ const items = [
       },
     ],
   },
+  {
+    title: "Tools",
+    links: [
+      {
+        name: "SMTP Tester",
+        url: "/tools/smtp-tester",
+        icon: "bi-envelope-fill",
+      },
+      {
+        name: "Mail Catcher",
+        url: "/tools/mail-catcher",
+        icon: "bi-envelope-open-fill",
+      },
+      {
+        name: "See more",
+        url: "/tools",
+        icon: "bi-three-dots",
+      }
+    ]
+  }
 ];
 </script>
 <template>
@@ -130,7 +150,7 @@ footer {
   }
 
   & > div:last-child {
-    @apply grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-screen-md mx-auto px-4 py-2;
+    @apply grid grid-cols-2 md:grid-cols-5 gap-4 w-full max-w-screen-md mx-auto px-4 py-2;
 
     div {
       @apply flex flex-col justify-start items-start;

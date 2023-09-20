@@ -185,6 +185,7 @@ class Daemon
         if (!$this->is_day(0))
             return false;
         $dm = (int) date('m', $this->time);
+        return in_array($dm, $m, true);
     }
 
     function month()
@@ -243,28 +244,31 @@ class Daemon
         $this->stop = false;
         $this->time = time();
         $this->last_time = $this->time;
-        $this->cycle = 0;
-        $this->lcycle = 0;
-        $this->mem = memory_get_usage() / 1024 / 1024;
-        $this->malloc = memory_get_usage(true) / 1024 / 1024;
+        // $this->cycle = 0;
+        // $this->lcycle = 0;
+        // $this->mem = memory_get_usage() / 1024 / 1024;
+        // $this->malloc = memory_get_usage(true) / 1024 / 1024;
+
+        array_walk($callbacks, function (&$callback) {
+            $callback = Callback::make($callback);
+            if (!$callback) {
+                unset($callback);
+            }
+        });
 
         while (!$this->stop) {
-            $this->lcycle++;
+            // $this->lcycle++;
             $this->time = time();
 
-            if ($this->is_second_new()) {
-                $this->mem = memory_get_usage() / 1024 / 1024;
-                $this->malloc = memory_get_usage(true) / 1024 / 1024;
-                $this->cycle = $this->lcycle;
-                $this->lcycle = 1;
-            }
+            // if ($this->is_second_new()) {
+                // $this->mem = memory_get_usage() / 1024 / 1024;
+                // $this->malloc = memory_get_usage(true) / 1024 / 1024;
+            //     $this->cycle = $this->lcycle;
+            //     $this->lcycle = 1;
+            // }
 
             foreach ($callbacks as $callback) {
-                $cb = Callback::make($callback);
-
-                if (is_callable($cb)) {
-                    call_user_func_array($callback, [&$this]);
-                }
+                call_user_func_array($callback, [&$this]);
             }
 
             $this->last_time = $this->time;

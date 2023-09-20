@@ -46,6 +46,7 @@ export default defineConfig({
         main: "src/main.js",
       },
     },
+    assetInlineLimit: 0,
   },
   server: {
     port: 3000,

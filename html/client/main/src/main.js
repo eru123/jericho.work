@@ -1,3 +1,4 @@
+import 'vite/modulepreload-polyfill'
 import { createApp } from "vue";
 import useServerData from "./composables/useServerData";
 import router from "./router";

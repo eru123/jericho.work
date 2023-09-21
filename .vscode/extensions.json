@@ -4,6 +4,7 @@
         "github.copilot",
         "zobo.php-intellisense",
         "esbenp.prettier-vscode",
-        "vue.volar"
+        "vue.volar",
+        "bradlc.vscode-tailwindcss"
     ]
 }

@@ -9,69 +9,9 @@ import PublicPage from "./components/PublicPage.vue";
 import PublicHeader from "./components/PublicHeader.vue";
 import PublicFooter from "./components/PublicFooter.vue";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
-import {
-  BiDiscord,
-  BiFacebook,
-  BiLinkedin,
-  BiGoogle,
-  BiEnvelopeFill,
-  BiEnvelopeOpenFill,
-  BiCloudFill,
-  FaDatabase,
-  MdPolicy,
-  MdHandshake,
-  BiCheckCircle,
-  BiXCircle,
-  CoLinkBroken,
-  MdAppsoutageTwotone,
-  IoLogoAppleAr,
-  BiInfoCircle,
-  MdDangerousOutlined,
-  CoWarning,
-  BiQuestionCircle,
-  BiHourglassBottom,
-  BiHourglassSplit,
-  HiSolidUserCircle,
-  FaSpinner,
-  BiThreeDots,
-  BiShieldLockFill,
-  FaUnlockAlt,
-  BiFileEarmarkLockFill 
-  // BiHourglassTop,
-  // BiHourglass,
-} from "oh-vue-icons/icons";
+import * as icons from "./icons";
 
-addIcons(
-  BiDiscord,
-  BiFacebook,
-  BiLinkedin,
-  BiGoogle,
-  BiEnvelopeFill,
-  BiEnvelopeOpenFill,
-  BiCloudFill,
-  FaDatabase,
-  MdPolicy,
-  MdHandshake,
-  BiCheckCircle,
-  BiXCircle,
-  CoLinkBroken,
-  MdAppsoutageTwotone,
-  IoLogoAppleAr,
-  BiInfoCircle,
-  MdDangerousOutlined,
-  CoWarning,
-  BiQuestionCircle,
-  BiHourglassBottom,
-  BiHourglassSplit,
-  HiSolidUserCircle,
-  FaSpinner,
-  BiThreeDots,
-  BiShieldLockFill,
-  FaUnlockAlt,
-  BiFileEarmarkLockFill
-  // BiHourglassTop,
-  // BiHourglass,
-);
+addIcons(...Object.values(icons));
 
 const app = createApp(App);
 app.component("v-icon", OhVueIcon);

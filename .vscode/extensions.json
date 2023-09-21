@@ -2,8 +2,8 @@
     "recommendations": [
         "github.copilot-chat",
         "github.copilot",
-        "vue.volar",
-        "vue.vscode-typescript-vue-plugin",
-        "misterj.vue-volar-extention-pack"
+        "zobo.php-intellisense",
+        "esbenp.prettier-vscode",
+        "vue.volar"
     ]
 }

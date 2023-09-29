@@ -486,6 +486,7 @@ class SMTP implements OutboundInterface
             $hash = md5((string) $this->config['time']);
 
             $this->write($socket, 'Subject: ' . $data['subject']);
+            $this->write($socket, 'Date: ' . date('r', $this->config['time']));
             $this->write($socket, 'MIME-Version: 1.0');
             $this->write($socket, 'Content-Type: multipart/mixed; boundary="=_NextPart_' . $hash . '"');
             $this->write($socket, '');

@@ -12,6 +12,7 @@ define('__COMMANDS__', __DIR__ . DIRECTORY_SEPARATOR . 'Commands');
 define('__DATABASE__', __DIR__ . DIRECTORY_SEPARATOR . 'database');
 define('__SEEDS__', __DATABASE__ . DIRECTORY_SEPARATOR . 'seeds');
 define('__MIGRATIONS__', __DATABASE__ . DIRECTORY_SEPARATOR . 'migrations');
+define('__MAILTPL__', __DIR__ . DIRECTORY_SEPARATOR . 'mailtpl');
 
 if (!class_exists('Memcached') && PHP_OS_FAMILY == 'Windows') {
     include("memcached.php");

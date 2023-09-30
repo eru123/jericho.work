@@ -266,7 +266,6 @@ const send = async () => {
             name="fa-spinner"
             class="icon"
             animation="spin"
-            speed="3"
             v-if="loading"
           ></v-icon>
           <button type="button" @click="reset" :disabled="loading">

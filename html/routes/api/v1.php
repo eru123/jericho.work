@@ -19,6 +19,10 @@ $v1->get('/net/whoami', fn () => NetTools::whoami() ?: ['error' => 'Unknown erro
 // Analytics
 $v1->post('/report', 'App\Controller\Analytics@report');
 
+
+// Newsletter
+$v1->post('/newsletter/add', 'App\Controller\Newsletter@add');
+
 // Auth
 
 $auth = new Router();

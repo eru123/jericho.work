@@ -110,7 +110,6 @@ watch(
               name="fa-spinner"
               class="icon"
               animation="spin"
-              speed="2"
               v-if="verifying"
             ></v-icon>
             <span v-if="!verifying">

@@ -1,3 +1,6 @@
+<script setup>
+import Newsletter from '@/components/Cards/Newsletter.vue';
+</script>
 <template>
   <v-public-header />
   <div class="landing-1" v-once>
@@ -11,19 +14,9 @@
 
     <a href="#info">Learn More</a>
   </div>
-  <div class="news-letter">
+  <div class="newsletter">
     <div class="container">
-      <div class="news-letter-card">
-        <div class="news-letter-title">
-          <h2>Subscribe to our newsletter</h2>
-        </div>
-        <div class="news-letter-form">
-          <form action="#">
-            <input type="text" placeholder="Enter your email address" />
-            <button type="submit">Subscribe</button>
-          </form>
-        </div>
-      </div>
+      <Newsletter />
     </div>
   </div>
   <v-public-footer />
@@ -57,39 +50,11 @@
   }
 }
 
-.news-letter {
+.newsletter {
   @apply w-full pb-8 bg-white sm:pb-12 px-4 sm:px-4;
 
   .container {
     @apply w-full max-w-screen-sm mx-auto flex flex-col justify-center items-center text-center;
-
-    .news-letter-card {
-      @apply w-full bg-white rounded-md shadow-md overflow-hidden;
-
-      .news-letter-title {
-        @apply w-full bg-primary-900 text-white py-4 px-4;
-
-        h2 {
-          @apply text-xl sm:text-2xl font-semibold;
-        }
-      }
-
-      .news-letter-form {
-        @apply w-full bg-white py-8 px-4;
-
-        form {
-          @apply flex flex-col sm:flex-row sm:justify-center sm:items-center m-0;
-
-          input {
-            @apply w-full text-base sm:text-sm sm:w-96 px-4 py-2 border border-gray-300 rounded-md mb-4 sm:mb-0 sm:mr-4;
-          }
-
-          button {
-            @apply px-4 py-2 rounded-md text-base sm:text-sm font-normal text-primary-50 bg-primary-900 hover:bg-primary-800;
-          }
-        }
-      }
-    }
   }
 }
 </style>

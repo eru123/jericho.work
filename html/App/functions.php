@@ -199,3 +199,14 @@ function xshell(string|array $cmd): string|false|null
 {
     return shell_exec(cmdp($cmd));
 }
+
+function use_mailtpl(string $name): string
+{
+    $f = __MAILTPL__ . DIRECTORY_SEPARATOR . basename($name) . '.php';
+
+    if (!file_exists($f)) {
+        return '';
+    }
+
+    return require($f);
+}

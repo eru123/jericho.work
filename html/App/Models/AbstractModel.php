@@ -6,7 +6,7 @@ use PDOStatement;
 use eru123\orm\Raw;
 use App\Plugin\DB;
 
-abstract class AbstractModel implements Newsletter
+abstract class AbstractModel implements Model
 {   
     protected static $table = '';
     protected static $allowed = [];
@@ -25,7 +25,7 @@ abstract class AbstractModel implements Newsletter
     {
         $sanitized = [];
 
-        foreach (self::$allowed as $key) {
+        foreach (static::$allowed as $key) {
             if (isset($data[$key])) {
                 $sanitized[$key] = $data[$key];
             }
@@ -37,24 +37,24 @@ abstract class AbstractModel implements Newsletter
     public static function insert(array $data): PDOStatement
     {
         $data = static::sanitize($data);
-        $date = self::$created_at || self::$updated_at ? date(self::$date_format) : null;
-        if (self::$created_at) $data[self::$created_at] = $date;
-        if (self::$updated_at) $data[self::$updated_at] = $date;
-        return DB::instance()->insert(self::$table, $data);
+        $date = static::$created_at || static::$updated_at ? date(static::$date_format) : null;
+        if (static::$created_at) $data[static::$created_at] = $date;
+        if (static::$updated_at) $data[static::$updated_at] = $date;
+        return DB::instance()->insert(static::$table, $data);
     }
 
     public static function insert_many(array $data): PDOStatement
     {
         $sanitized = [];
-        $date = self::$created_at || self::$updated_at ? date(self::$date_format) : null;
+        $date = static::$created_at || static::$updated_at ? date(static::$date_format) : null;
         foreach ($data as $row) {
             $tmp = static::sanitize($row);
-            if (self::$created_at) $tmp[self::$created_at] = $date;
-            if (self::$updated_at) $tmp[self::$updated_at] = $date;
+            if (static::$created_at) $tmp[static::$created_at] = $date;
+            if (static::$updated_at) $tmp[static::$updated_at] = $date;
             $sanitized[] = $tmp;
         }
 
-        return DB::instance()->insert_many(self::$table, $sanitized);
+        return DB::instance()->insert_many(static::$table, $sanitized);
     }
 
     public static function update(int|string $id, array $data): PDOStatement
@@ -63,25 +63,25 @@ abstract class AbstractModel implements Newsletter
         $where = [];
         $values = [];
 
-        if (self::$soft_delete && self::$deleted_at) {
-            $where[] = '`' . self::$deleted_at . '` IS NOT NULL';
+        if (static::$soft_delete && static::$deleted_at) {
+            $where[] = '`' . static::$deleted_at . '` IS NULL';
         }
 
-        if (self::$updated_at && !isset($data[self::$updated_at])) {
-            $data[self::$updated_at] = date(self::$date_format);
+        if (static::$updated_at && !isset($data[static::$updated_at])) {
+            $data[static::$updated_at] = date(static::$date_format);
         }
 
         if (empty($id)) {
             $where[] = '1';
-        } else if (is_numeric($id) && self::$primary_key) {
-            $where[] = '`' . self::$primary_key . '` = ?';
+        } else if (is_numeric($id) && static::$primary_key) {
+            $where[] = '`' . static::$primary_key . '` = ?';
             $values[] = $id;
         } else {
             $where[] = $id;
         }
 
         $where = Raw::build(implode(' AND ', $where), $values);
-        return DB::instance()->update(self::$table, $data, $where);
+        return DB::instance()->update(static::$table, $data, $where);
     }
 
     public static function delete(int|string $id): PDOStatement
@@ -90,15 +90,15 @@ abstract class AbstractModel implements Newsletter
         $values = [];
         $data = [];
 
-        if (self::$soft_delete && self::$deleted_at) {
-            $where[] = '`' . self::$deleted_at . '` IS NULL';
-            $data[self::$deleted_at] = date(self::$date_format);
+        if (static::$soft_delete && static::$deleted_at) {
+            $where[] = '`' . static::$deleted_at . '` IS NULL';
+            $data[static::$deleted_at] = date(static::$date_format);
         }
 
         if (empty($id)) {
             $where[] = '1';
-        } else if (is_numeric($id) && self::$primary_key) {
-            $where[] = '`' . self::$primary_key . '` = ?';
+        } else if (is_numeric($id) && static::$primary_key) {
+            $where[] = '`' . static::$primary_key . '` = ?';
             $values[] = $id;
         } else {
             $where[] = $id;
@@ -106,11 +106,11 @@ abstract class AbstractModel implements Newsletter
         
         $where = Raw::build(implode(' AND ', $where), $values);
         
-        if (self::$soft_delete && self::$deleted_at) {
-            return DB::instance()->update(self::$table, $data, $where);
+        if (static::$soft_delete && static::$deleted_at) {
+            return DB::instance()->update(static::$table, $data, $where);
         }
 
-        return DB::instance()->query('DELETE FROM `'.self::$table.'` WHERE ' . $where);
+        return DB::instance()->query('DELETE FROM `'.static::$table.'` WHERE ' . $where);
     }
 
     public static function deleteUnsafe(int|string $id): PDOStatement
@@ -120,15 +120,15 @@ abstract class AbstractModel implements Newsletter
 
         if (empty($id)) {
             $where[] = '1';
-        } else if (is_numeric($id) && self::$primary_key) {
-            $where[] = '`' . self::$primary_key . '` = ?';
+        } else if (is_numeric($id) && static::$primary_key) {
+            $where[] = '`' . static::$primary_key . '` = ?';
             $values[] = $id;
         } else {
             $where[] = $id;
         }
 
         $where = Raw::build(implode(' AND ', $where), $values);
-        return DB::instance()->query('DELETE FROM `'.self::$table.'` WHERE ' . $where);
+        return DB::instance()->query('DELETE FROM `'.static::$table.'` WHERE ' . $where);
     }
 
     public static function purge(int|string $id = null): PDOStatement
@@ -136,21 +136,21 @@ abstract class AbstractModel implements Newsletter
         $where = [];
         $values = [];
 
-        if (self::$soft_delete && self::$deleted_at) {
-            $where[] = '`' . self::$deleted_at . '` IS NOT NULL';
+        if (static::$soft_delete && static::$deleted_at) {
+            $where[] = '`' . static::$deleted_at . '` IS NOT NULL';
         }
 
         if (empty($id)) {
             $where[] = '1';
-        } else if (is_numeric($id) && self::$primary_key) {
-            $where[] = '`' . self::$primary_key . '` = ?';
+        } else if (is_numeric($id) && static::$primary_key) {
+            $where[] = '`' . static::$primary_key . '` = ?';
             $values[] = $id;
         } else {
             $where[] = $id;
         }
 
         $where = Raw::build(implode(' AND ', $where), $values);
-        return DB::instance()->query('DELETE FROM `'.self::$table.'` WHERE ' . $where);
+        return DB::instance()->query('DELETE FROM `'.static::$table.'` WHERE ' . $where);
     }
 
     public static function find(int|string $id): array|null|false
@@ -158,21 +158,21 @@ abstract class AbstractModel implements Newsletter
         $where = [];
         $values = [];
 
-        if (self::$soft_delete && self::$deleted_at) {
-            $where[] = '`' . self::$deleted_at . '` IS NULL';
+        if (static::$soft_delete && static::$deleted_at) {
+            $where[] = '`' . static::$deleted_at . '` IS NULL';
         }
 
         if (empty($id)) {
             $where[] = '1';
-        } else if (is_numeric($id) && self::$primary_key) {
-            $where[] = '`' . self::$primary_key . '` = ?';
+        } else if (is_numeric($id) && static::$primary_key) {
+            $where[] = '`' . static::$primary_key . '` = ?';
             $values[] = $id;
         } else {
             $where[] = $id;
         }
 
         $where = Raw::build(implode(' AND ', $where), $values);
-        return DB::instance()->query('SELECT * FROM `'.self::$table.'` WHERE ' . $where . ' LIMIT 1')->fetch();
+        return DB::instance()->query('SELECT * FROM `'.static::$table.'` WHERE ' . $where . ' LIMIT 1')->fetch();
     }
 
     public static function find_many(int|string $id): array
@@ -180,20 +180,20 @@ abstract class AbstractModel implements Newsletter
         $where = [];
         $values = [];
 
-        if (self::$soft_delete && self::$deleted_at) {
-            $where[] = '`' . self::$deleted_at . '` IS NULL';
+        if (static::$soft_delete && static::$deleted_at) {
+            $where[] = '`' . static::$deleted_at . '` IS NULL';
         }
 
         if (empty($id)) {
             $where[] = '1';
-        } else if (is_numeric($id) && self::$primary_key) {
-            $where[] = '`' . self::$primary_key . '` = ?';
+        } else if (is_numeric($id) && static::$primary_key) {
+            $where[] = '`' . static::$primary_key . '` = ?';
             $values[] = $id;
         } else {
             $where[] = $id;
         }
 
         $where = Raw::build(implode(' AND ', $where), $values);
-        return DB::instance()->query('SELECT * FROM `'.self::$table.'` WHERE ' . $where)->fetchAll();
+        return DB::instance()->query('SELECT * FROM `'.static::$table.'` WHERE ' . $where)->fetchAll();
     }
 }

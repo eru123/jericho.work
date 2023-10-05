@@ -25,10 +25,14 @@ export default defineConfig({
       wrapperClasses: "markdown-body",
     }),
   ],
+  optimizeDeps: {
+    exclude: ['oh-vue-icons/icons'],
+  },
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
+    preserveSymlinks: false,
   },
   publicDir: "public",
   base: "",
@@ -42,10 +46,11 @@ export default defineConfig({
         main: "src/main.js",
       },
     },
+    assetInlineLimit: 0,
   },
   server: {
     port: 3000,
     strictPort: true,
     host: true,
-  },
+  }
 });

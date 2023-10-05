@@ -2,6 +2,7 @@
 */vendor/
 */node_modules/
 html/.env
+html/.env.*.bak
 /test*
 /html/test*
 /html/*test.php

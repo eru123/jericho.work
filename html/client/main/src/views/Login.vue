@@ -80,7 +80,6 @@ const submit = () => {
               name="fa-spinner"
               class="icon"
               animation="spin"
-              speed="2"
               v-if="loggingIn"
             ></v-icon>
             <span v-if="!loggingIn">Login</span>

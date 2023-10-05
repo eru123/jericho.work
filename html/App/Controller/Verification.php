@@ -26,6 +26,7 @@ class Verification
     {
         return match ($data['action']) {
             'add_email' => static::action_add_mail($data),
+            'newsletter_add' => Newsletter::action_newsletter_add($data),
             default => false,
         };
     }
@@ -104,7 +105,7 @@ class Verification
             throw new Exception('Identical verification found, please try again.', 400);
         }
 
-        $data = [
+        $data = $data + [
             'user_id' => $user_id,
             'type' => 'email',
             'identifier' => $email,
@@ -139,6 +140,7 @@ class Verification
                 'name' => $user['name'],
                 'code' => $code,
                 'link' => $link,
+                'email' => $email,
             ], FORMAT_TEMPLATE_DOLLAR_CURLY),
             'type' => Mails::TYPE_TRANSACTIONAL,
             'priority' => Mails::PRIORITY_HIGH
@@ -148,6 +150,78 @@ class Verification
             'success' => 'Success. Please check your email for the verification code.',
             'verification_id' => $data['id'],
         ];
+    }
+
+    public static function make(array $data, string $template)
+    {
+        $user_id = intval(isset($data['user_id']) ? $data['user_id'] : 0);
+
+        if (!isset($data['email'])) {
+            throw new Exception('Missing email', 400);
+        }
+
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+            throw new Exception('Invalid email', 400);
+        }
+
+        $email = strtolower($data['email']);
+        
+        if ($user_id) {
+            $data['user_id'] = $user_id;
+        }
+        $user = Users::find($user_id);
+        if (!$user) {
+            $user = [
+                'name' => isset($data['name']) ? $data['name'] : 'there',
+            ];
+        }
+
+        $code = static::generate_code(6);
+        $expires_at = isset($data['expires_at']) ? $data['expires_at'] : date('Y-m-d H:i:s', strtotime('+2 hours'));
+        $hash = hash('sha256', json_encode([
+            'user_id' => $user_id,
+            'identifier' => $email,
+            'code' => $code,
+            'expires_at' => $expires_at,
+        ]));
+
+        if (Verifications::find(Raw::build('`hash` = ? AND `status` = 0 ', [$hash]))) {
+            throw new Exception('Identical verification found, please try again.', 400);
+        }
+
+        $verf = Verifications::find(Raw::build('`identifier` = ? AND `type` = ? AND `action` = ? AND `status` = 0 AND `expires_at` > ?', [$email, 'email', $data['action'], date('Y-m-d H:i:s')]));
+        if ($verf) {
+            return $verf + $data;
+        }
+
+        $data['hash'] = $hash;
+        $data['code'] = $code;
+        $data['expires_at'] = $expires_at;
+        $data['user_id'] = $user_id;
+        $data['identifier'] = $email;
+        $insert = Verifications::insert($data);
+        if (!$insert->rowCount()) {
+            throw new Exception('Failed to create mail verification', 500);
+        }
+        $data['id'] = DB::instance()->last_insert_id();
+        $link = env('BASE_URL') . '/verify/' . $hash;
+        
+        $data['link'] = $link;
+
+        Mailer::queue([
+            'to' => $email,
+            'subject' => isset($data['subject']) ? $data['subject'] : 'Verify your email address',
+            'body' => Format::template($template, [
+                'name' => $user['name'],
+                'code' => $code,
+                'link' => $link,
+                'email' => $email,
+            ], FORMAT_TEMPLATE_DOLLAR_CURLY),
+            'type' => Mails::TYPE_TRANSACTIONAL,
+            'priority' => Mails::PRIORITY_HIGH
+        ]);
+
+        return $data;
     }
 
     public static function verify_mail(Context $c)

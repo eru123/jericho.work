@@ -195,7 +195,6 @@ watch([fname, mname, lname], () => {
               name="fa-spinner"
               class="icon"
               animation="spin"
-              speed="2"
               v-if="registering"
             ></v-icon>
             <span v-if="!registering">Register</span>

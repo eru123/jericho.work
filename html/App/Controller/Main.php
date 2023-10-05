@@ -95,8 +95,7 @@ class Main extends Controller
             'type' => 'website'
         ]);
 
-        Vite::data(Verification::verify_from_link($code));
-
+        Vite::data(['email_verification' => Verification::verify_from_link($code)]);
         return $this->view();
     }
 
@@ -105,6 +104,7 @@ class Main extends Controller
         if (!headers_sent()) {
             http_response_code(200);
             header('Content-Type: application/manifest+json');
+            header('Cache-Control: public, max-age=3600');
         }
 
         return [

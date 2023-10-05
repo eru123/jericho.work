@@ -274,5 +274,15 @@ export const smtp_tester = (data) => {
     })
 }
 
+export const newsletter_add = (data) => {
+  return post("/api/v1/newsletter/add", data)
+    .then((res) => {
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+
+      return res;
+    })
+}
 
 export default post;

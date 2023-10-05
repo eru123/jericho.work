@@ -8,17 +8,17 @@ const $server = useServerData();
         <div class="container" v-once>
             <v-icon
                 name="bi-x-circle"
-                v-if="$server?.error"
+                v-if="$server?.email_verification?.error"
                 class="icon error"
             />
             <v-icon
                 name="bi-check-circle"
-                v-if="!$server?.error"
+                v-if="!$server?.email_verification?.error"
                 class="icon success"
             />
-            <h1>{{ $server?.title }}</h1>
-            <p v-if="$server?.success || $server?.error">
-                {{ $server?.success || $server?.error }}
+            <h1>{{ $server?.email_verification?.title ?? 'Email Verification' }}</h1>
+            <p v-if="$server?.email_verification?.success || $server?.email_verification?.error">
+                {{ $server?.email_verification?.success || $server?.email_verification?.error }}
             </p>
         </div>
     </v-public-page>

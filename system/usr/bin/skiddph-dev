@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# Copy all system variable to .env file
+if [ -f /app/.env ]; then
+    ts=$(date +"%Y%m%d%H%M%S")
+    mv /app/.env /app/.env.$ts.bak
+fi
+printenv > /app/.env
+
 # Creating executable php files
 cp /app/script /usr/bin/script
 cp /app/check /usr/bin/check

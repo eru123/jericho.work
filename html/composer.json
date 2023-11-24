@@ -1,5 +1,5 @@
 {
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "aws/aws-sdk-php": "^3.275"
     },

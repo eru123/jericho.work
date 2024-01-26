@@ -71,7 +71,7 @@ class Auth
                 ];
             }
 
-            $authorization = @getallheaders()['Authorization'] ?? null;
+            $authorization = @getallheaders()['Authorization'] ?? (@getallheaders()['authorization'] ?? null);
             preg_match('/^(Bearer\s+)?(.+)$/', (string) $authorization, $matches);
             $token = $matches[2] ?? null;
 

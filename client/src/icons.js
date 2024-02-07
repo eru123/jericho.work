@@ -26,6 +26,7 @@ export {
   BiShieldLockFill,
   FaUnlockAlt,
   BiFileEarmarkLockFill,
+  HiSolidMenuAlt3
   // BiHourglassTop,
   // BiHourglass,
 } from "oh-vue-icons/icons";

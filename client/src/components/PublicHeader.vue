@@ -26,13 +26,23 @@ const confirmLogout = () => {
         <img :src="LogoD" alt="Logo" />
       </v-link>
       <div class="actions">
-        <v-link v-if="!authed" to="/"> Home </v-link>
-        <v-link v-if="!authed" to="/services"> Services </v-link>
-        <v-link v-if="!authed" to="/about"> About </v-link>
-        <v-link v-if="!authed" to="/contact"> Contact Us </v-link>
-        <v-link v-if="!authed" to="/login"> Login </v-link>
+        <v-link class="desktop-only" v-if="!authed" to="/"> Home </v-link>
+        <v-link class="desktop-only" v-if="!authed" to="/services"> Services </v-link>
+        <v-link class="desktop-only" v-if="!authed" to="/about"> About </v-link>
+        <v-link class="desktop-only" v-if="!authed" to="/login"> Login </v-link>
+        <v-link class="desktop-only" v-if="!authed" to="/contact"> Contact Us </v-link>
+        <a class="dropdown mobile-only" v-if="!authed">
+          <v-icon name="hi-solid-menu-alt-3" class="icon"></v-icon>
+          <div class="items">
+            <v-link v-if="!authed" to="/"> Home </v-link>
+            <v-link v-if="!authed" to="/services"> Services </v-link>
+            <v-link v-if="!authed" to="/about"> About </v-link>
+            <v-link v-if="!authed" to="/login"> Login </v-link>
+            <v-link v-if="!authed" to="/contact"> Contact Us </v-link>
+          </div>
+        </a>
         <a class="dropdown" v-if="authed">
-          <v-icon name="hi-solid-user-circle" class="icon"></v-icon>
+          <v-icon name="hi-solid-user-circle" class="icon mr-2"></v-icon>
           <span class="shortname">
             {{ user?.fname ?? user?.user }}
           </span>
@@ -70,7 +80,7 @@ header {
     .actions {
       @apply flex items-center;
 
-      & > a {
+      &>a {
         @apply px-4 py-2 rounded-md text-sm font-normal text-primary-50 hover:bg-primary-800;
         @apply flex items-center;
 
@@ -78,7 +88,7 @@ header {
           @apply relative;
 
           svg.icon {
-            @apply w-6 h-6 mr-2;
+            @apply w-6 h-6;
           }
 
           .shortname {
@@ -93,7 +103,7 @@ header {
             @apply absolute top-full right-0 w-48 bg-primary-900 rounded-md shadow-lg py-1 z-10;
             @apply hidden;
 
-            & > * {
+            &>* {
               @apply text-left w-full block px-4 py-2 text-sm text-primary-50 hover:bg-primary-800 transition-all duration-200 rounded-md;
             }
           }
@@ -106,6 +116,14 @@ header {
           }
         }
       }
+
+      .mobile-only {
+        @apply inline-block md:hidden;
+      }
+
+      .desktop-only {
+        @apply hidden md:inline-block;
+      }
     }
   }
 }
@@ -115,6 +133,7 @@ header {
     opacity: 0;
     transform: translateY(-50%) translateX(50%) scale(0);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) translateX(0) scale(1);

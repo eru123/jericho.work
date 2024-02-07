@@ -200,6 +200,9 @@ watch([fname, mname, lname], () => {
             <span v-if="!registering">Register</span>
           </button>
         </div>
+        <div class="note">
+          Already have an account? <v-link target="_blank" to="/login"> Login </v-link>.
+        </div>
       </form>
     </div>
   </v-public-page>

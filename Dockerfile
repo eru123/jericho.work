@@ -5,7 +5,7 @@ WORKDIR /app
 COPY html/composer.json html/composer.lock ./
 RUN composer install -o 
 
-COPY system/ /
+COPY rootfs/ /
 COPY html .
 
 RUN cp /app/script /usr/bin/script \

@@ -6,10 +6,10 @@ use App\Plugin\Vite;
 use App\Controller\Main;
 
 return function (Router &$main) {
-    Vite::src(__CLIENT__ . '/main/src');
-    Vite::public(__CLIENT__ . '/main/public');
-    Vite::dist(__CLIENT__ . '/main/dist');
-    Vite::manifest(__CLIENT__ . '/main/dist/manifest.json');
+    Vite::src(__FE_MAIN__ . '/src');
+    Vite::public(__FE_MAIN__ . '/public');
+    Vite::dist(__FE_MAIN__ . '/dist');
+    Vite::manifest(__FE_MAIN__ . '/dist/manifest.json');
     Vite::template(env('MAIN_VITE_TEMPLATE', 'vite'));
     Vite::set('base_uri', env('MAIN_VITE_BASE_URI', ''));
     Vite::inject($main);

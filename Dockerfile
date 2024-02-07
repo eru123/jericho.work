@@ -7,6 +7,7 @@ RUN composer install -o
 
 COPY rootfs/ /
 COPY html .
+COPY client /client
 
 RUN cp /app/script /usr/bin/script \
     && cp /app/check /usr/bin/check \
@@ -21,16 +22,7 @@ RUN chmod +x /usr/bin/skiddph \
     && chmod +x /usr/bin/skiddph-daemon \
     && chmod +x /usr/bin/skiddph-ws
 
-RUN pnpm install --prefix client/cdn \
-    # && pnpm install --prefix client/admin \
-    && pnpm install --prefix client/main \
-    # && cd /app/client/admin && pnpm build \
-    && cd /app/client/main && pnpm build \
-    && cd /app/client/cdn && pnpm build
-
-# Production only - Delete FEs source code
-RUN find /app/client -mindepth 2 -maxdepth 2 -not -name 'dist'  -exec rm -rf {} \;
-RUN find /app/client -mindepth 1 -maxdepth 1 -not -name 'admin' -not -name 'cdn' -not -name 'main' -exec rm -rf {} \;
+RUN cd /client && pnpm install && pnpm build
 
 # Include port 9000 if Websocket is enabled
 EXPOSE 80 

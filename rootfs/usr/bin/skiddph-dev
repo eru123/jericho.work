@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # Copy all system variable to .env file
+# Ensuring that we will not accidentally lose credentials
 if [ -f /app/.env ]; then
     ts=$(date +"%Y%m%d%H%M%S")
     mv /app/.env /app/.env.$ts.bak
@@ -17,16 +18,8 @@ chmod +x /usr/bin/check
 chmod +x /usr/bin/make-migration
 chmod +x /usr/bin/migrate
 
-# CDN Client
-cd /app/client/cdn
-pnpm install && pnpm build
-
-# Admin Client
-# cd /app/client/admin
-# pnpm install && pnpm build
-
-# Main Client
-cd /app/client/main
+# Install Frontend Depencies
+cd /client
 pnpm install
 
 # Start memcached
@@ -49,8 +42,7 @@ cd /app && composer install -o
 # /usr/bin/skiddph-ws & # Disabled for now
 
 # Main Client watch changes
-cd /app/client/main
-pnpm dev &
+cd /client && pnpm dev &
 
 # Start apache2
 /usr/sbin/httpd -D FOREGROUND

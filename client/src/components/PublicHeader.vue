@@ -26,8 +26,11 @@ const confirmLogout = () => {
         <img :src="LogoD" alt="Logo" />
       </v-link>
       <div class="actions">
+        <v-link v-if="!authed" to="/"> Home </v-link>
+        <v-link v-if="!authed" to="/services"> Services </v-link>
+        <v-link v-if="!authed" to="/about"> About </v-link>
+        <v-link v-if="!authed" to="/contact"> Contact Us </v-link>
         <v-link v-if="!authed" to="/login"> Login </v-link>
-        <v-link v-if="!authed" to="/register"> Register </v-link>
         <a class="dropdown" v-if="authed">
           <v-icon name="hi-solid-user-circle" class="icon"></v-icon>
           <span class="shortname">

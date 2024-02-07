@@ -54,7 +54,6 @@ const items = [
         name: "OpenCDN",
         url: "/cdn",
         icon: "bi-cloud-fill",
-        _blank: true,
       },
       {
         name: "e-Kartero",

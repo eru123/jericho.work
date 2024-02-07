@@ -85,6 +85,9 @@ const submit = () => {
             <span v-if="!loggingIn">Login</span>
           </button>
         </div>
+        <div class="note">
+          Do not have an account? <v-link target="_blank" to="/register"> Register </v-link>.
+        </div>
       </form>
     </div>
   </v-public-page>

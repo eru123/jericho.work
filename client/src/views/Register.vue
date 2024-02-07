@@ -201,7 +201,7 @@ watch([fname, mname, lname], () => {
           </button>
         </div>
         <div class="note">
-          Already have an account? <v-link target="_blank" to="/login"> Login </v-link>.
+          Already have an account? <v-link to="/login"> Login </v-link>.
         </div>
       </form>
     </div>

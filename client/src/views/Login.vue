@@ -86,7 +86,7 @@ const submit = () => {
           </button>
         </div>
         <div class="note">
-          Do not have an account? <v-link target="_blank" to="/register"> Register </v-link>.
+          Do not have an account? <v-link to="/register"> Register </v-link>.
         </div>
       </form>
     </div>

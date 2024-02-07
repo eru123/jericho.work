@@ -1,6 +1,6 @@
 <?php
 
-return <<<TEMPLATE
+return <<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <body>
@@ -15,4 +15,4 @@ return <<<TEMPLATE
     <p><small>If you did not register on our site using this email address, please ignore this email.</small></p>
 </body>
 </html>
-TEMPLATE;
+HTML;

@@ -1,29 +1,29 @@
 import useServerData, { BASE_URL } from "./useServerData";
 import usePersistentData from "./usePersistentData";
 import { createError } from "./useDialog";
-import { restart as restartWs, on as onWs, close as closeWs } from "./useWebsocket";
+// import { restart as restartWs, on as onWs, close as closeWs } from "./useWebsocket";
 
-onWs("open", () => {
-  console.log("Websocket connected");
-});
+// onWs("open", () => {
+//   console.log("Websocket connected");
+// });
 
-onWs("message", (data) => {
-  console.log("Server sent a message", data);
-});
+// onWs("message", (data) => {
+//   console.log("Server sent a message", data);
+// });
 
 
-onWs("close", (data) => {
-  console.log("Websocket closed", data);
-  window.__skiddph__retry = true;
-  var retry = setInterval(async () => {
-    console.log("Retrying websocket connection");
-    if (window?.__skiddph__retry) {
-      clearInterval(retry);
-      delete window.__skiddph__retry;
-      restartWs();
-    }
-  }, 5000);
-});
+// onWs("close", (data) => {
+//   console.log("Websocket closed", data);
+//   window.__skiddph__retry = true;
+//   var retry = setInterval(async () => {
+//     console.log("Retrying websocket connection");
+//     if (window?.__skiddph__retry) {
+//       clearInterval(retry);
+//       delete window.__skiddph__retry;
+//       restartWs();
+//     }
+//   }, 5000);
+// });
 
 export const $server = useServerData();
 export const $user = usePersistentData("user", null);
@@ -130,12 +130,12 @@ export const hello = (data = {}) => {
 
       if (res?.data && res?.token) {
         loginWithData(res.token, res.data);
-        restartWs();
+        // restartWs();
       } else if (res?.data) {
         loginWithData(old_token, res.data);
       } else if (res?.token) {
         loginWithData(res.token, old_data);
-        restartWs();
+        // restartWs();
       }
 
       return res;
@@ -155,7 +155,7 @@ export const auth_init = async (fallback = '/') => {
         $user.value = null;
         return redirect(fallback);
       }
-      restartWs();
+      // restartWs();
       return;
     }
 
@@ -165,9 +165,9 @@ export const auth_init = async (fallback = '/') => {
       return redirect(fallback);
     }
 
-    restartWs();
+    // restartWs();
   } else {
-    closeWs();
+    // closeWs();
   }
 }
 
@@ -180,7 +180,7 @@ export const login = (data) => {
 
       if (res?.token && res?.data) {
         loginWithData(res.token, res.data);
-        restartWs();
+        // restartWs();
         return res;
       }
 
@@ -233,7 +233,7 @@ export const logout = () => {
         throw new Error(res.error);
       }
 
-      closeWs();
+      // closeWs();
       return res;
     })
     .catch((err) => {

@@ -37,7 +37,7 @@ const submit = () => {
       }
     })
     .catch((err) => {
-      return createError("Error", err?.message || "An error has occurred.");
+      return null;
     })
     .finally(() => {
       loggingIn.value = false;

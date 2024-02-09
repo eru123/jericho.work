@@ -8,6 +8,7 @@ import Link from "./components/Link.vue";
 import PublicPage from "./components/PublicPage.vue";
 import PublicHeader from "./components/PublicHeader.vue";
 import PublicFooter from "./components/PublicFooter.vue";
+import FixedLayout from "./components/FixedLayout.vue";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import * as icons from "./icons";
 
@@ -19,6 +20,7 @@ app.component("v-link", Link);
 app.component("v-public-page", PublicPage);
 app.component("v-public-header", PublicHeader);
 app.component("v-public-footer", PublicFooter);
+app.component("v-fixed-layout", FixedLayout);
 app.provide("$server", useServerData());
 app.use(router);
 app.mount("#app");

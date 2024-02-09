@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+
+import userRoutes from './user.js';
 import Landing from "@/views/Landing.vue";
 
 import MDLayout from "@/layouts/PublicMarkdown.vue";
@@ -10,6 +12,7 @@ import NotFound from "@/views/NotFound.vue";
 import FeatureNotAvailable from "@/views/FeatureNotAvailable.vue";
 import Register from "@/views/Register.vue";
 import Login from "@/views/Login.vue";
+import About from "@/views/About.vue";
 import Tools from "@/views/Tools.vue";
 import ToolsSmtpTester from "@/views/Tools/SmtpTester.vue";
 
@@ -105,6 +108,12 @@ const routes = [
     name: "FeatureNotAvailable",
     component: FeatureNotAvailable,
   },
+  {
+    path: "/about",
+    name: "About",
+    component: About,
+  },
+  ...userRoutes,
   {
     path: "/:pathMatch(.*)*",
     component: NotFound,

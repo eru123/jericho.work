@@ -5,6 +5,7 @@ import {
   createError,
   createConfirm,
 } from "@/composables/useDialog";
+
 import { register, redirect } from "@/composables/useApi";
 
 const fname = ref("");
@@ -91,7 +92,7 @@ const submit = () => {
         })
         .catch((err) => {
           registering.value = false;
-          return createError("Error", err?.message || "An error has occurred.");
+          return null;
         });
     }
   );

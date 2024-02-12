@@ -1,30 +1,108 @@
 <script setup>
+import { ref, watchEffect, computed } from 'vue'
+import usePersistentData from '@/composables/usePersistentData';
 import PublicHeader from "@/components/PublicHeader.vue";
+
+const sidebarOpen = usePersistentData('sidebarOpen', null)
+const sidebarFirstLoad = ref(true)
+
+const toggleSidebar = () => {
+    sidebarFirstLoad.value = false;
+    sidebarOpen.value = !sidebarOpen.value;
+}
+
+const sidebarClass = computed(() => {
+    const classes = ['side-navigation'];
+
+    if (!sidebarOpen.value && sidebarOpen.value === null && sidebarFirstLoad.value) {
+        classes.push('hide')
+    }
+
+    if (sidebarOpen.value !== null && !sidebarOpen.value && !sidebarFirstLoad.value) {
+        classes.push('hide')
+        classes.push('slide-in-left')
+    }
+
+    if (sidebarOpen.value && !sidebarFirstLoad.value) {
+        classes.push('slide-in-right')
+    }
+
+    return classes.join(' ');
+});
+
+const sidebarToggleBtnClass = computed(() => {
+    const classes = ['sidebar-toggle'];
+
+    if (!sidebarOpen.value && sidebarOpen.value === null && sidebarFirstLoad.value) {
+        classes.push('hide')
+    }
+
+    if (sidebarOpen.value !== null && !sidebarOpen.value && !sidebarFirstLoad.value) {
+        classes.push('hide')
+        classes.push('slide-in-left')
+    }
+
+    if (sidebarOpen.value && !sidebarFirstLoad.value) {
+        classes.push('slide-in-right')
+    }
+
+    return classes.join(' ');
+});
+
+watchEffect(() => {
+    if (sidebarOpen.value === null) {
+        sidebarOpen.value = window.innerWidth >= 768
+        sidebarFirstLoad.value = true
+    } else {
+        sidebarFirstLoad.value = false;
+    }
+})
+
+window?.addEventListener("resize", () => {
+    sidebarFirstLoad.value = false;
+    sidebarOpen.value = window.innerWidth >= 768
+});
+
 </script>
 <template>
     <PublicHeader />
-    <div class="public-page-container">
-        <div class="container" v-once>
-            <div class="side-navigation">
-                <v-link to="/profile" class="parent-item">Link</v-link>
-                <v-link to="/" v-for="i in 100" class="parent-item">Link {{ i }}</v-link>
-            </div>
+    <div class="fixed-layout-container">
+        <div :class="sidebarClass">
+            <v-link to="/profile" class="parent-item">Link</v-link>
+            <v-link to="/" v-for="i in 10" class="parent-item">Link {{ i }}</v-link>
+        </div>
+        <div class="content">
+            <button @click="toggleSidebar" class="sidebar-toggle"><v-icon name="hi-solid-menu-alt-2"></v-icon></button>
+            <v-slot></v-slot>
         </div>
     </div>
 </template>
 <style scoped lang="scss">
-.public-page-container {
-    @apply w-full min-h-[calc(100vh-3.5rem)] max-w-full;
-}
+.fixed-layout-container {
+    @apply w-screen min-h-[calc(100vh-3.5rem)] flex flex-row;
 
-.container {
-    @apply w-full max-w-screen-md min-h-[calc(100vh-3.5rem)] flex flex-row;
 
     .side-navigation {
-        @apply hidden md:flex min-h-full bg-primary-900 p-2 min-w-[200px] text-primary-50 flex-col;
+        @apply flex h-[calc(100vh-3.5rem)] bg-primary-900 p-2 min-w-[220px] text-primary-50 flex-col overflow-y-auto transition-all duration-200 translate-x-0;
+
+        &.hide {
+            @apply -translate-x-full w-0 min-w-0 p-0;
+        }
 
         .parent-item {
             @apply py-2 px-4 rounded-md hover:bg-primary-800;
+        }
+    }
+
+    .content {
+        @apply relative;
+
+        .sidebar-toggle {
+            @apply absolute top-0 left-0 py-2 px-4 rounded-br-md bg-primary-900 text-primary-50 hover:bg-primary-800 transition-all duration-200 translate-x-0;
+
+            .icon {
+                @apply text-sm;
+            }
         }
     }
 

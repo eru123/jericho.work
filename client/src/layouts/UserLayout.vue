@@ -3,9 +3,10 @@
 import { computed } from 'vue'
 import { aclToArray } from '@/lib/app'
 import usePersistentData from '@/composables/usePersistentData'
+import { useRouter } from 'vue-router'
 
 const user = usePersistentData('user', null)
-
+const router = useRouter();
 const sidebarItems = computed(() => ([
     {
         to: '/dashboard',
@@ -30,9 +31,11 @@ const sidebarItems = computed(() => ([
     }, user.value),
 ]))
 
+const pageName = computed(() => router?.currentRoute?.value?.name);
+
 </script>
 <template>
-    <v-fixed-layout :sidebar="sidebarItems">
+    <v-fixed-layout :sidebar="sidebarItems" :page-name="pageName">
         <router-view />
     </v-fixed-layout>
 </template>

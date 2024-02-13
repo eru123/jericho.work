@@ -1,10 +1,11 @@
 <script setup>
-import { ref, watchEffect, computed }from 'vue'
+import { ref, watchEffect, computed } from 'vue'
 import usePersistentData from '@/composables/usePersistentData';
 import PublicHeader from "@/components/PublicHeader.vue";
 
 const props = defineProps([
-    'sidebar'
+    'sidebar',
+    'pageName'
 ])
 
 const sidebarOpen = usePersistentData('sidebarOpen', null)
@@ -55,11 +56,16 @@ window?.addEventListener("resize", () => {
     <PublicHeader />
     <div class="fixed-layout-container">
         <div :class="sidebarClass" v-if="showSidebar">
-            <v-link v-for="item in props.sidebar" :key="item.name" :to="item.to ? item.to : '#'" class="parent-item">{{ item.name }}</v-link>
+            <v-link v-for="item in props.sidebar" :key="item.name" :to="item.to ? item.to : '#'" class="parent-item">{{
+                item.name }}</v-link>
         </div>
         <div class="content">
-            <button v-if="showSidebar" @click="toggleSidebar" class="sidebar-toggle"><v-icon name="hi-solid-menu-alt-2"></v-icon></button>
-            <v-slot></v-slot>
+            <div class="content-header">
+                <button v-if="showSidebar" @click="toggleSidebar" class="sidebar-toggle"><v-icon
+                        name="hi-solid-menu-alt-2"></v-icon></button>
+                <span v-if="props?.pageName" class="content-title">{{ props?.pageName }}</span>
+            </div>
+            <slot></slot>
         </div>
     </div>
 </template>
@@ -81,15 +87,25 @@ window?.addEventListener("resize", () => {
     }
 
     .content {
-        @apply relative;
+        @apply block w-full h-[calc(100vh-3.5rem)] overflow-y-auto;
 
-        .sidebar-toggle {
-            @apply absolute top-0 left-0 py-2 px-4 rounded-br-md bg-primary-900 text-primary-50 hover:bg-primary-800 transition-all duration-200 translate-x-0;
+        .content-header {
+            @apply sticky top-0 flex bg-white shadow-md;
 
-            .icon {
-                @apply text-sm;
+            .content-title {
+                @apply text-sm font-semibold px-4 py-2;
+            }
+
+            .sidebar-toggle {
+                @apply py-2 px-4 bg-primary-900 text-primary-50 hover:bg-primary-800 transition-all duration-200 translate-x-0;
+
+                .icon {
+                    @apply text-sm;
+                }
             }
         }
+
+
     }
 
     .icon {

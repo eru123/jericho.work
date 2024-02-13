@@ -1,7 +1,11 @@
 <script setup>
-import { ref, watchEffect, computed } from 'vue'
+import { ref, watchEffect, computed }from 'vue'
 import usePersistentData from '@/composables/usePersistentData';
 import PublicHeader from "@/components/PublicHeader.vue";
+
+const props = defineProps([
+    'sidebar'
+])
 
 const sidebarOpen = usePersistentData('sidebarOpen', null)
 const sidebarFirstLoad = ref(true)
@@ -11,27 +15,10 @@ const toggleSidebar = () => {
     sidebarOpen.value = !sidebarOpen.value;
 }
 
+const showSidebar = () => props?.sidebar && !Array.isArray(props.sidebar) && typeof props.sidebar === 'object' && props.sidebar !== null;
+
 const sidebarClass = computed(() => {
     const classes = ['side-navigation'];
-
-    if (!sidebarOpen.value && sidebarOpen.value === null && sidebarFirstLoad.value) {
-        classes.push('hide')
-    }
-
-    if (sidebarOpen.value !== null && !sidebarOpen.value && !sidebarFirstLoad.value) {
-        classes.push('hide')
-        classes.push('slide-in-left')
-    }
-
-    if (sidebarOpen.value && !sidebarFirstLoad.value) {
-        classes.push('slide-in-right')
-    }
-
-    return classes.join(' ');
-});
-
-const sidebarToggleBtnClass = computed(() => {
-    const classes = ['sidebar-toggle'];
 
     if (!sidebarOpen.value && sidebarOpen.value === null && sidebarFirstLoad.value) {
         classes.push('hide')
@@ -67,12 +54,11 @@ window?.addEventListener("resize", () => {
 <template>
     <PublicHeader />
     <div class="fixed-layout-container">
-        <div :class="sidebarClass">
-            <v-link to="/profile" class="parent-item">Link</v-link>
-            <v-link to="/" v-for="i in 10" class="parent-item">Link {{ i }}</v-link>
+        <div :class="sidebarClass" v-if="showSidebar">
+            <v-link v-for="item in props.sidebar" :key="item.name" :to="item.to ? item.to : '#'" class="parent-item">{{ item.name }}</v-link>
         </div>
         <div class="content">
-            <button @click="toggleSidebar" class="sidebar-toggle"><v-icon name="hi-solid-menu-alt-2"></v-icon></button>
+            <button v-if="showSidebar" @click="toggleSidebar" class="sidebar-toggle"><v-icon name="hi-solid-menu-alt-2"></v-icon></button>
             <v-slot></v-slot>
         </div>
     </div>

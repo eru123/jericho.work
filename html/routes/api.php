@@ -40,8 +40,7 @@ $api->response(function ($data) {
                 'server' => $_SERVER,
                 'cookies' => $_COOKIE,
                 'session' => $_SESSION ?? null,
-                'files' => $_FILES ?? null,
-                'env' => $_ENV ?? null,
+                'files' => $_FILES ?? null
             ];
         } else {
             unset($data['debug']);

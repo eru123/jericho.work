@@ -3,7 +3,7 @@ export function acl(role, user = null) {
         user = JSON.parse(localStorage.getItem("user") ?? "null")
     }
 
-    if (!user || !user?.roles || !Array.isArray(roles)) {
+    if (!user || !user?.roles || !Array.isArray(user?.roles)) {
         return false;
     }
 

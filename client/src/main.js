@@ -1,3 +1,4 @@
+import "core-js/full/set/intersection";
 import 'vite/modulepreload-polyfill'
 import { createApp } from "vue";
 import useServerData from "./composables/useServerData";
@@ -21,6 +22,5 @@ app.component("v-public-page", PublicPage);
 app.component("v-public-header", PublicHeader);
 app.component("v-public-footer", PublicFooter);
 app.component("v-fixed-layout", FixedLayout);
-app.provide("$server", useServerData());
 app.use(router);
 app.mount("#app");

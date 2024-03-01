@@ -1,65 +1,6 @@
 <script setup>
 </script>
 <template>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam in quis excepturi, amet saepe eligendi quia illo? Totam nobis autem ex inventore quis omnis, commodi saepe, qui facere ratione amet!</p>
+    <h1>Profile</h1>
 </template>
 <style scoped lang="scss"></style>

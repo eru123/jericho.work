@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import userRoutes from './user.js';
 import Landing from "@/views/Landing.vue";
 
+import UserLayout from '@/layouts/UserLayout.vue'
 import MDLayout from "@/layouts/PublicMarkdown.vue";
 import MDPrivacyPolicy from "@/md/privacy-policy.md";
 import MDTermsAndConditions from "@/md/terms-and-conditions.md";
@@ -116,7 +117,14 @@ const routes = [
   ...userRoutes,
   {
     path: "/:pathMatch(.*)*",
-    component: NotFound,
+    component: UserLayout,
+    children: [
+      {
+        path: "",
+        name: "Not Found",
+        component: NotFound,
+      }
+    ]
   },
 ];
 

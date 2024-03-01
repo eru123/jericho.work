@@ -35,8 +35,11 @@ const pageName = computed(() => router?.currentRoute?.value?.name);
 
 </script>
 <template>
-    <v-fixed-layout :sidebar="sidebarItems" :page-name="pageName">
+    <v-fixed-layout :sidebar="sidebarItems" :page-name="pageName" v-if="user?.token">
         <router-view />
     </v-fixed-layout>
+    <v-public-page v-else>
+        <router-view />
+    </v-public-page>
 </template>
 <style scoped lang="scss"></style>

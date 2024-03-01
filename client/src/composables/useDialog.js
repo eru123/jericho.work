@@ -113,6 +113,17 @@ export const createCustom = (component) => {
     });
 };
 
+export const createForm = (title, fields, data, onOk = null, onCancel = null) => {
+    return createDialog({
+        title,
+        fields,
+        data,
+        type: "form",
+        onOk,
+        onCancel,
+    });
+};
+
 export const createLoading = (message = null) => {
     return createDialog({
         message,

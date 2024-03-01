@@ -1,15 +1,13 @@
 <template>
-    <v-public-page>
-        <div class="container" v-once>
-            <v-icon class="icon" name="co-link-broken" />
-            <h1>404 Page Not Found</h1>
-            <p>The page you are trying to access does not exist.</p>
-        </div>
-    </v-public-page>
+    <div class="container">
+        <v-icon class="icon" name="co-link-broken" />
+        <h1>404 Page Not Found</h1>
+        <p>The page you are trying to access does not exist.</p>
+    </div>
 </template>
 <style scoped lang="scss">
 .container {
-    @apply w-full max-w-screen-md mx-auto min-h-[calc(100vh-3.5rem)] flex flex-col justify-center items-center text-center px-4 py-8;
+    @apply w-full max-w-screen-md mx-auto min-h-[calc(100%-1rem-36px)] flex flex-col justify-center items-center text-center px-4 py-8;
 
     .icon {
         @apply mb-6 h-[4rem] w-[4rem];

@@ -10,7 +10,7 @@
             "<template>",
             "   <div>$2</div>",
             "</template>",
-            "<style scoped>",
+            "<style scoped lang=\"scss\">",
             "$3",
             "</style>"
         ],

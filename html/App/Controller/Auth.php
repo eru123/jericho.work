@@ -8,6 +8,7 @@ use App\Models\Users;
 use App\Models\Tokens;
 use App\Plugin\MC;
 use App\Plugin\DB;
+use App\Plugin\ACL;
 use eru123\router\Context;
 use eru123\helper\JWT;
 
@@ -71,9 +72,7 @@ class Auth
                 ];
             }
 
-            $authorization = @getallheaders()['Authorization'] ?? null;
-            preg_match('/^(Bearer\s+)?(.+)$/', (string) $authorization, $matches);
-            $token = $matches[2] ?? null;
+            $token = ACL::token();
 
             if (!$token) {
                 throw new Exception('Missing Authorization header');

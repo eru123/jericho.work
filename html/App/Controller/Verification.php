@@ -105,7 +105,7 @@ class Verification
             throw new Exception('Identical verification found, please try again.', 400);
         }
 
-        $data = $data + [
+        $data = [
             'user_id' => $user_id,
             'type' => 'email',
             'identifier' => $email,

@@ -40,8 +40,7 @@ $api->response(function ($data) {
                 'server' => $_SERVER,
                 'cookies' => $_COOKIE,
                 'session' => $_SESSION ?? null,
-                'files' => $_FILES ?? null,
-                'env' => $_ENV ?? null,
+                'files' => $_FILES ?? null
             ];
         } else {
             unset($data['debug']);
@@ -100,7 +99,7 @@ $api->error(function (Throwable $e) {
     return $res;
 });
 
-$v1 = require __ROUTES__ . '/api/v1.php';
+$v1 = require (__ROUTES__ . '/api/v1/v1.php');
 
 $api->child($v1);
 return $api;

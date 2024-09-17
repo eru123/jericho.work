@@ -1,5 +1,7 @@
 <?php
 
+use App\Plugin\ORM;
+
 function base_url($path = '')
 {
     $base_url = env('BASE_URL', '/');
@@ -209,4 +211,34 @@ function use_mailtpl(string $name): string
     }
 
     return require($f);
+}
+
+function function_deprecated($functionName)
+{
+    $reflection = new ReflectionFunction($functionName);
+    $docComment = $reflection->getDocComment();
+    return strpos($docComment, '@deprecated') !== false;
+}
+
+function a_get(array $arr, array|string|null $key = null, $default = null)
+{
+    return ORM::array_get($arr, $key, $default);
+}
+
+function a_set(array &$arr, array|string $key, $value = null)
+{
+    return ORM::array_set($arr, $key, $value);
+}
+
+function payload(string $key = null, $default = null)
+{
+    global $__global_payload;
+    if (isset($__global_payload) && !empty($__global_payload) && is_array($__global_payload)) {
+        return a_get($__global_payload, $key, $default);
+    }
+
+    $json = json_decode(file_get_contents('php://input'), true) ?? [];
+    $payload = array_merge($_REQUEST, $json);
+    $__global_payload = $payload;
+    return a_get($payload, $key, $default);
 }

@@ -6,6 +6,7 @@ define('__APP__', __DIR__ . DIRECTORY_SEPARATOR . 'App');
 define('__LOGS__', __DIR__ . DIRECTORY_SEPARATOR . 'logs');
 define('__ROUTES__', __DIR__ . DIRECTORY_SEPARATOR . 'routes');
 define('__CLIENT__', __DIR__ . DIRECTORY_SEPARATOR . 'client');
+define('__FE_MAIN__', __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'client');
 define('__SCRIPTS__', __DIR__ . DIRECTORY_SEPARATOR . 'scripts');
 define('__DOMAINS__', __DIR__ . DIRECTORY_SEPARATOR . 'domains');
 define('__COMMANDS__', __DIR__ . DIRECTORY_SEPARATOR . 'Commands');
@@ -28,6 +29,8 @@ if (isset($_SERVER['HTTP_USER_AGENT'])) {
     foreach ($comh as $header) {
         header_remove($header);
     }
+    unset($comh);
+    unset($header);
 }
 
 if (php_sapi_name() == 'cli') {

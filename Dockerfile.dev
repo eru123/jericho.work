@@ -2,7 +2,7 @@ FROM lighty262/afs:1.0
 
 WORKDIR /app
 
-COPY system/ /
+COPY rootfs/ /
 
 RUN chmod +x /usr/bin/skiddph-dev  \
     && chmod +x /usr/bin/skiddph-daemon \

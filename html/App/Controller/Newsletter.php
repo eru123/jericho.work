@@ -2,9 +2,6 @@
 
 namespace App\Controller;
 
-use PDOStatement;
-use Throwable;
-use Exception;
 use App\Plugin\Mailer;
 use App\Models\Newsletter as NewsletterModel;
 use App\Models\Mails;
@@ -19,13 +16,14 @@ class Newsletter
         $data = $c->json();
         $email = isset($data['email']) ? $data['email'] : null;
         $subs = isset($data['subscription']) ? $data['subscription'] : [];
-        
+
         if (!$email) {
-            return $c->json(['error' => 'Missing email'], 400);
+            http_response_code(400);
+            return ['error' => 'Missing email'];
         }
 
         $mail = NewsletterModel::find(Raw::build('`email` = ?', [$email]));
-        
+
         if ($mail && $mail['verified'] == 0) {
             NewsletterModel::update($mail['id'], [
                 'subscriptions' => json_encode(array_unique(array_values($subs))),
@@ -64,7 +62,7 @@ class Newsletter
         ];
     }
 
-    public static function action_newsletter_add(array $data): bool 
+    public static function action_newsletter_add(array $data): bool
     {
         $email = isset($data['identifier']) ? $data['identifier'] : null;
 

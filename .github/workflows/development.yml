@@ -6,7 +6,7 @@ jobs:
   deploy:
     environment: 
       name: Development
-      url: https://jericho.work
+      url: https://skiddph-dev.skiddph.com
     name: Deploy
     runs-on: ubuntu-latest
     steps:

